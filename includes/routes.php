@@ -9,6 +9,7 @@ $helper = new Helper($con);
 
 // Create the clientController instance and pass the Helper
 $clientController = new clientController($helper);
+$scheduleController = new scheduleController($helper);
 
 if($action == 'addClient'){
 
@@ -17,4 +18,16 @@ if($action == 'addClient'){
 	// if($login)
 	// 	echo $login;
 			return $addC;
+}
+
+if($action == "addSchedule"){
+	$addSched = $scheduleController->store();
+	
+	return $addSched;
+}
+
+if($action == "getClientData"){
+	$getData = $clientController->get();
+
+	return $getData;
 }

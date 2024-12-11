@@ -9,7 +9,7 @@ require_once('../includes/initialize.php');
 // $params = [1];
 // $result = $helper->executeQuery($query, $params);
 
- class clientController extends Helper {
+ class clientController {
 
    
     private $helper;
@@ -47,6 +47,26 @@ require_once('../includes/initialize.php');
         exit; // Ensure no other output is sent
     }
     
+    public function get(){
+        extract($_POST);
+
+        $clientID = $id;
+
+        if($clientID == null || $clientID == ''){
+            return $this->helper->message("error CLIENT Missing!",200,1);
+        }
+        $query = "select * from client where CLIENT_ID = ?";
+        $param = [$clientID];
+
+        $result = $this->helper->regularQuery($query,$param);
+
+        if(empty($result)){
+            return $this->helper->message("Error",200,1);
+        }
+
+        return $this->helper->message("success",200,0,$result);
+
+    }
     
 
 

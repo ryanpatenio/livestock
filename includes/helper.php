@@ -22,12 +22,12 @@ class Helper {
     }
     
 
-   public function message($message, $status = 200, $data = []) {
+   public function message($message, $status = 200, $code = null, $data = []) {
         // Create the response array
         $response = [
             'status' => $status === 200 ? 'success' : 'error', // If status is 200, it's a success, else it's an error
             'message' => $message,
-            'code' => $status === 200 ? '0' : '1', //0 true 1 false
+            'code' => $code,
             'data' => $data // Optional data, which can be passed if needed
         ];
     
@@ -85,3 +85,4 @@ class Helper {
         return false; // Return false for unsupported query types or failures
     }
 }
+

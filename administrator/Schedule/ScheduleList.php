@@ -7,6 +7,12 @@ $clientQuery = "SELECT CLIENT_ID, CONCAT(FNAME, ' ', LNAME) AS full_name FROM cl
 $clientResult = mysqli_query($con, $clientQuery);
 $clients = mysqli_fetch_all($clientResult, MYSQLI_ASSOC);
 
+$query = "select * from vaccine";
+$result = mysqli_query($con, $query);
+$vaccineData = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+
+
 // Check if the form is submitted
 if (isset($_POST['submit_schedule'])) {
     // Get form data
@@ -57,17 +63,8 @@ if (isset($_POST['submit_schedule'])) {
      
   }
 
-  
-    //get Vaccine
-    $query = "SELECT * FROM vaccine";
-    $stmt = mysqli_prepare($con, $query);
-    mysqli_stmt_execute($stmt);
-   
 
- $resultData = mysqli_stmt_get_result($stmt);
- $resulVac = mysqli_fetch_all($scheduleResult, MYSQLI_ASSOC);
 
-    print_r($resultVacc);
 
   mysqli_close($con);
   ?>
@@ -177,7 +174,7 @@ if (isset($_POST['submit_schedule'])) {
         <h5 class="modal-title">Create New Schedule Request</h5>
         <button type="button" class="close text-white" data-dismiss="modal">&times;</button>
       </div>
-      <form action="" method="POST">
+      <form action="" id="addScheduleForm" method="POST">
         <div class="modal-body">
           <!-- Event Name -->
           <div class="form-group">
@@ -216,6 +213,25 @@ if (isset($_POST['submit_schedule'])) {
               </select>
             </div>
           </div>
+
+          <div class="form-group">
+            <label for="status">Vaccine:</label>
+            <select name="vaccine_ID" id="vacc" class="form-control" required>
+              <?php
+              
+              foreach ($vaccineData as $vacc) { ?>
+                <option value="<?=$vacc['VACCINE_ID'] ?>"><?=$vacc['DESCRIPTION'] ?></option>
+
+            <?php  }
+              
+              ?>
+              
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="status">Qty</label>
+            <input type="number" class="form-control" name="qty" required>
+          </div>
           <!-- Status -->
           <div class="form-group">
             <label for="status">Status:</label>
@@ -225,17 +241,10 @@ if (isset($_POST['submit_schedule'])) {
               <option value="2">Cancelled</option>
             </select>
           </div>
-          <div class="form-group">
-            <label for="status">Vaccine:</label>
-            <select name="status" id="vacc" class="form-control" required>
-              <option value="0">Pending</option>
-              <option value="1">Confirmed</option>
-              <option value="2">Cancelled</option>
-            </select>
-          </div>
+          
         </div>
         <div class="modal-footer">
-          <button type="submit" name="submit_schedule" class="btn btn-primary">Submit Schedule</button>
+          <button type="submit" name="" class="btn btn-primary">Submit Schedule</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
         </div>
       </form>
@@ -278,7 +287,7 @@ if (isset($_POST['submit_schedule'])) {
       </div>
     </div>
   </div>
-
+  <script src="../livestock2/administrator/Schedule/sched.js"></script>
   <script>
   document.addEventListener('DOMContentLoaded', function () {
       document.querySelectorAll('.edit-btn').forEach(function (button) {

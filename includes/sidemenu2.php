@@ -67,7 +67,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a href="index2.php?page=Clientlist" class="nav-link <?= $clientlist?>">
+            <a href="index2.php?page=clientList2" class="nav-link <?= $clientlist?>">
               <i class="nav-icon fas fa-users"></i>
               <p>Client  </p>
             </a>

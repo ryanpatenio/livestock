@@ -17,6 +17,9 @@ if (isset($_GET['page'])) {
         case "dashboard2":
             include("administrator2/dashboard/dashboard2.php");
             break;
+        case "clientList2":
+            include("administrator2/client/clientList2.php");
+            break;
         case "inventory":
             include("administrator2/inventory/inventory.php");
             break;
