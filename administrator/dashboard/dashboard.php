@@ -193,3 +193,11 @@
   </section>
   <!-- /.content -->
 </div>
+
+<script>
+  $(document).ready(function(){
+
+  $('#main').css('filter', 'none');
+  $('#loader').hide();
+});
+</script>

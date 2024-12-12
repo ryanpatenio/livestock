@@ -38,11 +38,11 @@ require_once('../includes/initialize.php');
         // Check if the result is successful
         if (!$result) {
           
-            return $this->helper->message("Error inserting data", 400); // Return error message with 400 status
+            return $this->helper->message("Error inserting data", 400,1); // Return error message with 400 status
         }
     
         // If insertion is successful, return a success message
-        return $this->helper->message('Data successfully inserted', 200); // Return success message with 200 status
+        return $this->helper->message('Data successfully inserted', 200,0); // Return success message with 200 status
     
         exit; // Ensure no other output is sent
     }
@@ -65,6 +65,28 @@ require_once('../includes/initialize.php');
         }
 
         return $this->helper->message("success",200,0,$result);
+
+    }
+
+    public function update(){
+        extract($_POST);
+
+        $client = $client_id;
+
+        if($client == null || $client == ""){
+            return $this->helper->message("error CLIENT Missing!",200,1);
+        }
+
+        $query = "UPDATE client SET FNAME = ? , LNAME = ? , MIDINITIAL = ?, ASSOCIATION = ? , CONTACT_NO = ?, ADDRESS = ?, DATE_REGISTERED = ? WHERE CLIENT_ID = ?";
+        $param = [$FNAME,$LNAME,$MI, $ASSOC,$CONTACT,$ADDRESS,$DATE_REGISTERED,$client];
+
+        $result = $this->helper->regularQuery($query,$param);
+
+        if(!$result){
+            return $this->helper->message("Error While Processing your Request!",200,1);
+        }
+        return $this->helper->message("Success!",200,0);
+
 
     }
     

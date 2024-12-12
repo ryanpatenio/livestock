@@ -1,6 +1,8 @@
 $(document).ready(function(){
 
-//msg("hello",'success')
+        $('#main').css('filter', 'none');
+        $('#loader').hide();
+
 
 const addModal = $('#AddclientModal');
 //const editModal = $('#editModal');

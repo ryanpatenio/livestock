@@ -34,8 +34,36 @@
 		var baseUrl = '/livestock2/includes/routes.php?';
 	</script>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <style>
+  /* Loader styles */
+#loader {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    font-size: 16px;
+    border-radius: 5px;
+    z-index: 1000; /* Make sure it's above other elements */
+}
+
+/* Blur effect */
+.blur {
+    filter: blur(5px);
+    pointer-events: none; /* Disable interactions with blurred content */
+}
+
+</style>
+
 
 </head>
+
+  <div id="loader" style="display:block">
+      <img src="administrator/assets/loader/loader3.gif" alt="Loading...">
+  </div>
+
 <body class="hold-transition sidebar-mini layout-fixed layout-navbar-fixed">
 <div class="wrapper" >
   <!-- <input type="hidden" id="todaysSchedules" value="<?=$_SESSION['SCHED_COUNT']?>"> -->

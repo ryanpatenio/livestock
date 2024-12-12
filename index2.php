@@ -20,6 +20,9 @@ if (isset($_GET['page'])) {
         case "clientList2":
             include("administrator2/client/clientList2.php");
             break;
+        case "Recording":
+            include("administrator2/recording/recordingList.php");
+            break;
         case "inventory":
             include("administrator2/inventory/inventory.php");
             break;

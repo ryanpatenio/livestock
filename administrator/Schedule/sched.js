@@ -1,5 +1,8 @@
 $(document).ready(function(){
 
+    $('#main').css('filter', 'none');
+    $('#loader').hide();
+
     const addModal = $('#Add_scheduleModal');
 
     $(document).on('submit','#addScheduleForm',function(e){
@@ -14,6 +17,7 @@ $(document).ready(function(){
             Data,
             function(){
                 logs(true);
+                loader(true);
             },
     
             function(response){
@@ -25,11 +29,12 @@ $(document).ready(function(){
                 }
     
                 message('New Schedule added successfully!','success');
-                formModalClose(addModal,$('#addClientForm'));
+                formModalClose(addModal,$('#addScheduleForm'));
             },
     
             function(){
                 logs(false);
+                loader(false);
             }
         );
     

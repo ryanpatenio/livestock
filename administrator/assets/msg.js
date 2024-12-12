@@ -7,6 +7,15 @@ function message($text = "", $msg_type = "") {
 	});
 }
 
+function msgThenRedirect($text ="",$msg_type ="", _url){
+	swal($text, {
+		icon: $msg_type,
+	}).then((confirmed) => {
+		swal.close();
+		window.location.href = _url;
+	});
+}
+
 // function message(_message, _msg_type, _url) {
 // 	Swal.fire({
 // 		title: _message,

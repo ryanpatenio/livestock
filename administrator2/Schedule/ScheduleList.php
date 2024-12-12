@@ -9,6 +9,11 @@
   $clientResult = mysqli_query($con, $clientQuery);
   $clients = mysqli_fetch_all($clientResult, MYSQLI_ASSOC);
 
+  //get all vaccine Dat
+$query = "select * from vaccine";
+$result = mysqli_query($con, $query);
+$vaccineData = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
   // Fetch schedules for a specific client
   $schedules = [];
   $selectedClientName = '';
@@ -38,6 +43,7 @@
 
   mysqli_close($con);
   ?>
+
 
   <div class="content-wrapper">
     <div class="content-header">
@@ -108,19 +114,21 @@
                                   data-id="<?= $schedule['SCHEDULE_ID']; ?>" 
                                   data-1st="<?= $schedule['1ST_REQUIREMENT']; ?>" 
                                   data-2nd="<?= $schedule['2ND_REQUIREMENT']; ?>" 
-                                  data-toggle="modal" 
-                                  data-target="#editRequirementsModal">Edit</button>
+                                   
+                                  >Edit</button>
+
+
                           <form action="includes/action.php" method="POST" class="d-inline">
                             <input type="hidden" name="schedule_id" value="<?= $schedule['SCHEDULE_ID']; ?>">
                             <button 
                             type="button" 
-                            class="btn btn-sm btn-success approve-btn" 
+                            class="btn btn-sm btn-success approve-btn " 
                             data-id="<?= $schedule['SCHEDULE_ID']; ?>" 
                             data-1st="<?= $schedule['1ST_REQUIREMENT']; ?>" 
                             data-2nd="<?= $schedule['2ND_REQUIREMENT']; ?>" 
                             data-event="<?= $schedule['EVENT_DATE']; ?>" 
                             data-toggle="modal" 
-                            data-target="#approveScheduleModal">
+                            <?= $schedule['STATUS'] == 1 ? 'disabled' : ''; ?>>
                             Approve
                           </button>
                           </form>
@@ -136,30 +144,141 @@
       </div>
     </section>
   </div>
+<?php 
+include('addSched.php');
 
-  <!-- Modal for New Schedule Request -->
-  <div class="modal fade" id="Add_scheduleModal" tabindex="-1" aria-labelledby="AddScheduleModalLabel" aria-hidden="true">
+?>
+<!-- Approve Schedule Modal -->
+<div class="modal fade" id="approveScheduleModal" tabindex="-1" aria-labelledby="approveScheduleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Approve Schedule</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <form id="approveScheduleForm" method="post" action="">
+        <div class="modal-body">
+          <input type="hidden" name="schedule_id" id="approveScheduleId">
+          <div class="form-group">
+            <label for="approveEventDateLabel">Event Date</label>
+            <input type="date" name="event_date" id="approveEventDate" class="form-control" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Approve Schedule</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+
+
+
+  // document.addEventListener('DOMContentLoaded', function () {
+  //   document.querySelectorAll('.approve-btn').forEach(function (button) {
+  //     button.addEventListener('click', function () {
+  //       const scheduleId = button.getAttribute('data-id');
+  //       const firstRequirement = button.getAttribute('data-1st');
+  //       const secondRequirement = button.getAttribute('data-2nd');
+
+  //       // Check if both requirements are submitted
+  //       if (firstRequirement === '0' || secondRequirement === '0') {
+  //         alert('Both the 1st and 2nd Requirements must be submitted before approval.');
+  //         return;
+  //       }
+
+  //       const eventDate = button.getAttribute('data-event');
+
+  //       // Populate modal fields if requirements are met
+  //       document.getElementById('approveScheduleId').value = scheduleId;
+  //       document.getElementById('approveEventDate').value = eventDate || ''; // Pre-fill the event date if available
+  //     });
+  //   });
+  // });
+</script>
+
+  <script>
+    $(document).on('click','.approve-btn',function(e){
+      e.preventDefault();
+
+      let ID = $(this).attr('data-id');
+      $('#approveScheduleId').val(ID);
+
+      $('#approveEventDate').val("");
+
+
+        const scheduleId = $(this).attr('data-id');
+        const firstRequirement = $(this).attr('data-1st');
+        const secondRequirement = $(this).attr('data-2nd');
+
+        // Check if both requirements are submitted
+        if (firstRequirement === '0' || secondRequirement === '0') {
+          alert('Both the 1st and 2nd Requirements must be submitted before approval.');
+          return;
+        }
+
+        
+      $url = baseUrl + "action=getSchedDate";
+
+        AjaxPost(
+            $url,
+            'POST',
+            {schedule_id : ID},
+            function(){
+                logs(true);
+            },
+    
+            function(response){
+               
+
+                if(response.code != 0){
+                    msg(response.message,'error');
+                    return;
+                }
+                $('#approveEventDate').val(response.data);
+
+                $('#approveScheduleModal').modal('show');
+
+            },
+    
+            function(){
+                logs(false);
+            }
+        );
+
+
+
+      
+
+
+    });
+
+  // document.addEventListener('DOMContentLoaded', function () {
+  //     document.querySelectorAll('.approve-btn').forEach(function (button) {
+  //         button.addEventListener('click', function () {
+  //             const scheduleId = button.getAttribute('data-id');
+  //             document.getElementById('scheduleId').value = scheduleId;
+  //         });
+  //     });
+  // });
+  </script>
+  <!-- Edit Modal -->
+  <div class="modal fade" id="editRequirementsModal" tabindex="-1" aria-labelledby="editRequirementsModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Create New Schedule Request</h5>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h5>Edit Requirements</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
-        <form action="includes/action.php" method="post">
+        <form id="editRequirementsForm" method="post">
           <div class="modal-body">
-            <div class="form-group">
-              <label for="client">Client</label>
-              <select name="client_id" id="client" class="form-control" required>
-                <option value="">Select Client</option>
-                <?php foreach ($clients as $client): ?>
-                  <option value="<?= $client['CLIENT_ID']; ?>"><?= htmlspecialchars($client['full_name']); ?></option>
-                <?php endforeach; ?>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="event_name">Event Name</label>
-              <input type="text" class="form-control" name="event_name" id="event_name" required>
-            </div>
+            <input type="hidden" name="schedule_id" id="scheduleId">
             <div class="form-group">
               <label for="firstRequirement">1st Requirement</label>
               <select name="first_requirement" id="firstRequirement" class="form-control">
@@ -177,104 +296,6 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            <button type="submit" name='btn-addSchedule' class="btn btn-success">
-              <i class="fas fa-save"></i> Submit Schedule
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-<!-- Approve Schedule Modal -->
-<div class="modal fade" id="approveScheduleModal" tabindex="-1" aria-labelledby="approveScheduleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Approve Schedule</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <form id="approveScheduleForm" method="post" action="includes/update_schedule.php">
-        <div class="modal-body">
-          <input type="hidden" name="schedule_id" id="approveScheduleId">
-          <div class="form-group">
-            <label for="approveEventDate">Event Date</label>
-            <input type="date" name="event_date" id="approveEventDate" class="form-control" required>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-          <button type="submit" class="btn btn-primary">Approve Schedule</button>
-        </div>
-      </form>
-    </div>
-  </div>
-</div>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.approve-btn').forEach(function (button) {
-      button.addEventListener('click', function () {
-        const scheduleId = button.getAttribute('data-id');
-        const firstRequirement = button.getAttribute('data-1st');
-        const secondRequirement = button.getAttribute('data-2nd');
-
-        // Check if both requirements are submitted
-        if (firstRequirement === '0' || secondRequirement === '0') {
-          alert('Both the 1st and 2nd Requirements must be submitted before approval.');
-          return;
-        }
-
-        const eventDate = button.getAttribute('data-event');
-
-        // Populate modal fields if requirements are met
-        document.getElementById('approveScheduleId').value = scheduleId;
-        document.getElementById('approveEventDate').value = eventDate || ''; // Pre-fill the event date if available
-      });
-    });
-  });
-</script>
-
-  <script>
-  document.addEventListener('DOMContentLoaded', function () {
-      document.querySelectorAll('.approve-btn').forEach(function (button) {
-          button.addEventListener('click', function () {
-              const scheduleId = button.getAttribute('data-id');
-              document.getElementById('scheduleId').value = scheduleId;
-          });
-      });
-  });
-  </script>
-  <!-- Edit Modal -->
-  <div class="modal fade" id="editRequirementsModal" tabindex="-1" aria-labelledby="editRequirementsModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5>Edit Requirements</h5>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <form id="editRequirementsForm" method="post" action="includes/update_schedule.php">
-          <div class="modal-body">
-            <input type="hidden" name="schedule_id" id="scheduleId">
-            <div class="form-group">
-              <label for="firstRequirement">1st Requirement</label>
-              <select name="1st_requirement" id="firstRequirement" class="form-control">
-                <option value="0">Not Submitted</option>
-                <option value="1">Submitted</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="secondRequirement">2nd Requirement</label>
-              <select name="2nd_requirement" id="secondRequirement" class="form-control">
-                <option value="0">Not Submitted</option>
-                <option value="1">Submitted</option>
-              </select>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
             <button type="submit" class="btn btn-primary">Update Requirements</button>
           </div>
         </form>
@@ -282,20 +303,33 @@
     </div>
   </div>
 
+  <script src="../livestock2/administrator2/Schedule/sched.js"></script>
   <script>
-  document.addEventListener('DOMContentLoaded', function () {
-      document.querySelectorAll('.edit-btn').forEach(function (button) {
-          button.addEventListener('click', function () {
-              const scheduleId = this.getAttribute('data-id');
-              const firstRequirement = this.getAttribute('data-1st');
-              const secondRequirement = this.getAttribute('data-2nd');
 
-              document.getElementById('scheduleId').value = scheduleId;
-              document.getElementById('firstRequirement').value = firstRequirement;
-              document.getElementById('secondRequirement').value = secondRequirement;
-          });
-      });
-  });
+$(document).on('click','.edit-btn',function(e){
+  e.preventDefault();
+
+  const scheduleId = this.getAttribute('data-id');
+  const firstRequirement = this.getAttribute('data-1st');
+  const secondRequirement = this.getAttribute('data-2nd');
+
+  document.getElementById('scheduleId').value = scheduleId;
+  document.getElementById('firstRequirement').value = firstRequirement;
+  document.getElementById('secondRequirement').value = secondRequirement;
+
+  $('#editRequirementsModal').modal('show');
+
+
+});
+
+
+  // document.addEventListener('DOMContentLoaded', function () {
+  //     document.querySelectorAll('.edit-btn').forEach(function (button) {
+  //         button.addEventListener('click', function () {
+             
+  //         });
+  //     });
+  // });
   </script>
 
   <script>
