@@ -25,12 +25,12 @@ class scheduleController {
                extract($_POST);
     
                // Prepare the query for inserting data into the client table
-               $query = "INSERT INTO schedule (VACCINE_ID, QTY_USED, EVENT_NAME, EVENT_DATE, CLIENT_ID, 1ST_REQUIREMENT, 2ND_REQUIREMENT, STATUS, CREATED_AT) 
+               $query = "INSERT INTO schedule (VACCINE_TYPE_ID, QTY_USED, EVENT_NAME, EVENT_DATE, CLIENT_ID, 1ST_REQUIREMENT, 2ND_REQUIREMENT, STATUS, CREATED_AT) 
                          VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())";
            
                // Define the parameters to be bound to the query
              
-               $param = [$vaccine_ID, $qty, $event_name, $event_date, $client_id, $first_requirement, $second_requirement, $status];
+               $param = [$vaccine_TYPE_ID, $qty, $event_name, $event_date, $client_id, $first_requirement, $second_requirement, $status];
            
                // Execute the query using the helper's executeQuery method
                $result = $this->helper->regularQuery($query, $param);
@@ -100,7 +100,7 @@ class scheduleController {
  
          $request = new SmsAdvancedTextualRequest(messages: [$message]);
 
-          // Send SMS
+          // Send SMS || then executing all CODES
         try {
             $response = $api->sendSmsMessage($request);    
             //update event if success
@@ -109,27 +109,29 @@ class scheduleController {
             $params = [$schedule_id];
             $results = $this->helper->regularQuery($updateQuery,$params);
             
-            // if(!$results){
-            //     return $this->helper->message("error while updating...",200,1);
-            // }
+            if(!$results){
+                return $this->helper->message("error while updating...",200,1);
+            }
 
             $data = $this->getRequestQty($schedule_id);
-            if(!is_object($data)){
-                //return error
-                return $this->helper->message("error qty",200,1);
+            if ($data === 0) {
+                // Return error if no data is found
+                return $this->helper->message("Error: Qty.", 200, 1);
             }
             //get DATA
             $qty = $data['qty'];
-            $vaccine_id = $data['vaccine_id'];
+            $vaccine_type_id = $data['vaccine_type_id'];
             
-
-
-            if ($response) {              
-                return $this->helper->message("Schedule approved and SMS sent successfully",200,0,$response);
-            } else {
+            $deduct =  $this->deductVaccine($vaccine_type_id,$qty);
+            
+            return $deduct;
+            
+            // if ($response) {              
+            //     return $this->helper->message("Schedule approved and SMS sent successfully",200,0,$response);
+            // } else {
                
-                return $this->helper->message("Schedule approved but failed to send SMS",200,0,$response);
-            }
+            //     return $this->helper->message("Schedule approved but failed to send SMS",200,0,$response);
+            // }
         } catch (Exception $e) {
             $err = [
                 'err_msg' =>  $this->helper->message("success",200,1,$e->$e->getMessage()),
@@ -193,14 +195,76 @@ class scheduleController {
         $query = "SELECT * FROM schedule WHERE SCHEDULE_ID = ? LIMIT 1";
         $param = [$schedule_id];
 
-        $result = $this->helper->regular($query,$param);
+        $result = $this->helper->regularQuery($query,$param);
 
         if($result){
             return $data = [
-                'qty' => $result[0]['QUANTITY'],
-                'vaccine_id' => $result[0]['VACCINE_ID']
+                'qty' => $result[0]['QTY_USED'],
+                'vaccine_type_id' => $result[0]['VACCINE_TYPE_ID']
             ];
         }
         return 0;
     }
+
+
+    //this method will handle deduction in vaccine stocks table
+    function deductVaccine($vaccine_type_id, $usedQty) {
+        $remainingQty = $usedQty;
+
+        // Check total available stock before proceeding
+            $query_check = "SELECT SUM(QUANTITY) AS total_stock FROM vaccine WHERE VACCINE_TYPE_ID = ? AND EXPIRY_DATE > NOW() AND QUANTITY > 0";
+            $param_check = [$vaccine_type_id];
+            $result_check = $this->helper->regularQuery($query_check, $param_check);
+
+            if ($result_check[0]['total_stock'] < $usedQty) {
+                return $this->helper->message("Not enough stock available", 200, 1);
+            }
+
+    
+        while ($remainingQty > 0) {
+            // Fetch the oldest stock that has available quantity
+            $query = "SELECT VACCINE_ID, QUANTITY FROM vaccine WHERE VACCINE_TYPE_ID = ? AND EXPIRY_DATE > NOW() AND QUANTITY > 0 ORDER BY DATE_CREATED ASC LIMIT 1";
+            $param = [$vaccine_type_id];
+    
+            $result = $this->helper->regularQuery($query, $param);
+    
+            if (!$result) {
+                // No available stock found
+                return $this->helper->message("Not enough stock available", 200, 1);
+            }
+    
+            // Get the quantity to deduct from this stock
+            $deductedQuantity = min($remainingQty, $result[0]['QUANTITY']);
+            $remainingQty -= $deductedQuantity;
+    
+            // Update the vaccine stock by deducting the quantity
+            $newQuantity = $result[0]['QUANTITY'] - $deductedQuantity;
+            $query2 = "UPDATE vaccine SET QUANTITY = ? WHERE VACCINE_ID = ?";
+            $param2 = [$newQuantity, $result[0]['VACCINE_ID']];
+            $result2 = $this->helper->regularQuery($query2, $param2);
+    
+            if (!$result2) {
+                // Error in updating the stock
+                return $this->helper->message("Error updating stock", 200, 1);
+            }
+    
+           // Log the usage in the vaccine_usage table
+            $query3 = "INSERT INTO vaccine_usage (VACCINE_ID, VACCINE_TYPE_ID, use_quantity, date_used) VALUES (?, ?, ?, NOW())";
+            $param3 = [$result[0]['VACCINE_ID'],$vaccine_type_id, $deductedQuantity]; // Log the deducted quantity
+            $result3 = $this->helper->regularQuery($query3, $param3);
+
+            if (!$result3) {
+                // Error in logging the usage
+                return $this->helper->message("Error logging usage", 200, 1);
+            }
+    
+        }
+    
+        // After the loop, check if remaining quantity is 0 (success) or partially deducted
+        if ($remainingQty == 0) {
+            return $this->helper->message("Schedule approved and SMS sent successfully",200,0);
+        } 
+
+    }
+    
 }

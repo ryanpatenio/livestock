@@ -8,3 +8,4 @@ require_once(ROOT_PATH . '/includes/helper.php');
 require_once(ROOT_PATH . '/administrator/Controllers/clientController.php');
 require_once(ROOT_PATH . '/administrator/Controllers/scheduleController.php');
 require_once(ROOT_PATH . '/administrator/Controllers/cattleController.php');
+require_once(ROOT_PATH . '/administrator/Controllers/vaccineController.php');

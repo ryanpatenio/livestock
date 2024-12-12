@@ -7,7 +7,7 @@ $clientQuery = "SELECT CLIENT_ID, CONCAT(FNAME, ' ', LNAME) AS full_name FROM cl
 $clientResult = mysqli_query($con, $clientQuery);
 $clients = mysqli_fetch_all($clientResult, MYSQLI_ASSOC);
 
-$query = "select * from vaccine";
+$query = "select * from vaccine_type";
 $result = mysqli_query($con, $query);
 $vaccineData = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -41,7 +41,7 @@ if (isset($_POST['submit_schedule'])) {
       $client_id = intval($_GET['client_id']);
 
       // Get schedules
-      $scheduleQuery = "SELECT SCHEDULE_ID, EVENT_NAME, EVENT_DATE, 1ST_REQUIREMENT, 2ND_REQUIREMENT, STATUS FROM schedule WHERE CLIENT_ID = ?";
+      $scheduleQuery = "SELECT vt.VACCINE_NAME,s.QTY_USED AS 'qty_request',s.SCHEDULE_ID, s.EVENT_NAME, s.EVENT_DATE, s.1ST_REQUIREMENT, s.2ND_REQUIREMENT, s.STATUS FROM schedule s, vaccine_type vt WHERE s.VACCINE_TYPE_ID = vt.VACCINE_TYPE_ID and CLIENT_ID = ? ORDER BY s.STATUS ASC";
       $stmt = mysqli_prepare($con, $scheduleQuery);
       mysqli_stmt_bind_param($stmt, 'i', $client_id);
       mysqli_stmt_execute($stmt);
@@ -120,17 +120,21 @@ if (isset($_POST['submit_schedule'])) {
               <table class="table table-bordered">
                 <thead class="thead-dark">
                   <tr>
-                    <th>Event Name</th>
-                    <th>Event Date</th>
-                    <th>1st Requirement</th>
-                    <th>2nd Requirement</th>
-                    <th>Status</th>
-                    <th>Action</th>
+                  <th>Vaccine Name</th>
+                      <th>QTY Req.</th>
+                      <th>Event Name</th>
+                      <th>Event Date</th>
+                      <th>1st Req.</th>
+                      <th>2nd Req.</th>
+                      <th>Status</th>
+                      <th>Action</th>
                   </tr>
                 </thead>
                 <tbody>
                   <?php foreach ($schedules as $schedule) { ?>
                     <tr>
+                      <td><?=$schedule['VACCINE_NAME'] ?></td>
+                      <td><?= $schedule['qty_request'] ?></td>
                       <td><?= htmlspecialchars($schedule['EVENT_NAME']); ?></td>
                       <td><?= htmlspecialchars($schedule['EVENT_DATE']); ?></td>
                       <td><?= $schedule['1ST_REQUIREMENT'] == 0 ? 'Not Submitted' : 'Submitted'; ?></td>
@@ -216,11 +220,11 @@ if (isset($_POST['submit_schedule'])) {
 
           <div class="form-group">
             <label for="status">Vaccine:</label>
-            <select name="vaccine_ID" id="vacc" class="form-control" required>
+            <select name="vaccine_TYPE_ID" id="vacc" class="form-control" required>
               <?php
               
               foreach ($vaccineData as $vacc) { ?>
-                <option value="<?=$vacc['VACCINE_ID'] ?>"><?=$vacc['DESCRIPTION'] ?></option>
+                <option value="<?=$vacc['VACCINE_TYPE_ID'] ?>"><?=  $vacc['VACCINE_NAME'].' | '.$vacc['DESCRIPTION'] ?></option>
 
             <?php  }
               

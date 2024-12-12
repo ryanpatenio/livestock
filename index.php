@@ -21,6 +21,9 @@ if (isset($_GET['page'])) {
         case "inventory":
             include("administrator/inventory/Inventory.php");
             break;
+        case "viewInventory":
+            include("administrator/inventory/viewInventory.php");
+            break;
         case "Dispersal":
             include("administrator/Dispersal/Dispersal_list.php");
             break;

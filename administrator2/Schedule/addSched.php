@@ -48,11 +48,11 @@
 
           <div class="form-group">
             <label for="status">Vaccine:</label>
-            <select name="vaccine_ID" id="vacc" class="form-control" required>
+            <select name="vaccine_TYPE_ID" id="vacc" class="form-control" required>
               <?php
               
               foreach ($vaccineData as $vacc) { ?>
-                <option value="<?=$vacc['VACCINE_ID'] ?>"><?=$vacc['DESCRIPTION'] ?></option>
+                <option value="<?=$vacc['VACCINE_TYPE_ID'] ?>"><?=$vacc['VACCINE_NAME'].' | '.$vacc['DESCRIPTION'] ?></option>
 
             <?php  }
               

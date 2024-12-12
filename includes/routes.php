@@ -11,6 +11,7 @@ $helper = new Helper($con);
 $clientController = new clientController($helper);
 $scheduleController = new scheduleController($helper);
 $cattleController = new cattleController($helper);
+$vaccineController = new vaccineController($helper);
 
 if($action == 'addClient'){
 
@@ -61,4 +62,9 @@ if($action == "getSchedDate"){
 	$schedDate = $scheduleController->getScheduleDate();
 
 	return $schedDate;
+}
+
+if($action == "addVaccine"){
+	$addVaccine = $vaccineController->store();
+	return $addVaccine;
 }
