@@ -42,4 +42,41 @@ $(document).ready(function(){
     
    
 
+    $(document).on('submit','#editRequirementsForm',function(e){
+        e.preventDefault();
+        
+        let Data = $(this).serialize();
+        $url = baseUrl + "action=updateRequirements";
+
+       
+      swalMessage('custom','Are you sure you want to update this Requirement?',function(){
+        AjaxPost(
+            $url,
+            'POST',
+            Data,
+            function(){
+                logs(true);
+            },
+
+            function(response){
+               // res(response);
+
+                if(response.code != 0){
+                    msg(response.message,'error');
+                    return;
+                }
+
+                message(response.message,'success');
+                formModalClose(addModal,$('#editRequirementsForm'));
+            },
+
+            function(){
+                logs(false);
+            }
+        );
+
+
+    });
+    });
+
 });

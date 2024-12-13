@@ -73,7 +73,10 @@ class Helper {
                     return ['insert_id' => $this->con->insert_id]; // Return the insert ID
 
                 case 'UPDATE':
-                    return $stmt->affected_rows > 0; // Return true if rows were updated
+                    if ($stmt->affected_rows >= 0) {
+                        return true; // Return true for successful execution, even if no rows are updated
+                    }
+                    break;
 
                 default:
                     throw new Exception("Unsupported query type: $query_type");

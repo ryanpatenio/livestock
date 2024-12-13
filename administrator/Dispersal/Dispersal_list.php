@@ -303,7 +303,7 @@ mysqli_close($con);
   </div>
 </div>
 
-
+<script src="../livestock2/administrator/Dispersal/dispersal.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   // Toggle payment details based on status selection

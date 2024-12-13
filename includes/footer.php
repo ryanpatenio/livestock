@@ -23,12 +23,14 @@
 <!-- Core plugin JavaScript-->
 <script src="plugins/jquery-easing/jquery.easing.min.js"></script>
 <!-- DataTables  & Plugins -->
-<script src="plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="plugins/datatables/dataTables.bootstrap4.min.js"></script>
+ <script src="plugins/datatables/jquery.dataTables.min.js"></script>
+<!-- <script src="plugins/datatables/dataTables.bootstrap4.min.js"></script>  -->
 <!-- SweetAlert2 -->
 <!-- <script src="plugins/sweetalert2/sweetalert2.min.js"></script>  -->
-<!-- CropperJS -->
+<!-- CropperJS -->s
 <script src="plugins/cropper/cropper.min.js"></script>
+
+<script src="vendor/datatables/simple-datatable.js"></script>
 
 <!-- USING CDN ###############################################################################-->
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>

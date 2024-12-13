@@ -75,7 +75,7 @@ $(document).ready(function(){
                     }
                  
                     message('Client updated successfully!','success');
-                    formModalClose(editModal,$('#updateForm'));
+                    formModalClose(editModal,$('#updateClientForm'));
 
                 },
 

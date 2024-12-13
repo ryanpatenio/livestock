@@ -40,6 +40,22 @@ class vaccineController {
         return $this->helper->message('Vaccine added successfully!',200,0);
     }
 
+    public function updateQty(){
+        extract($_POST);
+
+        $query = "UPDATE vaccine SET QUANTITY = ? WHERE VACCINE_ID = ?";
+        $param = [$quantity,$vaccine_id];
+
+        $result = $this->helper->regularQuery($query,$param);
+
+        if(!$result){
+            //return error
+            return $this->helper->message("error while processing your request!",200,1);
+        }
+        //success 
+        return $this->helper->message("Quantity Updated Successfully!",200,0);
+    }
+
 //query for displaying the data vaccine received logs
 //     SELECT 
 //     vt.VACCINE_TYPE_ID,

@@ -10,6 +10,30 @@ $vaccineTypeResult = mysqli_query($con, $vaccineTypeQuery);
 $vaccineTypes = mysqli_fetch_all($vaccineTypeResult, MYSQLI_ASSOC);
 mysqli_free_result($vaccineTypeResult);
 
+//fetch inventory
+$query2  = "SELECT 
+    vt.VACCINE_NAME AS 'VACCINE_NAME', 
+    vt.DESCRIPTION,
+    v.VACCINE_TYPE_ID,
+    SUM(v.QUANTITY) AS available_quantity,
+    MIN(v.DATE_CREATED) AS first_created_date,
+    MAX(v.EXPIRY_DATE) AS EXPIRY_DATE
+FROM 
+    vaccine v
+JOIN 
+    vaccine_type vt ON v.VACCINE_TYPE_ID = vt.VACCINE_TYPE_ID
+WHERE 
+    v.EXPIRY_DATE > NOW() -- Ensure only non-expired vaccines are included
+GROUP BY 
+    vt.VACCINE_NAME, vt.DESCRIPTION, v.VACCINE_TYPE_ID
+ORDER BY 
+    first_created_date ASC;
+";
+
+$executeQuery = mysqli_query($con, $query2);
+$inventory =  mysqli_fetch_all($executeQuery, MYSQLI_ASSOC);
+
+
 // Fetch vaccines by selected type if vaccine_type_id is set
 $vaccines = [];
 $selectedVaccineType = '';
@@ -23,18 +47,18 @@ if (isset($_GET['vaccine_type_id'])) {
         $vaccines = mysqli_fetch_all($vaccineResult, MYSQLI_ASSOC);
 
         // Fetch vaccine type name for display
-            $typeNameQuery = "SELECT VACCINE_NAME FROM vaccine_type WHERE VACCINE_TYPE_ID = ?";
-            if ($stmt = mysqli_prepare($con, $typeNameQuery)) {
-                mysqli_stmt_bind_param($stmt, 'i', $vaccine_type_id);
-                mysqli_stmt_execute($stmt);
-                $typeNameResult = mysqli_stmt_get_result($stmt);
-                if ($typeNameResult && $row = mysqli_fetch_assoc($typeNameResult)) {
-                    $selectedVaccineType = $row['VACCINE_NAME'];
-                } else {
-                    $selectedVaccineType = ''; // or provide a default value
-                }
-                mysqli_free_result($typeNameResult);
+        $typeNameQuery = "SELECT VACCINE_NAME FROM vaccine_type WHERE VACCINE_TYPE_ID = ?";
+        if ($stmt = mysqli_prepare($con, $typeNameQuery)) {
+            mysqli_stmt_bind_param($stmt, 'i', $vaccine_type_id);
+            mysqli_stmt_execute($stmt);
+            $typeNameResult = mysqli_stmt_get_result($stmt);
+            if ($typeNameResult && $row = mysqli_fetch_assoc($typeNameResult)) {
+                $selectedVaccineType = $row['VACCINE_NAME'];
+            } else {
+                $selectedVaccineType = ''; // or provide a default value
             }
+            mysqli_free_result($typeNameResult);
+        }
     }
 }
 
@@ -47,55 +71,95 @@ mysqli_close($con);
     </div>
 
     <section class="content">
-        <div class="container-fluid p-2">
+        <div class="container-fluid p-3">
             <div class="row">
                 <!-- Vaccine Type List -->
                 <div class="col-md-4">
-                    <div class="card mb-3">
-                        <div class="card-header"><h6><b>Vaccine Types</b>   <button class="btn btn-primary float-right" data-toggle="modal" data-target="#Add_vaccine_typeModal">+Add New Vaccine Type</button></h6></div>
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h6><b>Vaccine Types</b></h6>
+                        </div>
                         <div class="card-body">
-                            <table id="vaccineTypeTBL" class="table table-bordered table-hover">
-                                <thead><tr><th>Vaccine Type</th><th>Action</th></tr></thead>
+                            <table id="vaccineTypeTBL" class="table table-striped table-hover">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th>No.</th>
+                                        <th>Vaccine Type</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
-                                    <?php foreach ($vaccineTypes as $type): ?>
+
+                                <?php
+                                  $i = 1;
+                                foreach ($vaccineTypes as $type) {
+                                  
+                                    ?>
                                         <tr>
+                                            <td><?=$i; ?></td>
                                             <td><?= htmlspecialchars($type['VACCINE_NAME']); ?></td>
-                                            <td><a href="index2.php?page=inventory&vaccine_type_id=<?= $type['VACCINE_TYPE_ID']; ?>" class="btn-sm btn-info elevation-1">View</a></td>
+                                            <!-- <td><a href="index.php?page=inventory&vaccine_type_id=<?= $type['VACCINE_TYPE_ID']; ?>" class="btn btn-sm btn-outline-info">View</a></td> -->
                                         </tr>
-                                    <?php endforeach; ?>
+
+                              <?php $i++;  } ?>
+                                
+                                
+                                    
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
 
-
                 <!-- Vaccine Inventory List -->
                 <div class="col-md-8">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6><b>Inventory for Vaccine Type: <?= $selectedVaccineType ?: "Select a type to view details"; ?></b></h6>
-                            <button class="btn btn-primary float-right" data-toggle="modal" data-target="#AddVaccineModal">+ New Vaccine</button>
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-secondary text-white">
+                            <div class="row">
+                                <div class="col-6">
+                                     <h4>Inventory</h4>
+                                </div>
+                                <div class="col-6">
+                                     <button class="btn btn-primary float-right" data-toggle="modal" data-target="#AddVaccineModal">+ Add New Vaccine</button>
+                                </div>
+                            </div>
+                           
+                            
                         </div>
                         <div class="card-body">
-                            <table class="table table-bordered">
-                                <thead><tr><th>Description</th><th>Quantity</th><th>Date Created</th><th>Expiry Date</th><th>Action</th></tr></thead>
-                                <tbody>
-                                    <?php if ($vaccines): ?>
-                                        <?php foreach ($vaccines as $vaccine): ?>
-                                            <tr>
-                                                <td><?= htmlspecialchars($vaccine['DESCRIPTION']); ?></td>
-                                                <td><?= htmlspecialchars($vaccine['QUANTITY']); ?></td>
-                                                <td><?= htmlspecialchars($vaccine['DATE_CREATED']); ?></td>
-                                                <td><?= htmlspecialchars($vaccine['EXPIRY_DATE']); ?></td>
-                                                <td><button class="btn btn-sm btn-info editVaccineBtn" data-id="<?= $vaccine['VACCINE_ID']; ?>">Edit</button></td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
-                                        <tr><td colspan="6">No vaccines found for this type.</td></tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
+                            <div id="table-responsive">
+                                <table class="table datatable table-light" id="dataTable" width="100%" cellspacing="0">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>Vaccine Type</th>
+                                            <th>Description</th>
+                                            <th>Available Quantity</th>
+                                           
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php
+                                        $i = 1;
+                                            foreach ($inventory as $data) { ?>
+                                                <tr>
+                                                    <td><?=$i; ?></td>
+                                                    <td><?=$data['VACCINE_NAME'] ?></td>
+                                                    <td><?=$data['DESCRIPTION'] ?></td>
+                                                    <td><?=$data['available_quantity'] ?></td>
+                                                   
+                                                    <td>
+                                                        <a href="index2.php?page=viewInventory&vaccID=<?=$data['VACCINE_TYPE_ID'] ?>" class="btn btn-sm btn-primary fa fa-eye">View</a>
+                                                       
+                                                    
+                                                    </td>
+                                                </tr>
+                                          <?php $i++; }
+                                        ?>
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -104,53 +168,48 @@ mysqli_close($con);
     </section>
 </div>
 
-<!-- Modals for adding new vaccine -->
+<!-- Add New Vaccine Modal -->
 <div class="modal fade" id="AddVaccineModal" tabindex="-1" role="dialog" aria-labelledby="AddVaccineModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <form action="includes/action.php" method="POST">
-                <div class="modal-header">
+            <form action="" id="addVaccineForm" method="POST">
+                <div class="modal-header bg-info text-white">
                     <h5 class="modal-title">Add New Vaccine</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label for="vaccineType">Vaccine Type</label>
                         <select class="custom-select" required name="VACCINE_TYPE_ID">
-                            <option value="" selected>-SELECT-</option>
+                            <option value="" selected>- SELECT -</option>
                             <?php foreach ($vaccineTypes as $type): ?>
                                 <option value="<?= htmlspecialchars($type['VACCINE_TYPE_ID']); ?>"><?= htmlspecialchars($type['VACCINE_NAME']); ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        <textarea class="form-control" id="description" name="description"></textarea>
-                    </div>
-                    <div class="form-group">
+                    
+                    <div class="form-group mb-3">
                         <label for="quantity">Quantity</label>
-                        <input type="number" class="form-control" id="quantity" name="quantity" required>
+                        <input type="number" min="5" class="form-control" id="quantity" name="QUANTITY" required>
                     </div>
-                    <div class="form-group">
-                        <label for="dateCreated">Date Created</label>
-                        <input type="date" class="form-control" id="dateCreated" name="date_created" required>
-                    </div>
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label for="expiryDate">Expiry Date</label>
-                        <input type="date" class="form-control" id="expiryDate" name="expiry_date" required>
+                        <input type="date" class="form-control" id="expiryDate" name="EXPIRY_DATE" required>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" name="btn-addvaccine" class="btn btn-primary">Save Vaccine</button>
+                    <button type="submit" name="btn-add-vaccine" class="btn btn-primary">Save Vaccine</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
+<script src="../livestock2/administrator2/inventory/inventory.js"></script>
 <!-- JavaScript for handling AJAX-based modal interactions -->
-<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
 <script>
     $(document).on('click', '.editVaccineBtn', function() {
         const vaccineId = $(this).data('id');
@@ -180,4 +239,3 @@ mysqli_close($con);
         });
     });
 </script>
-<?php include("administrator2/inventory/Add_vaccine_type.php"); ?>

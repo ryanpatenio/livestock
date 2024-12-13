@@ -50,14 +50,6 @@
               </select>
             </div>
 
-            <!-- Vaccine Card Select -->
-            <div class="col-md-6 mb-3">
-              <label for="VACCINE_CARD_ID">Vaccine Card ID</label>
-              <select name="VACCINE_CARD_ID" class="form-control" required>
-                <option value="1">Not Vaccinated</option>
-                <option value="2">Vaccinated</option>
-              </select>
-            </div>
 
             <!-- Image Upload -->
             <div class="col-md-6 mb-3">

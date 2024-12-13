@@ -105,6 +105,7 @@ class scheduleController {
             $response = $api->sendSmsMessage($request);    
             //update event if success
 
+                
             $updateQuery = "UPDATE schedule SET STATUS = 1 WHERE SCHEDULE_ID = ?";
             $params = [$schedule_id];
             $results = $this->helper->regularQuery($updateQuery,$params);
@@ -112,26 +113,13 @@ class scheduleController {
             if(!$results){
                 return $this->helper->message("error while updating...",200,1);
             }
-
-            $data = $this->getRequestQty($schedule_id);
-            if ($data === 0) {
-                // Return error if no data is found
-                return $this->helper->message("Error: Qty.", 200, 1);
-            }
-            //get DATA
-            $qty = $data['qty'];
-            $vaccine_type_id = $data['vaccine_type_id'];
-            
-            $deduct =  $this->deductVaccine($vaccine_type_id,$qty);
-            
-            return $deduct;
-            
-            // if ($response) {              
-            //     return $this->helper->message("Schedule approved and SMS sent successfully",200,0,$response);
-            // } else {
+          
+            if ($response) {              
+                return $this->helper->message("Schedule approved and SMS sent successfully",200,0,$response);
+            } else {
                
-            //     return $this->helper->message("Schedule approved but failed to send SMS",200,0,$response);
-            // }
+                return $this->helper->message("Schedule approved but failed to send SMS",200,0,$response);
+            }
         } catch (Exception $e) {
             $err = [
                 'err_msg' =>  $this->helper->message("success",200,1,$e->$e->getMessage()),
@@ -264,6 +252,95 @@ class scheduleController {
         if ($remainingQty == 0) {
             return $this->helper->message("Schedule approved and SMS sent successfully",200,0);
         } 
+
+    }
+
+    public function getSchedule(){
+        extract($_POST);
+
+        $query = "SELECT s.SCHEDULE_ID,s.QTY_USED, vt.VACCINE_NAME,vt.`DESCRIPTION`,s.EVENT_DATE FROM schedule s,vaccine_type vt WHERE s.VACCINE_TYPE_ID = vt.VACCINE_TYPE_ID AND s.SCHEDULE_ID = ? AND s.`STATUS` = 1";
+        $param = [$schedule_id];
+
+        $result = $this->helper->regularQuery($query,$param);
+
+        $query2 = "SELECT * from animal where ANIMAL_ID = ? LIMIT 1";
+        $param2 = [$animal_id];
+        $result2 = $this->helper->regularQuery($query2,$param2);
+        $getVaccineCardID = $result2[0]['VACCINE_CARD_ID'];
+
+        if(!$result2){
+            return $this->helper->message('error while processing your request!',200,1);
+        }
+
+        if(!$result){
+            //error
+
+            return $this->helper->message('error while processing your request!',200,1);
+        }
+
+        $data = [
+            'schedule_id' => $result[0]['SCHEDULE_ID'],
+            'vaccine_name' => $result[0]['VACCINE_NAME'],
+            'description' => $result[0]['DESCRIPTION'],
+            'event_date' => $result[0]['EVENT_DATE'],
+            'req_qty'    => $result[0]['QTY_USED'],
+            'vaccine_card_id' => $getVaccineCardID
+        ];
+
+
+        return $this->helper->message('success',200,0,$data);
+
+    }
+
+    public function vaccinateAnimal(){
+        extract($_POST);
+
+        
+        $data = $this->getRequestQty($schedule_id);
+        if ($data === 0) {
+            // Return error if no data is found
+            return $this->helper->message("Error: Qty.", 200, 1);
+        }
+
+        
+         //get DATA
+         $qty = $data['qty'];
+         $vaccine_type_id = $data['vaccine_type_id'];
+         
+         $deduct =  $this->deductVaccine($vaccine_type_id,$qty);
+
+
+        $query = "UPDATE animal SET isVaccinated = 1 WHERE ANIMAL_ID = ?";
+        $param = [$animal_id];
+        $result = $this->helper->regularQuery($query,$param);
+
+        if(!$result){
+            return $this->helper->message('error while processing your request!',200,1);
+        }
+
+        //insert into vaccine details
+        $query2 = "INSERT INTO vaccine_details (VACCINE_CARD_ID, SCHEDULE_ID,STATUS) VALUES(?, ?, '1')";
+        $param2 = [$vaccine_card_id, $schedule_id];
+        $insert = $this->helper->regularQuery($query2,$param2);
+
+       
+
+        if(!$insert){
+            return $this->helper->message('error while processing your request!',200,1);
+        }
+
+         //update selected schedule
+         $query3 = "UPDATE schedule SET isCompleted = '1' WHERE SCHEDULE_ID = ?";
+         $param3 = [$schedule_id];
+         $updated = $this->helper->regularQuery($query3,$param3);
+
+         if(!$updated){
+            return $this->helper->message('error while processing your request!',200,1);
+         }
+
+         //deduct the stocks
+  
+         return $deduct;
 
     }
     

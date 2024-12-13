@@ -69,9 +69,10 @@
                         <a href="index.php?page=Stb_Profile&client_id=<?= $row['CLIENT_ID']; ?>" class="btn btn-sm btn-info" title="View">
                           <i class="fas fa-eye"></i> View
                         </a>
-                        <a href="Edits/edit_client.php?client_id=<?= $row['CLIENT_ID']; ?>" class="btn btn-sm btn-warning ml-2" title="Edit">
+                        <button class="btn btn-sm btn-warning ml-2 fa fa-edit" id="edit-btn-client" data-id="<?= $row['CLIENT_ID']; ?>"> Edit</button>
+                        <!-- <a href="Edits/edit_client.php?client_id=<?= $row['CLIENT_ID']; ?>" class="btn btn-sm btn-warning ml-2" title="Edit">
                           <i class="fas fa-edit"></i> Edit
-                        </a>
+                        </a> -->
                       </td>
                     </tr>
                     <?php } ?>
@@ -135,6 +136,9 @@
     </div>
   </div>
 </div>
+                      <!--EDIT MODAL--->
+                      <?php include('editModal.php'); ?>
+
 
 <script src="../livestock2/administrator/Addclient/client.js"></script>
 <script>

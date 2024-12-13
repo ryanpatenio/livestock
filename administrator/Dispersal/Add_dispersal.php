@@ -4,16 +4,18 @@
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="Add_dispersalModalLabel">Create New Dispersal</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
                 <!-- Form with search functionality -->
-                <form action="includes/action.php" method="POST" enctype="multipart/form-data">
+                <form id="addForm" method="POST" enctype="multipart/form-data">
                     <!-- Client Search Input -->
                     <div class="form-group">
                         <label for="clientSearch">Client</label>
                         <div class="search-container">
-                            <input type="text" id="clientSearch" placeholder="Search Client" class="form-control" onkeyup="searchClient()" autocomplete="off">
+                            <input type="text" id="clientSearch" placeholder="Search Client" class="form-control" onkeyup="searchClient()" autocomplete="off" required>
                             <input type="hidden" name="CLIENT_ID" id="clientSelect">
                             <div id="searchResults" class="autocomplete-suggestions" style="display: none;"></div>
                         </div>
@@ -22,23 +24,31 @@
                     <!-- 1st Payment ID -->
                     <div class="form-group">
                         <label for="Input1ST_PAYMENT_ID">1st Payment ID</label>
-                        <input type="number" name="1ST_PAYMENT_ID" class="form-control" id="Input1ST_PAYMENT_ID" placeholder="Input 1st Payment ID">
+                        <input type="number" name="FIRST_PAYMENT_ID" class="form-control" id="Input1ST_PAYMENT_ID" placeholder="Input 1st Payment ID">
                     </div>
 
                     <!-- 2nd Payment ID -->
                     <div class="form-group">
                         <label for="Input2ND_PAYAMENT_ID">2nd Payment ID</label>
-                        <input type="number" name="2ND_PAYAMENT_ID" class="form-control" id="Input2ND_PAYAMENT_ID" placeholder="Enter 2nd Payment ID">
+                        <input type="number" name="SECOND_PAYMENT_ID" class="form-control" id="Input2ND_PAYAMENT_ID" placeholder="Enter 2nd Payment ID">
                     </div>
 
                     <!-- Status -->
                     <div class="form-group">
                         <label for="InputSTATUS">Status</label>
-                        <input type="text" name="STATUS" class="form-control" id="InputSTATUS" placeholder="Enter Status">
+                        <select name="STATUS" id="status" class="form-control">
+                            <option value="PENDING">PENDING</option>
+                            <option value="APPROVE">APPROVE</option>
+                        </select>
+                        <!-- <input type="text" name="STATUS" class="form-control" id="InputSTATUS" placeholder="Enter Status"> -->
                     </div>
 
                     <!-- Submit Button -->
-                    <button type="submit" name="btn-dispersal" class="btn btn-primary">Submit</button>
+                    <div class="modal-footer">
+                        <button type="submit" name="btn-dispersal" class="btn btn-primary">Submit</button>
+                        <button type="submit"  class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        
+                    </div>
                 </form>
             </div>
         </div>

@@ -134,7 +134,7 @@ mysqli_close($con);
                                             <th>Vaccine Type</th>
                                             <th>Description</th>
                                             <th>Available Quantity</th>
-                                            <th>Expiry Date</th>
+                                            
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -147,11 +147,11 @@ mysqli_close($con);
                                                     <td><?=$data['VACCINE_NAME'] ?></td>
                                                     <td><?=$data['DESCRIPTION'] ?></td>
                                                     <td><?=$data['available_quantity'] ?></td>
-                                                    <td><?= date('F j, Y', strtotime($data['EXPIRY_DATE'])) ?></td>
+                                                    
                                                     <td>
                                                         <a href="index.php?page=viewInventory&vaccID=<?=$data['VACCINE_TYPE_ID'] ?>" class="btn btn-sm btn-primary fa fa-eye">View</a>
                                                        
-                                                        <button class="btn btn-sm btn-warning fa fa-edit" id="edit-btn" data-id=<?=$data['VACCINE_TYPE_ID'] ?>> Edit</button>
+                                                       
                                                     </td>
                                                 </tr>
                                           <?php $i++; }
@@ -192,7 +192,7 @@ mysqli_close($con);
                     
                     <div class="form-group mb-3">
                         <label for="quantity">Quantity</label>
-                        <input type="number" class="form-control" id="quantity" name="QUANTITY" required>
+                        <input type="number" min="5" class="form-control" id="quantity" name="QUANTITY" required>
                     </div>
                     <div class="form-group mb-3">
                         <label for="expiryDate">Expiry Date</label>

@@ -265,19 +265,20 @@ if (isset($_POST['submit_schedule'])) {
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form id="editRequirementsForm" method="post" action="administrator/Schedule/update_schedule.php">
+        <form id="editRequirementsForm" method="post" action="">
           <div class="modal-body">
-            <input type="hidden" name="schedule_id" id="scheduleId">
+          <input type="hidden" name="schedule_id" id="scheduleId">
+
             <div class="form-group">
               <label for="firstRequirement">1st Requirement</label>
-              <select name="1st_requirement" id="firstRequirement" class="form-control">
+              <select name="first_requirement" id="firstRequirement" class="form-control">
                 <option value="0">Not Submitted</option>
                 <option value="1">Submitted</option>
               </select>
             </div>
             <div class="form-group">
               <label for="secondRequirement">2nd Requirement</label>
-              <select name="2nd_requirement" id="secondRequirement" class="form-control">
+              <select name="second_requirement" id="secondRequirement" class="form-control">
                 <option value="0">Not Submitted</option>
                 <option value="1">Submitted</option>
               </select>

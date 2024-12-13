@@ -12,6 +12,7 @@ $clientController = new clientController($helper);
 $scheduleController = new scheduleController($helper);
 $cattleController = new cattleController($helper);
 $vaccineController = new vaccineController($helper);
+$dispersalController = new dispersalController($helper);
 
 if($action == 'addClient'){
 
@@ -45,6 +46,11 @@ if($action == "addCattle"){
 
 	return $addCattle;
 }
+if($action == "addCattleStaff"){
+	$addCattle2 = $cattleController->storeStaff();
+
+	return $addCattle2;
+}
 
 if($action == 'approveSchedule'){
 	$approveSched = $scheduleController->update();
@@ -67,4 +73,27 @@ if($action == "getSchedDate"){
 if($action == "addVaccine"){
 	$addVaccine = $vaccineController->store();
 	return $addVaccine;
+}
+
+if($action == "updateQty"){
+	$updateQty = $vaccineController->updateQty();
+	return $updateQty;
+}
+
+if($action == "addDispersal"){
+	$addDispersal = $dispersalController->store();
+
+	return $addDispersal;
+}
+
+if($action == "getScheduleData"){
+	$scheduleData = $scheduleController->getSchedule();
+
+	return $scheduleData;
+}
+
+if($action == "addAnimalVaccine"){
+	$addAnimalVaccine = $scheduleController->vaccinateAnimal();
+
+	return $addAnimalVaccine;
 }
