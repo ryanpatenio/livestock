@@ -117,4 +117,35 @@ class cattleController {
     }
 
 
+    public function getAnimalDetails(){
+        extract($_POST);
+
+        $query = "SELECT vt.VACCINE_NAME,s.EVENT_DATE,s.QTY_USED FROM vaccine_details vd, vaccine_card vc,schedule s,vaccine_type vt WHERE vd.VACCINE_CARD_ID = vc.VACCINE_CARD_ID AND vd.SCHEDULE_ID = s.SCHEDULE_ID AND s.VACCINE_TYPE_ID = vt.VACCINE_TYPE_ID AND  vc.ANIMAL_ID = ?";
+        $param = [$animal_id];
+        $result = $this->helper->regularQuery($query,$param);
+
+        if(!$result){
+            return $this->helper->message('error while processing your request!..',200,1);
+        }
+       
+
+        $query2 = "SELECT ANIMAL_ID,ANIMALTYPE,VACCINE_CARD_ID FROM animal WHERE ANIMAL_ID = ?";
+        $param2 = [$animal_id];
+        $result2 = $this->helper->regularQuery($query2,$param2);
+
+        if(!$result2){
+            return $this->helper->message('error while processing your request!..',200,1);
+        }
+
+        $returnData = [
+            'tbl_data' =>$result,
+            'tbl_head' =>$result2
+        ];
+
+        return $this->helper->message('success',200,0,$returnData);
+        
+
+    }
+
+
 }

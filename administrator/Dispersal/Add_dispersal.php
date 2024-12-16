@@ -9,45 +9,67 @@
                 </button>
             </div>
             <div class="modal-body">
-                <!-- Form with search functionality -->
                 <form id="addForm" method="POST" enctype="multipart/form-data">
-                    <!-- Client Search Input -->
+                    <!-- Client Search -->
                     <div class="form-group">
-                        <label for="clientSearch">Client</label>
+                        <label for="clientSearch">Paid By : Client Name</label>
                         <div class="search-container">
-                            <input type="text" id="clientSearch" placeholder="Search Client" class="form-control" onkeyup="searchClient()" autocomplete="off" required>
+                            <input 
+                                type="text" 
+                                id="clientSearch" 
+                                class="form-control" 
+                                placeholder="Search Client" 
+                                onkeyup="searchClient()" 
+                                autocomplete="off" 
+                                required
+                            >
                             <input type="hidden" name="CLIENT_ID" id="clientSelect">
-                            <div id="searchResults" class="autocomplete-suggestions" style="display: none;"></div>
+                            <div id="searchResults" class="autocomplete-suggestions"></div>
                         </div>
                     </div>
 
-                    <!-- 1st Payment ID -->
-                    <div class="form-group">
-                        <label for="Input1ST_PAYMENT_ID">1st Payment ID</label>
-                        <input type="number" name="FIRST_PAYMENT_ID" class="form-control" id="Input1ST_PAYMENT_ID" placeholder="Input 1st Payment ID">
-                    </div>
-
-                    <!-- 2nd Payment ID -->
-                    <div class="form-group">
-                        <label for="Input2ND_PAYAMENT_ID">2nd Payment ID</label>
-                        <input type="number" name="SECOND_PAYMENT_ID" class="form-control" id="Input2ND_PAYAMENT_ID" placeholder="Enter 2nd Payment ID">
-                    </div>
-
-                    <!-- Status -->
-                    <div class="form-group">
-                        <label for="InputSTATUS">Status</label>
-                        <select name="STATUS" id="status" class="form-control">
-                            <option value="PENDING">PENDING</option>
-                            <option value="APPROVE">APPROVE</option>
+                    <!-- Paid To -->
+                    <div class="form-group" id="paidToGroup">
+                        <label for="paidTo">Paid To: Client Name</label>
+                        <select name="paidTo" id="paidTo" class="form-control">
+                            <option value="ryan">Ryan Wong</option>
                         </select>
-                        <!-- <input type="text" name="STATUS" class="form-control" id="InputSTATUS" placeholder="Enter Status"> -->
                     </div>
 
-                    <!-- Submit Button -->
+                    <!-- Client Type -->
+                    <div class="form-group">
+                        <label for="existingClient">Client Type</label>
+                        <select name="existingClient" id="existingClient" class="form-control">
+                            <option value="existing">Existing Client</option>
+                            <option value="notexisting">Not Existing Client</option>
+                        </select>
+                    </div>
+
+                    <!-- Additional Client Info (Hidden by Default) -->
+                    <div class="form-container" id="clientForm" style="display: none;">
+                        <label>First Name:</label>
+                        <input type="text" name="firstName" class="form-control" placeholder="Enter First Name">
+                        
+                        <label>Last Name:</label>
+                        <input type="text" name="lastName" class="form-control" placeholder="Enter Last Name">
+                        
+                        <label>Middle Initial:</label>
+                        <input type="text" name="middleInitial" class="form-control" placeholder="Enter Middle Initial">
+                        
+                        <label>Association:</label>
+                        <input type="text" name="association" class="form-control" placeholder="Enter Association">
+                        
+                        <label>Contact:</label>
+                        <input type="text" name="contact" class="form-control" placeholder="Enter Contact">
+                        
+                        <label>Address:</label>
+                        <input type="text" name="address" class="form-control" placeholder="Enter Address">
+                    </div>
+
+                    <!-- Modal Footer -->
                     <div class="modal-footer">
                         <button type="submit" name="btn-dispersal" class="btn btn-primary">Submit</button>
-                        <button type="submit"  class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -55,72 +77,82 @@
     </div>
 </div>
 
-<!-- JavaScript for AJAX-based client search -->
+<!-- JavaScript -->
 <script>
-function searchClient() {
-    let searchValue = document.getElementById('clientSearch').value;
-    if (searchValue.length > 0) {
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", "administrator/Addcattle/search_client.php", true);
-        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                document.getElementById("searchResults").innerHTML = xhr.responseText;
-                document.getElementById("searchResults").style.display = "block";
-            }
-        };
-        xhr.send("search=" + encodeURIComponent(searchValue));
-    } else {
-        document.getElementById("searchResults").style.display = "none";
-    }
-}
+    // Toggle Client Form and Paid To Dropdown
+    document.getElementById('existingClient').addEventListener('change', function () {
+        const clientForm = document.getElementById('clientForm');
+        const paidToGroup = document.getElementById('paidToGroup');
+        
+        if (this.value === 'notexisting') {
+            clientForm.style.display = 'block';
+            paidToGroup.style.display = 'none';
+        } else {
+            clientForm.style.display = 'none';
+            paidToGroup.style.display = 'block';
+        }
+    });
 
-function selectClient(clientId, clientName) {
-    document.getElementById('clientSelect').value = clientId;
-    document.getElementById('clientSearch').value = clientName;
-    document.getElementById("searchResults").style.display = "none";
-}
+    // AJAX-based Client Search
+    function searchClient() {
+        const searchValue = document.getElementById('clientSearch').value.trim();
+        const searchResults = document.getElementById('searchResults');
 
-document.addEventListener("click", function(e) {
-    if (!e.target.closest(".search-container")) {
-        document.getElementById("searchResults").style.display = "none";
+        if (searchValue) {
+            const xhr = new XMLHttpRequest();
+            xhr.open("POST", "administrator/Addcattle/search_client.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    searchResults.innerHTML = xhr.responseText;
+                    searchResults.style.display = "block";
+                }
+            };
+            xhr.send("search=" + encodeURIComponent(searchValue));
+        } else {
+            searchResults.style.display = "none";
+        }
     }
-});
+
+    // Select Client from Suggestions
+    function selectClient(clientId, clientName) {
+        document.getElementById('clientSelect').value = clientId;
+        document.getElementById('clientSearch').value = clientName;
+        document.getElementById('searchResults').style.display = "none";
+    }
+
+    // Hide Suggestions on Outside Click
+    document.addEventListener("click", function (e) {
+        if (!e.target.closest(".search-container")) {
+            document.getElementById("searchResults").style.display = "none";
+        }
+    });
 </script>
 
-<!-- Styles for search functionality -->
+<!-- Styles -->
 <style>
-.search-container {
-    position: relative;
-    width: 100%;
-}
+    .search-container {
+        position: relative;
+    }
 
-#clientSearch {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
+    .autocomplete-suggestions {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #fff;
+        border: 1px solid #ccc;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+    }
 
-.autocomplete-suggestions {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-top: none;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1000;
-}
+    .autocomplete-suggestions div {
+        padding: 8px;
+        cursor: pointer;
+    }
 
-.autocomplete-suggestions div {
-    padding: 8px;
-    cursor: pointer;
-}
-
-.autocomplete-suggestions div:hover {
-    background-color: #f0f0f0;
-}
+    .autocomplete-suggestions div:hover {
+        background-color: #f0f0f0;
+    }
 </style>

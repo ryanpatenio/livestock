@@ -1,6 +1,7 @@
 $(document).ready(function(){
     
 const addModal = $('#addVaccinationModal');
+const viewModal = $('#viewModal');
 
     $(document).on('submit','#addCattleForm',function(e){
         e.preventDefault();
@@ -100,25 +101,79 @@ const addModal = $('#addVaccinationModal');
         let Data = $(this).serialize();
         $url = baseUrl + "action=addAnimalVaccine";
 
+        swalMessage('custom','Are you sure you want to update this Vaccination in this Animal?',function(){
+            AjaxPost(
+                $url,
+                'POST',
+                Data,
+                function(){
+                    logs(true);
+                    loader(true);
+                },
+        
+                function(response){
+                    res(response);
+
+                    if(response.code != 0){
+                        msg(response.message,'error');
+                        return;
+                    }
+        
+                    message('Animal Vaccination Added Successfully!','success');
+                    formModalClose(addModal,$('#editAnimalVaccineForm'));
+                },
+        
+                function(){
+                    logs(false);
+                    loader(false);
+                }
+            );
+         });
+
+    });
+
+    $(document).on('click','#view-btn',function(e){
+        e.preventDefault();
+
+        const tableBody = $('#tbl-data tbody');
+        tableBody.empty();
+
+        $url = baseUrl + "action=getAnimalDetails";
+
         AjaxPost(
             $url,
             'POST',
-            Data,
+            {animal_id : $(this).attr('data-id')},
             function(){
                 logs(true);
                 loader(true);
             },
     
             function(response){
-                res(response);
+              //  res(response);
 
-                if(response.code != 0){
+                  if(response.code != 0){
                     msg(response.message,'error');
                     return;
                 }
-    
-                message('Animal Vaccination Added Successfully!','success');
-                formModalClose(addModal,$('#editAnimalVaccineForm'));
+                $('#vaccine-id').text(response.data.tbl_head[0].VACCINE_CARD_ID);
+                $('#animal-type').text(response.data.tbl_head[0].ANIMALTYPE);
+                
+                //populate the table
+                response.data.tbl_data.forEach((item, index) => {
+                    const row = `
+                        <tr>
+                            <td>${index + 1}</td> <!-- Counter -->
+                            <td>${item.VACCINE_NAME}</td>
+                            <td>${item.QTY_USED}</td>
+                            <td>${item.EVENT_DATE}</td>
+                        </tr>
+                    `;
+                    tableBody.append(row); // Append each row to the table's tbody
+                });
+
+                viewModal.modal('show');
+           
             },
     
             function(){
@@ -126,6 +181,9 @@ const addModal = $('#addVaccinationModal');
                 loader(false);
             }
         );
+
+
+       
 
     });
      

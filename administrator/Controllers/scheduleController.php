@@ -295,7 +295,8 @@ class scheduleController {
     public function vaccinateAnimal(){
         extract($_POST);
 
-        
+
+      
         $data = $this->getRequestQty($schedule_id);
         if ($data === 0) {
             // Return error if no data is found
@@ -306,17 +307,22 @@ class scheduleController {
          //get DATA
          $qty = $data['qty'];
          $vaccine_type_id = $data['vaccine_type_id'];
-         
-         $deduct =  $this->deductVaccine($vaccine_type_id,$qty);
+
+        //  $dd = [
+        //     'qt'=> $qty,
+        //     'vc' => $vaccine_type_id
+        //  ];
 
 
+
+        //update animal isVAccinated column set to 1 mean true
         $query = "UPDATE animal SET isVaccinated = 1 WHERE ANIMAL_ID = ?";
         $param = [$animal_id];
         $result = $this->helper->regularQuery($query,$param);
 
         if(!$result){
             return $this->helper->message('error while processing your request!',200,1);
-        }
+        }  
 
         //insert into vaccine details
         $query2 = "INSERT INTO vaccine_details (VACCINE_CARD_ID, SCHEDULE_ID,STATUS) VALUES(?, ?, '1')";
@@ -338,7 +344,9 @@ class scheduleController {
             return $this->helper->message('error while processing your request!',200,1);
          }
 
-         //deduct the stocks
+          
+         $deduct =  $this->deductVaccine($vaccine_type_id,$qty);
+        // deduct the stocks
   
          return $deduct;
 

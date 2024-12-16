@@ -226,6 +226,7 @@ mysqli_close($con);
     </section>
 </div>
 <?php include('addVaccination.php'); ?>
+<?php include('viewAnimalModal.php'); ?>
 
 <!-- Edit Animal Status Modal -->
 <div class="modal fade" id="editAnimalStatusModal" tabindex="-1" role="dialog" aria-labelledby="editAnimalStatusModalLabel" aria-hidden="true">

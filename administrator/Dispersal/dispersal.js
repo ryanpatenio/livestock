@@ -2,6 +2,16 @@ $(document).ready(function(){
 
     const addModal = $('#Add_dispersalModal');
 
+    $('#existingClient').on('change', function () {
+        const selectedValue = $(this).val();
+
+        if (selectedValue === 'notexisting') {
+            $('#clientForm').slideDown(); // Show the form
+        } else {
+            $('#clientForm').slideUp(); // Hide the form
+        }
+    });
+
     
 
     $(document).on('submit','#addForm',function(e){

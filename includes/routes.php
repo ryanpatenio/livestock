@@ -97,3 +97,8 @@ if($action == "addAnimalVaccine"){
 
 	return $addAnimalVaccine;
 }
+
+if($action == "getAnimalDetails"){
+	$animal = $cattleController->getAnimalDetails();
+	return $animal;
+}

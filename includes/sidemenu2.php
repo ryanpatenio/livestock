@@ -86,12 +86,7 @@
               <p>Schedule  </p>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="index2.php?page=Cattlelist" class="nav-link <?= $Cattlelist?>">
-              <i class="nav-icon fas fa-file-alt"></i>
-              <p>Cattle  </p>
-            </a>
-          </li>
+       
           <li class="nav-item">
             <a href="index2.php?page=Recording"  class="nav-link <?= $Recording?>">
               <i class="nav-icon far fa-calendar-alt"></i>
