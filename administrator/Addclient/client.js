@@ -3,6 +3,11 @@ $(document).ready(function(){
         $('#main').css('filter', 'none');
         $('#loader').hide();
 
+        $('#pendingTBL').dataTable({
+            
+
+        });
+
 
 const addModal = $('#AddclientModal');
 const editModal = $('#editModal');

@@ -1,6 +1,12 @@
+<?php
+
+
+?>
+
+
 <!-- Modal -->
 <div class="modal fade" id="Add_dispersalModal" tabindex="-1" role="dialog" aria-labelledby="Add_dispersalModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header bg-primary text-white">
                 <h5 class="modal-title" id="Add_dispersalModalLabel">Create New Dispersal</h5>
@@ -28,25 +34,38 @@
                         </div>
                     </div>
 
-                    <!-- Paid To -->
-                    <div class="form-group" id="paidToGroup">
-                        <label for="paidTo">Paid To: Client Name</label>
-                        <select name="paidTo" id="paidTo" class="form-control">
-                            <option value="ryan">Ryan Wong</option>
+                    <div class="form-group">
+                        <label for="status">STATUS</label>
+                        <select name="STATUS" id="" class="form-control">
+                            <option value="PENDING">PENDING</option>
                         </select>
                     </div>
 
+                    <!-- Paid To -->
+                    <!-- <div class="form-group" id="paidToGroup">
+                        <label for="paidTo">Give To: Client Name</label>
+                        <select name="paidTo" id="paidTo" class="form-control">
+                            <?php
+                            foreach ($clients as $client) { ?>
+                              <option value="<?=$client['CLIENT_ID'] ?>"><?=$client['full_name']; ?></option>
+                           <?php }
+
+                            ?>
+                            
+                        </select>
+                    </div> -->
+
                     <!-- Client Type -->
-                    <div class="form-group">
+                    <!-- <div class="form-group">
                         <label for="existingClient">Client Type</label>
                         <select name="existingClient" id="existingClient" class="form-control">
                             <option value="existing">Existing Client</option>
                             <option value="notexisting">Not Existing Client</option>
                         </select>
-                    </div>
+                    </div> -->
 
                     <!-- Additional Client Info (Hidden by Default) -->
-                    <div class="form-container" id="clientForm" style="display: none;">
+                    <!-- <div class="form-container" id="clientForm" style="display: none;">
                         <label>First Name:</label>
                         <input type="text" name="firstName" class="form-control" placeholder="Enter First Name">
                         
@@ -64,7 +83,7 @@
                         
                         <label>Address:</label>
                         <input type="text" name="address" class="form-control" placeholder="Enter Address">
-                    </div>
+                    </div> -->
 
                     <!-- Modal Footer -->
                     <div class="modal-footer">

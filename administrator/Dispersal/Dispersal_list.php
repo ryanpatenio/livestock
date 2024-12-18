@@ -6,7 +6,7 @@ require("connection/connection.php"); // Ensure this file has your DB connection
 
 function insertOneClientAnimalIntoParentTable($con, $client_id) {
     // Step 1: Search for an animal record for the client
-    $query = "SELECT ANIMAL_ID FROM animal WHERE CLIENT_ID = ? LIMIT 1";
+    $query = "SELECT ANIMAL_ID FROM animal WHERE CLIENT_ID = ?  LIMIT 1";
     $stmt = mysqli_prepare($con, $query);
     mysqli_stmt_bind_param($stmt, 'i', $client_id);
     mysqli_stmt_execute($stmt);
@@ -37,9 +37,17 @@ function insertOneClientAnimalIntoParentTable($con, $client_id) {
 }
 
 // Fetch all clients
-$clientQuery = "SELECT CLIENT_ID, CONCAT(FNAME, ' ', LNAME) AS full_name FROM client";
+$clientQuery = "SELECT CLIENT_ID, CONCAT(FNAME, ' ', LNAME) AS full_name FROM client ORDER BY FNAME ASC";
 $clientResult = mysqli_query($con, $clientQuery);
 $clients = mysqli_fetch_all($clientResult, MYSQLI_ASSOC);
+
+// Fetch all animals by  clients
+$Query2 = "SELECT ANIMAL_ID,ANIMALTYPE,ANIMAL_SEX FROM animal WHERE CLIENT_ID = ? AND ANIMAL_SEX = 'Female'";
+$stmt2 = mysqli_prepare($con, $Query2);
+mysqli_stmt_bind_param($stmt2, 'i', $client_id);
+mysqli_stmt_execute($stmt2);
+$animalResult = mysqli_stmt_get_result($stmt2);
+$animals = mysqli_fetch_all($animalResult, MYSQLI_ASSOC);
 
 // Initialize variables
 $dispersals = [];
@@ -172,9 +180,8 @@ mysqli_close($con);
                           <td><?= htmlspecialchars($dispersal['DISPERSAL_ID']); ?></td>
                           <td>
                             <?php if (!$isFirstPaymentPaid) { ?>
-                              <button class="btn btn-danger btn-sm payment-button" 
-                                      data-toggle="modal" 
-                                      data-target="#paymentModal" 
+                              <button class="btn btn-danger btn-sm payment-button-1st" 
+                                      id="edit-btn"
                                       data-dispersal-id="<?= $dispersal['DISPERSAL_ID']; ?>" 
                                       data-payment-type="1ST_PAYMENT_ID" 
                                       data-client-name="<?= htmlspecialchars($selectedClientName); ?>">
@@ -186,9 +193,8 @@ mysqli_close($con);
                           </td>
                           <td>
                             <?php if (!$isSecondPaymentPaid) { ?>
-                              <button class="btn btn-danger btn-sm payment-button" 
-                                      data-toggle="modal" 
-                                      data-target="#paymentModal" 
+                              <button class="btn btn-danger btn-sm payment-button-2nd" 
+                                      id="edit-btn"                                    
                                       data-dispersal-id="<?= $dispersal['DISPERSAL_ID']; ?>" 
                                       data-payment-type="2ND_PAYMENT_ID" 
                                       data-client-name="<?= htmlspecialchars($selectedClientName); ?>">
@@ -222,14 +228,19 @@ mysqli_close($con);
     </div>
   </section>
 
- <?php include('updatePayment.php') ?>
+ <?php include('updateFirstPayment.php'); ?>
+ <?php include('updateSecondPayment.php'); ?>
 
 <script src="../livestock2/administrator/Dispersal/dispersal.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
   // Toggle payment details based on status selection
-  document.getElementById('paymentStatus').addEventListener('change', function() {
-    document.getElementById('paymentDetails').style.display = (this.value === '1') ? 'block' : 'none';
+  document.getElementById('paymentStatus1').addEventListener('change', function() {
+    document.getElementById('paymentDetails1').style.display = (this.value === '1') ? 'block' : 'none';
+  });
+
+  document.getElementById('paymentStatus2').addEventListener('change', function() {
+    document.getElementById('paymentDetails2').style.display = (this.value === '1') ? 'block' : 'none';
   });
 
   // Toggle new/existing client fields

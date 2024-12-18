@@ -102,3 +102,8 @@ if($action == "getAnimalDetails"){
 	$animal = $cattleController->getAnimalDetails();
 	return $animal;
 }
+
+if($action == "getDispersal"){
+	$getDispersal = $dispersalController->get();
+	return $getDispersal;
+}

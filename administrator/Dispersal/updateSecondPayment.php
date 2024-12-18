@@ -1,6 +1,6 @@
  <!-- Payment Modal -->
- <div class="modal fade" id="paymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+ <div class="modal fade" id="secondPaymentModal" tabindex="-1" role="dialog" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header bg-primary text-white">
           <h5 class="modal-title" id="paymentModalLabel">Update Payment Status</h5>
@@ -8,27 +8,34 @@
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-        <form action="includes/action.php" method="post">
+        <form action="" method="post">
           <div class="modal-body">
-            <input type="hidden" name="dispersal_id" id="dispersalId">
-            <input type="hidden" name="payment_type" id="paymentType">
+            <input type="hidden" name="dispersal_id2" id="dispersalId2">
+            <input type="hidden" name="payment_type" id="paymentType2">
             <div class="form-group">
               <label for="paymentStatus">Select Payment Status</label>
-              <select class="form-control" id="paymentStatus" name="payment_status">
+              <select class="form-control" id="paymentStatus2" name="payment_status2">
                 <option value="">-- Select Option --</option>
                
                 <option value="1">Paid</option>
               </select>
             </div>
-            <div id="paymentDetails" style="display: none;">
+            <div id="paymentDetails2" style="display: none;">
               <!-- Payment Details -->
               <div class="form-group">
                 <label for="orPaymentNo">OR Payment No</label>
                 <input type="text" class="form-control" id="orPaymentNo" name="or_payment_no">
               </div>
               <div class="form-group">
-                <label for="parentId">Parent ID</label>
-                <input type="number" class="form-control" id="parentId" name="parent_id">
+                <label for="parentId">Parent ID (Animal of CLIENTS (Female) )</label>
+                <select name="ANIMAL_ID" id="" class="form-control">
+                  <?php
+                  foreach ($animals as $animal) { ?>
+                      <option value="<?=$animal['ANIMAL_ID'] ?>"> <?=$animal['ANIMALTYPE']." | ".$animal['ANIMAL_SEX'] ?></option>
+                 <?php }
+                  
+                  ?>
+                </select>
               </div>
 
               <div class="form-group">
@@ -67,17 +74,37 @@
                 </select>
               </div>
 
-            <!-- New Client Input (hidden initially) -->
-            <div id="newClientDiv" style="display: none;">
+
+              <!-- Client Type -->
               <div class="form-group">
-                <label for="newClientName">New Client Name</label>
-                <input type="text" class="form-control" id="newClientName" name="new_client_name">
-              </div>
-              <div class="form-group">
-                <label for="newClientContact">New Client Contact</label>
-                <input type="text" class="form-control" id="newClientContact" name="new_client_contact">
-              </div>
-            </div>
+                        <label for="existingClient">Client Type</label>
+                        <select name="existingClient" id="existingClient" class="form-control">
+                            <option value="existing">Existing Client</option>
+                            <option value="notexisting">Not Existing Client</option>
+                        </select>
+                    </div>
+
+                    <!-- Additional Client Info (Hidden by Default) -->
+                     <div class="form-container" id="clientForm" style="display: none;">
+                        <label>First Name:</label>
+                        <input type="text" name="firstName" class="form-control" placeholder="Enter First Name">
+                        
+                        <label>Last Name:</label>
+                        <input type="text" name="lastName" class="form-control" placeholder="Enter Last Name">
+                        
+                        <label>Middle Initial:</label>
+                        <input type="text" name="middleInitial" class="form-control" placeholder="Enter Middle Initial">
+                        
+                        <label>Association:</label>
+                        <input type="text" name="association" class="form-control" placeholder="Enter Association">
+                        
+                        <label>Contact:</label>
+                        <input type="text" name="contact" class="form-control" placeholder="Enter Contact">
+                        
+                        <label>Address:</label>
+                        <input type="text" name="address" class="form-control" placeholder="Enter Address">
+                    </div> 
+
           </div>
         </div>
         <div class="modal-footer">
