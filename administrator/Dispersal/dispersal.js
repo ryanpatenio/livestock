@@ -11,12 +11,49 @@ $(document).ready(function(){
         if (selectedValue === 'notexisting') {
             $('#clientForm').slideDown(); // Show the form
             $('#paidtToDiv').css('display', 'none');
+
+            $('#clientForm input').prop('required', true); // Add required attributes
         } else {
             $('#clientForm').slideUp(); // Hide the form
             $('#paidtToDiv').css('display', 'block');
+            $('#clientForm input').prop('required', false); // Remove required attributes
+        }
+    });
+
+    $('#existingClient2').on('change', function () {
+        const selectedValue = $(this).val();
+    
+        if (selectedValue === 'notexisting') {
+            $('#clientForm2').slideDown(); // Show the form
+            $('#paidtToDiv2').css('display', 'none');
+        } else {
+            $('#clientForm2').slideUp(); // Hide the form
+            $('#paidtToDiv2').css('display', 'block');
         }
     });
     
+
+    $('#animal_parent').on('change', function () {
+        // Get the selected option
+        var selectedOption = $(this).find('option:selected');
+        
+        // Get the data attribute value
+        var animalType = selectedOption.data('animal-type');
+        
+        // Set the value in the input field
+        $('#animal-type-to-give').val(animalType);
+    });
+
+    $('#animal_parent2').on('change', function () {
+        // Get the selected option
+        var selectedOption = $(this).find('option:selected');
+        
+        // Get the data attribute value
+        var animalType = selectedOption.data('animal-type');
+        
+        // Set the value in the input field
+        $('#animal-type-to-give2').val(animalType);
+    });
 
     
 
@@ -53,13 +90,58 @@ $(document).ready(function(){
     
     });
 
+    $('#firstPaymentForm').submit(function(e){
+        e.preventDefault();
+
+        if ($('#existingClient').val() === 'notexisting' && $('#clientForm input:visible[required]').filter(function () {
+            return !this.value;
+        }).length > 0) {
+            alert('Please fill out all required fields!');
+            e.preventDefault();
+        }
+
+        $url = baseUrl + "action=addFirstPayment";
+        let formData = new FormData(this);
+
+        $.ajax({
+            url: $url,
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            dataType: 'json',
+    
+    
+            success: function(resp) {
+              // res(resp);
+               
+               if(response.code != 0){
+                msg(response.message,'error');
+                return;
+             }
+
+            message(response.message,'success');
+            formModalClose(addModal,$('#firstPaymentForm'));
+             
+                                  
+            },
+            error: function(xhr, status, error) {
+                res(xhr.responseText);
+      
+            }
+        });
+    
+       
+      
+    })
+
     $(document).on('click','.payment-button-1st',function(e){
         e.preventDefault();
 
         let ID = $(this).attr('data-dispersal-id1');
         $('#dispersalId1').val(ID);
       
-        updateFirstModal.modal('show');
+      updateFirstModal.modal('show');
     });
 
     $(document).on('click','.payment-button-2nd',function(e){

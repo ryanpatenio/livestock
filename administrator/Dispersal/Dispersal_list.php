@@ -41,13 +41,36 @@ $clientQuery = "SELECT CLIENT_ID, CONCAT(FNAME, ' ', LNAME) AS full_name FROM cl
 $clientResult = mysqli_query($con, $clientQuery);
 $clients = mysqli_fetch_all($clientResult, MYSQLI_ASSOC);
 
-// Fetch all animals by  clients
-$Query2 = "SELECT ANIMAL_ID,ANIMALTYPE,ANIMAL_SEX FROM animal WHERE CLIENT_ID = ? AND ANIMAL_SEX = 'Female'";
+
+
+// Fetch all animals by clients
+$client_id = $_GET['client_id'];
+$Query2 = "SELECT ANIMAL_ID, ANIMALTYPE, ANIMAL_SEX FROM animal WHERE CLIENT_ID = ? AND ANIMAL_SEX = 'Female'";
 $stmt2 = mysqli_prepare($con, $Query2);
-mysqli_stmt_bind_param($stmt2, 'i', $client_id);
-mysqli_stmt_execute($stmt2);
-$animalResult = mysqli_stmt_get_result($stmt2);
-$animals = mysqli_fetch_all($animalResult, MYSQLI_ASSOC);
+
+// Check if statement preparation was successful
+if ($stmt2) {
+    mysqli_stmt_bind_param($stmt2, 'i', $client_id);
+
+   
+    if (mysqli_stmt_execute($stmt2)) {
+        $animalResult = mysqli_stmt_get_result($stmt2);
+
+        // Check if rows are found
+        if (mysqli_num_rows($animalResult) > 0) {
+            $animals = mysqli_fetch_all($animalResult, MYSQLI_ASSOC);
+           
+        } else {
+            echo "No results found.";
+        }
+    } else {
+        echo "Error executing query: " . mysqli_error($con);
+    }
+} else {
+    echo "Error preparing statement: " . mysqli_error($con);
+}
+
+
 
 // Initialize variables
 $dispersals = [];
@@ -182,7 +205,7 @@ mysqli_close($con);
                             <?php if (!$isFirstPaymentPaid) { ?>
                               <button class="btn btn-danger btn-sm payment-button-1st" 
                                       id="edit-btn"
-                                      data-dispersal-id="<?= $dispersal['DISPERSAL_ID']; ?>" 
+                                      data-dispersal-id1="<?= $dispersal['DISPERSAL_ID']; ?>" 
                                       data-payment-type="1ST_PAYMENT_ID" 
                                       data-client-name="<?= htmlspecialchars($selectedClientName); ?>">
                                 Unpaid
@@ -195,7 +218,7 @@ mysqli_close($con);
                             <?php if (!$isSecondPaymentPaid) { ?>
                               <button class="btn btn-danger btn-sm payment-button-2nd" 
                                       id="edit-btn"                                    
-                                      data-dispersal-id="<?= $dispersal['DISPERSAL_ID']; ?>" 
+                                      data-dispersal-id2="<?= $dispersal['DISPERSAL_ID']; ?>" 
                                       data-payment-type="2ND_PAYMENT_ID" 
                                       data-client-name="<?= htmlspecialchars($selectedClientName); ?>">
                                 Unpaid

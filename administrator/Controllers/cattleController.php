@@ -124,8 +124,8 @@ class cattleController {
         $param = [$animal_id];
         $result = $this->helper->regularQuery($query,$param);
 
-        if(!$result){
-            return $this->helper->message('error while processing your request!..',200,1);
+        if(empty($result)){
+            return $this->helper->message('NODF',200,0);
         }
        
 

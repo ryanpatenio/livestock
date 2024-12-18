@@ -150,12 +150,18 @@ const viewModal = $('#viewModal');
             },
     
             function(response){
-              //  res(response);
+              // res(response);
 
                   if(response.code != 0){
                     msg(response.message,'error');
                     return;
                 }
+                //no data found or no vaccine Details yet for this selected animals
+                if(response.message == "NODF"){
+                    viewModal.modal('show');
+                    return;
+                }
+
                 $('#vaccine-id').text(response.data.tbl_head[0].VACCINE_CARD_ID);
                 $('#animal-type').text(response.data.tbl_head[0].ANIMALTYPE);
                 

@@ -107,3 +107,8 @@ if($action == "getDispersal"){
 	$getDispersal = $dispersalController->get();
 	return $getDispersal;
 }
+
+if($action == "addFirstPayment"){
+	$firstPayment = $dispersalController->firstPayment();
+	return $firstPayment;
+}
