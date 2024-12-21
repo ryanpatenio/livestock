@@ -1,0 +1,8 @@
+DISPERSAl
+** new dispersal
+1.add input Give To : --DONE
+
+PAYMENT STATUS
+1. PARENT ID all "animals of selected CLIENT own where ANIMAL SEX = female" -- DONE
+2.sa existing client add some info to fit in the database in client columns -- DONE
+3. pag add sang user sang first payment it will create a new animal that will insert in the animal table with a client ID of selected existing or new client --DONE

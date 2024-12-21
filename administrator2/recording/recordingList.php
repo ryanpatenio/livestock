@@ -10,15 +10,16 @@ mysqli_free_result($clientResult);
 // Fetch animals for selected client if client_id is set
 $animals = [];
 $selectedClient = '';
+$client_id = $_GET['client_id'];
 if (isset($_GET['client_id'])) {
-    $client_id = $_GET['client_id'];
+    
     $animalQuery = "SELECT 
                         ANIMAL_ID, 
                         ANIMALTYPE, 
                         BIRTHDATE, 
                         ANIMAL_SEX AS GENDER, 
                         STATUS, 
-                        VACCINE_CARD_ID, 
+                        VACCINE_CARD_ID, isVaccinated,
                         IMAGE_PATH
                     FROM animal 
                     WHERE CLIENT_ID = ?";
@@ -75,6 +76,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+$query2  = "SELECT s.SCHEDULE_ID, vt.VACCINE_NAME,vt.`DESCRIPTION`,s.EVENT_DATE FROM schedule s,vaccine_type vt WHERE s.VACCINE_TYPE_ID = vt.VACCINE_TYPE_ID AND s.CLIENT_ID = ? AND s.`STATUS` = 1 AND s.isCompleted != 1";
+
+
+$stmt5 = mysqli_prepare($con, $query2);
+
+if ($stmt5) {
+    // Bind the parameter to the query
+    mysqli_stmt_bind_param($stmt5, 'i', $client_id);
+
+    // Execute the query
+    mysqli_stmt_execute($stmt5);
+
+    // Fetch the result set
+    $result5 = mysqli_stmt_get_result($stmt5);
+
+    // Fetch all rows into an associative array
+    $schedules = mysqli_fetch_all($result5, MYSQLI_ASSOC);
+
+   
+    // Close the statement
+    mysqli_stmt_close($stmt5);
+} else {
+    // Handle errors in query preparation
+    die("Failed to prepare statement: " . mysqli_error($con));
+}
 mysqli_close($con);
 ?>
 
@@ -88,113 +114,161 @@ mysqli_close($con);
         <div class="container-fluid p-3">
             <div class="row">
                 <!-- Client List -->
-                <div class="col-md-4">
-                    <div class="card shadow">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0"><i class="fas fa-users"></i> List of Clients</h5>
-                        </div>
-                        <div class="card-body p-0">
-                            <table id="clientTBL" class="table table-striped table-hover mb-0">
-                                <thead class="thead-dark">
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-primary text-white">
+                                <h6 class="mb-0"><b>List of Clients</b></h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                <table id="clientTBL" class="table table-bordered table-hover">
+                                    <thead class="thead-dark">
                                     <tr>
                                         <th>Client</th>
                                         <th>Action</th>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($clients as $client): ?>
-                                        <tr>
-                                            <td><?= htmlspecialchars($client['full_name']); ?></td>
-                                            <td>
-                                                <a href="index2.php?page=Recording&client_id=<?= $client['CLIENT_ID']; ?>" 
-                                                   class="btn btn-sm btn-info">
-                                                    View
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($clients as $client): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($client['full_name']); ?></td>
+                                                <td>
+                                                    <a href="index2.php?page=Recording&client_id=<?= $client['CLIENT_ID']; ?>" 
+                                                    class="btn btn-sm btn-info ">
+                                                    <i class="fa fa-eye"> View</i>
+                                                        
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                        </tbody>
+                                </table>
+                            </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                 </div>
+
 
                 <!-- Animal Information -->
                 <div class="col-md-8">
                     <div class="card shadow">
+                        <!-- Card Header -->
                         <div class="card-header bg-success text-white d-flex align-items-center">
                             <h5 class="mb-0"><i class="fas fa-paw"></i> Animal Information</h5>
                             <a href="#" 
-                               class="btn btn-warning btn-sm ml-auto" 
-                               style="border-radius: 20px; font-weight: bold;" 
-                               data-toggle="modal" 
-                               data-target="#AddCattleModal">
-                               + Add New
+                            class="btn btn-warning btn-sm ml-auto" 
+                            style="border-radius: 20px; font-weight: bold;" 
+                            data-toggle="modal" 
+                            data-target="#AddCattleModal">
+                            + Add New
                             </a>
                         </div>
 
+                        <!-- Card Body -->
                         <div class="card-body">
                             <h6 class="mb-3">
                                 <strong>Client:</strong> 
-                                <span id="clientNameDisplay" class="text-primary"><?= $selectedClient ?: "Select a client to view animal details"; ?></span>
+                                <span id="clientNameDisplay" class="text-primary">
+                                    <?= htmlspecialchars($selectedClient) ?: "Select a client to view animal details"; ?>
+                                </span>
                             </h6>
-                            <table class="table table-bordered table-striped">
-                                <thead class="thead-light">
-                                    <tr>
-                                        <th>Animal Type</th>
-                                        <th>Birthdate</th>
-                                        <th>Gender</th>
-                                        <th>Status</th>
-                                        <th>Vaccination Status</th>
-                                        <th>Image</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php if ($animals): ?>
-                                        <?php foreach ($animals as $animal): ?>
-                                            <tr>
-                                                <td><?= htmlspecialchars($animal['ANIMALTYPE']); ?></td>
-                                                <td><?= htmlspecialchars($animal['BIRTHDATE']); ?></td>
-                                                <td><?= $animal['GENDER'] == 1 ? 'Male' : 'Female'; ?></td>
-                                                <td>
-                                                    <button class="btn btn-sm <?= $animal['STATUS'] == 1 ? 'btn-success' : 'btn-danger'; ?> editStatusBtn"
-                                                            data-animal-id="<?= $animal['ANIMAL_ID']; ?>"
-                                                            data-current-status="<?= $animal['STATUS']; ?>">
-                                                        <?= $animal['STATUS'] == 1 ? 'Alive' : 'Dead'; ?>
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <button class="btn btn-sm <?= $animal['VACCINE_CARD_ID'] == 1 ? 'btn-warning' : 'btn-primary'; ?> editVaccineBtn"
-                                                            data-animal-id="<?= $animal['ANIMAL_ID']; ?>"
-                                                            data-current-vaccination-status="<?= $animal['VACCINE_CARD_ID']; ?>">
-                                                        <?= $animal['VACCINE_CARD_ID'] == 1 ? 'Not Vaccinated' : 'Vaccinated'; ?>
-                                                    </button>
-                                                </td>
-                                                <td>
-                                                    <?php if (!empty($animal['IMAGE_PATH'])): ?>
-                                                        <!-- Use relative path to display image -->
-                                                        <img src="includes/<?= htmlspecialchars($animal['IMAGE_PATH']); ?>" alt="Animal Image" class="img-thumbnail" style="width:150px;">
-                                                    <?php else: ?>
-                                                        <span class="text-muted">No image</span>
-                                                    <?php endif; ?>
-                                                </td>
-                                                                                            </tr>
-                                        <?php endforeach; ?>
-                                    <?php else: ?>
+
+                            <!-- Table -->
+                             <div class="table-responsive">
+                                <table class="table table-bordered table-striped" id="animal-info-table">
+                                    <thead class="thead-light">
                                         <tr>
-                                            <td colspan="6" class="text-center text-muted">No animal details found for this client.</td>
+                                            <th>#</th>
+                                            <th>Animal Type</th>
+                                            <th>Birthdate</th>
+                                            <th>Gender</th>
+                                            <th>Status</th>
+                                            <th>Vaccination Status</th>
+                                            <th>Image</th>
+                                            <th>Action</th>
                                         </tr>
-                                    <?php endif; ?>
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        <?php $i = 1; if (!empty($animals)): ?>
+                                            <?php foreach ($animals as $animal): ?>
+                                                <tr>
+                                                    <td><?=$i; ?></td>
+                                                    <!-- Animal Type -->
+                                                    <td><?= htmlspecialchars($animal['ANIMALTYPE']); ?></td>
+
+                                                    <!-- Birthdate -->
+                                                    <td><?= htmlspecialchars($animal['BIRTHDATE']); ?></td>
+
+                                                    <!-- Gender -->
+                                                    <td><?= $animal['GENDER'] == 1 ? 'Male' : 'Female'; ?></td>
+
+                                                    <!-- Status -->
+                                                    <td>
+                                                        <button class="btn btn-sm <?= $animal['STATUS'] == 1 ? 'btn-success' : 'btn-danger'; ?> editStatusBtn"
+                                                                data-animal-id="<?= $animal['ANIMAL_ID']; ?>"
+                                                                data-current-status="<?= $animal['STATUS']; ?>">
+                                                            <?= $animal['STATUS'] == 1 ? 'Alive' : 'Dead'; ?>
+                                                        </button>
+                                                    </td>
+
+                                                    <!-- Vaccination Status -->
+                                                    <td>
+                                                        <button class="btn btn-sm <?= $animal['isVaccinated'] == 0 ? 'btn-warning' : 'btn-primary'; ?>" 
+                                                                id="vacc-status"
+                                                                data-animal-id="<?= $animal['ANIMAL_ID']; ?>">
+                                                            <?= $animal['isVaccinated'] == 0 ? 'Not Vaccinated' : 'Vaccinated'; ?>
+                                                        </button>
+                                                    </td>
+
+                                                    <!-- Image -->
+                                                    <td>
+                                                        <?php if (!empty($animal['IMAGE_PATH'])): ?>
+                                                            <img src="includes/<?= htmlspecialchars($animal['IMAGE_PATH']); ?>" 
+                                                                alt="Animal Image" 
+                                                                class="img-thumbnail" 
+                                                                style="width: 150px;">
+                                                        <?php else: ?>
+                                                            <span class="text-muted">No image</span>
+                                                        <?php endif; ?>
+                                                    </td>
+
+                                                    <!-- Actions -->
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary" 
+                                                                id="view-btn" 
+                                                                data-id="<?= $animal['ANIMAL_ID']; ?>">
+                                                            <i class="fa fa-eye"></i> View
+                                                        </button>
+                                                        <button class="btn btn-sm btn-success" 
+                                                                id="add-btn" 
+                                                                data-current-vaccination-status="<?= $animal['isVaccinated'] == 0 ? 'Not Vaccinated' : 'Vaccinated'; ?>" 
+                                                                data-id="<?= $animal['ANIMAL_ID']; ?>">
+                                                            <i class="fa fa-plus"></i> Add
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            <?php $i++; endforeach; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="7" class="text-center text-muted">
+                                                    No animal details found for this client.
+                                                </td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </div>
     </section>
 </div>
-
+<?php include('addVaccination.php'); ?>
+<?php include('viewAnimalModal.php'); ?>
 
 <!-- Edit Animal Status Modal -->
 <div class="modal fade" id="editAnimalStatusModal" tabindex="-1" role="dialog" aria-labelledby="editAnimalStatusModalLabel" aria-hidden="true">
@@ -225,70 +299,22 @@ mysqli_close($con);
         </div>
     </div>
 </div>
-<!-- Edit Vaccination Status Modal -->
-<div class="modal fade" id="editAnimalVaccineModal" tabindex="-1" role="dialog" aria-labelledby="editAnimalVaccineModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editAnimalVaccineModalLabel">Edit Vaccination Status</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form action="includes/action.php" method="POST" id="editAnimalVaccineForm">
-                <div class="modal-body">
-                    <input type="hidden" name="animal_id" id="vaccineAnimalIdInput">
-
-                    <div class="form-group">
-                        <label for="vaccineSelect">Vaccination Status</label>
-                        <select class="form-control" id="vaccineSelect" name="vaccination_status">
-                            <option value="1">Not Vaccinated</option>
-                            <option value="2">Vaccinated</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group" id="vaccineTypeGroup" style="display: none;">
-                        <label for="vaccineTypeSelect">Vaccine Type</label>
-                        <select class="form-control" id="vaccineTypeSelect" name="vaccine_type_id">
-                            <!-- Vaccine types will be populated dynamically -->
-                            <?php foreach ($vaccineTypes as $vaccineType): ?>
-                                <option value="<?= $vaccineType['VACCINE_TYPE_ID'] ?>"><?= $vaccineType['VACCINE_NAME'] ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-
-                    <div class="form-group" id="vaccineIdGroup" style="display: none;">
-                        <label for="VACCINE_ID">Vaccine ID</label>
-                        <select class="form-control" id="VACCINE_ID" name="VACCINE_ID">
-                            <!-- Vaccines will be populated dynamically -->
-                        </select>
-                    </div>
-
-                    <div class="form-group" id="vaccineDateGroup" style="display: none;">
-                        <label for="DATE">Date</label>
-                        <input type="date" class="form-control" id="DATE" name="DATE">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
 
+
+<script src="../livestock2/administrator2/recording/recording.js"></script>
 <!-- Scripts to handle modals and updates -->
 <script>
-$(document).ready(function(){
+document.addEventListener('DOMContentLoaded', function() {
 
     $('#main').css('filter', 'none');
     $('#loader').hide();
-});
+
+    $('#animal-info-table').dataTable({
 
 
-document.addEventListener('DOMContentLoaded', function() {
+    });
+
     // Handle vaccine button click
     const editVaccineButtons = document.querySelectorAll('.editVaccineBtn');
     editVaccineButtons.forEach(button => {
@@ -316,15 +342,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const vaccineTypeGroup = document.getElementById('vaccineTypeGroup');
         const vaccineIdGroup = document.getElementById('vaccineIdGroup');
         const vaccineDateGroup = document.getElementById('vaccineDateGroup');
+        const vaccineScheduleGroup = document.getElementById('vaccineScheduleGroup');
 
         if (vaccinationStatus == '2') { // Vaccinated
             vaccineTypeGroup.style.display = 'block';
             vaccineIdGroup.style.display = 'block';
             vaccineDateGroup.style.display = 'block';
+            vaccineScheduleGroup.style.display = 'block';
         } else { // Not Vaccinated
             vaccineTypeGroup.style.display = 'none';
             vaccineIdGroup.style.display = 'none';
             vaccineDateGroup.style.display = 'none';
+            vaccineScheduleGroup.style.display = 'none';
         }
     }
 
@@ -361,7 +390,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 <?php
 // Check if the AddCattleModal.php file exists before including it
-$addCattleModalPath = "administrator2/addCattle/AddCattle.php";
+$addCattleModalPath = "administrator/AddCattle/AddCattle.php";
 if (file_exists($addCattleModalPath)) {
     include($addCattleModalPath);
 } else {

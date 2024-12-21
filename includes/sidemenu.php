@@ -100,12 +100,28 @@
               <p>Schedule </p>
             </a>
           </li>
-          <li class="nav-item">
+          <!-- <li class="nav-item">
             <a href="index.php?page=reports" class="nav-link <?= $reports?>">
               <i class="nav-icon fas fa-file"></i>
               <p>Reports </p>
             </a>
-          </li>
+          </li> -->
+
+          <!-- Dropdown Menu for Recording -->
+          <li class="nav-item dropdown">
+                    <a href="#" class="nav-link dropdown-toggle <?= $reports ?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="nav-icon far fa-calendar-alt"></i>
+                        <p>Reports</p>
+                    </a>
+                    <div class="dropdown-menu bg-secondary text-white pl-3">
+                        <a href="index.php?page=AnimalReports" class="dropdown-item  mt-2">Animals </a>
+                        <a href="index.php?page=ScheduleReports" class="dropdown-item mt-2">Schedule </a>
+                        <a href="index.php?page=InventoryReports" class="dropdown-item  mt-2">Inventory </a>
+                        <a href="index.php?page=DispersalReports" class="dropdown-item mt-2 ">Dispersals </a>
+                        <a href="index.php?page=PaymentReports" class="dropdown-item  mt-2>">Payments </a>
+                       
+                    </div>
+                </li>
 
         </ul>
       </nav>
@@ -115,3 +131,10 @@
   </aside>
   <?php include('logoutAdminModal.php'); ?>
 
+  <style>
+  /* Change text color to black when hovering over dropdown items */
+  .dropdown-menu .dropdown-item:hover {
+      background-color:rgb(221, 223, 225); /* Darker grey background */
+      color: black !important; /* Text turns black on hover */
+  }
+</style>

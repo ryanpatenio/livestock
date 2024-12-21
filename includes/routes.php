@@ -7,7 +7,7 @@ $action = $_GET['action'];
 $helper = new Helper($con);
 
 
-// Create the clientController instance and pass the Helper
+// Create the Controller instance and pass the Helper
 $clientController = new clientController($helper);
 $scheduleController = new scheduleController($helper);
 $cattleController = new cattleController($helper);
@@ -111,4 +111,8 @@ if($action == "getDispersal"){
 if($action == "addFirstPayment"){
 	$firstPayment = $dispersalController->firstPayment();
 	return $firstPayment;
+}
+if($action == "addSecondPayment"){
+	$secondPayment = $dispersalController->secondPayment();
+	return $secondPayment;
 }

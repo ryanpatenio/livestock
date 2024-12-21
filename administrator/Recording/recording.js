@@ -3,6 +3,11 @@ $(document).ready(function(){
 const addModal = $('#addVaccinationModal');
 const viewModal = $('#viewModal');
 
+$('#clientTBL').dataTable({
+            
+
+});
+
     $(document).on('submit','#addCattleForm',function(e){
         e.preventDefault();
 

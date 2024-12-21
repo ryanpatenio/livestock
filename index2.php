@@ -20,6 +20,9 @@ if (isset($_GET['page'])) {
         case "clientList2":
             include("administrator2/client/clientList2.php");
             break;
+        case "Dispersal":
+            include("administrator2/dispersal/Dispersal_list.php");
+            break;
         case "Recording":
             include("administrator2/recording/recordingList.php");
             break;
@@ -34,6 +37,24 @@ if (isset($_GET['page'])) {
             break;
         case "AddSchedule":
             include("administrator2/Schedule/AddSchedule.php"); // Path to AddSchedule page
+            break;
+
+            //reports
+           
+        case "AnimalReports":
+            include("administrator2/reports/animals/animalList.php"); // 
+            break;
+        case "ScheduleReports":
+            include("administrator2/reports/schedule/scheduleList.php"); // Path 
+            break;
+        case "InventoryReports":
+            include("administrator2/reports/inventory/inventoryList.php"); // Path 
+            break;
+        case "DispersalReports":
+            include("administrator2/reports/dispersal/dispersalList.php"); // Path 
+            break;
+        case "PaymentReports":
+            include("administrator2/reports/payment/paymentList.php"); // Path 
             break;
     }
 } else {

@@ -27,7 +27,10 @@ class cattleController {
             mkdir($uploadDirectory, 0755, true); // Create folder if it doesn't exist
         }
 
-        $imagePath = $uploadDirectory . basename($image['name']);
+       
+        // Generate a unique name for the uploaded image
+        $imageName = uniqid() . "_" . basename($image['name']);
+        $imagePath = $uploadDirectory . $imageName;
 
         if (!move_uploaded_file($image['tmp_name'], $imagePath)) {
            return $this->helper->message("error while uploading...",200,1);
@@ -77,7 +80,10 @@ class cattleController {
             mkdir($uploadDirectory, 0755, true); // Create folder if it doesn't exist
         }
 
-        $imagePath = $uploadDirectory . basename($image['name']);
+        
+        // Generate a unique name for the uploaded image
+        $imageName = uniqid() . "_" . basename($image['name']);
+        $imagePath = $uploadDirectory . $imageName;
 
         if (!move_uploaded_file($image['tmp_name'], $imagePath)) {
            return $this->helper->message("error while uploading...",200,1);

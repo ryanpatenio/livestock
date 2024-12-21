@@ -5,6 +5,14 @@ $(document).ready(function(){
 
     const addModal = $('#Add_scheduleModal');
 
+    $('#clientTbl').dataTable({
+
+    });
+    $('#schedTable').dataTable({
+
+    });
+
+
     $(document).on('submit','#addScheduleForm',function(e){
         e.preventDefault();
         

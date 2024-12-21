@@ -252,7 +252,7 @@ if ($stmt5) {
                         </div>
                         <div class="card-body">
                             <div id="table-responsive">
-                                <table class="table datatable table-light" id="dataTable" width="100%" cellspacing="0">
+                                <table class="table datatable table-light stocks-on-hand-table" id="dataTable" width="100%" cellspacing="0">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>No.</th>
@@ -312,7 +312,7 @@ if ($stmt5) {
                         </div>
                         <div class="card-body">
                             <div id="table-responsive">
-                                <table class="table datatable table-light" id="dataTable" width="100%" cellspacing="0">
+                                <table class="table datatable table-light vaccine-receive-table" id="dataTable" width="100%" cellspacing="0">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>No.</th>
@@ -366,7 +366,7 @@ if ($stmt5) {
                         </div>
                         <div class="card-body">
                             <div id="table-responsive">
-                                <table class="table datatable table-light" id="dataTable" width="100%" cellspacing="0">
+                                <table class="table datatable table-light vaccine-usage-table" id="dataTable" width="100%" cellspacing="0">
                                     <thead class="thead-dark">
 
                                         <tr>
@@ -415,6 +415,18 @@ if ($stmt5) {
     $(document).ready(function(){
         $('#main').css('filter', 'none');
         $('#loader').hide();
+
+        $('.stocks-on-hand-table').dataTable({
+
+        });
+
+        $('.vaccine-receive-table').dataTable({
+
+        });
+
+        $('.vaccine-usage-table').dataTable({
+
+        });
         
         const editModal = $('#editModal');
 

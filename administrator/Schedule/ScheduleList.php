@@ -84,24 +84,26 @@ if (isset($_POST['submit_schedule'])) {
               <h6 class="mb-0">Clients</h6>
             </div>
             <div class="card-body">
-              <table class="table table-striped table-hover">
-                <thead class="thead-light">
-                  <tr>
-                    <th>Client</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php foreach ($clients as $client) { ?>
-                    <tr>
-                      <td><?= htmlspecialchars($client['full_name']); ?></td>
-                      <td>
-                        <a href="index.php?page=Schedule&client_id=<?= $client['CLIENT_ID']; ?>" class="btn btn-sm btn-outline-primary">View</a>
-                      </td>
-                    </tr>
-                  <?php } ?>
-                </tbody>
-              </table>
+              <div class="table-responsive">
+                    <table class="table table-striped table-hover" id="clientTbl">
+                      <thead class="thead-light">
+                        <tr>
+                          <th>Client</th>
+                          <th>Action</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php foreach ($clients as $client) { ?>
+                          <tr>
+                            <td><?= htmlspecialchars($client['full_name']); ?></td>
+                            <td>
+                              <a href="index.php?page=Schedule&client_id=<?= $client['CLIENT_ID']; ?>" class="btn btn-sm btn-info">View</a>
+                            </td>
+                          </tr>
+                        <?php } ?>
+                      </tbody>
+                    </table>
+                </div>
             </div>
           </div>
         </div>
@@ -117,7 +119,7 @@ if (isset($_POST['submit_schedule'])) {
             </div>
             <div class="card-body">
               <h6><strong>Client:</strong> <?= htmlspecialchars($selectedClientName); ?></h6>
-              <table class="table table-bordered">
+              <table class="table table-bordered" id="schedTable">
                 <thead class="thead-dark">
                   <tr>
                   <th>Vaccine Name</th>

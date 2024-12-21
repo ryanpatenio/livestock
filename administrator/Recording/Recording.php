@@ -114,59 +114,70 @@ mysqli_close($con);
         <div class="container-fluid p-3">
             <div class="row">
                 <!-- Client List -->
-                <div class="col-md-4">
-                    <div class="card shadow">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0"><i class="fas fa-users"></i> List of Clients</h5>
-                        </div>
-                        <div class="card-body p-0">
-                            <table id="clientTBL" class="table table-striped table-hover mb-0">
-                                <thead class="thead-dark">
+
+                    <div class="col-md-4 mb-4">
+                        <div class="card shadow-sm">
+                            <div class="card-header bg-primary text-white">
+                                <h6 class="mb-0"><b>List of Clients</b></h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                <table id="clientTBL" class="table table-bordered table-hover">
+                                    <thead class="thead-dark">
                                     <tr>
                                         <th>Client</th>
                                         <th>Action</th>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($clients as $client): ?>
-                                        <tr>
-                                            <td><?= htmlspecialchars($client['full_name']); ?></td>
-                                            <td>
-                                                <a href="index.php?page=Recording&client_id=<?= $client['CLIENT_ID']; ?>" 
-                                                   class="btn btn-sm btn-info">
-                                                    View
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($clients as $client): ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($client['full_name']); ?></td>
+                                                <td>
+                                                    <a href="index.php?page=Recording&client_id=<?= $client['CLIENT_ID']; ?>" 
+                                                    class="btn btn-sm btn-info fa fa-search">
+                                                        View
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                        </tbody>
+                                </table>
+                            </div>
+                            </div>
                         </div>
-                    </div>
-                </div>
+                 </div>
 
-                <!-- Animal Information -->
-                <div class="col-md-8">
+
+                 <!-- Animal Information -->
+                 <div class="col-md-8">
                     <div class="card shadow">
+                        <!-- Card Header -->
                         <div class="card-header bg-success text-white d-flex align-items-center">
                             <h5 class="mb-0"><i class="fas fa-paw"></i> Animal Information</h5>
                             <a href="#" 
-                               class="btn btn-warning btn-sm ml-auto" 
-                               style="border-radius: 20px; font-weight: bold;" 
-                               data-toggle="modal" 
-                               data-target="#AddCattleModal">
-                               + Add New
+                            class="btn btn-warning btn-sm ml-auto" 
+                            style="border-radius: 20px; font-weight: bold;" 
+                            data-toggle="modal" 
+                            data-target="#AddCattleModal">
+                            + Add New
                             </a>
                         </div>
 
+                        <!-- Card Body -->
                         <div class="card-body">
                             <h6 class="mb-3">
                                 <strong>Client:</strong> 
-                                <span id="clientNameDisplay" class="text-primary"><?= $selectedClient ?: "Select a client to view animal details"; ?></span>
+                                <span id="clientNameDisplay" class="text-primary">
+                                    <?= htmlspecialchars($selectedClient) ?: "Select a client to view animal details"; ?>
+                                </span>
                             </h6>
-                            <table class="table table-bordered table-striped">
+
+                            <!-- Table -->
+                            <table class="table table-bordered table-striped" id="animal-info-table">
                                 <thead class="thead-light">
                                     <tr>
+                                        <th>#</th>
                                         <th>Animal Type</th>
                                         <th>Birthdate</th>
                                         <th>Gender</th>
@@ -177,12 +188,20 @@ mysqli_close($con);
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if ($animals): ?>
+                                    <?php $i = 1; if (!empty($animals)): ?>
                                         <?php foreach ($animals as $animal): ?>
                                             <tr>
+                                                <td><?=$i; ?></td>
+                                                <!-- Animal Type -->
                                                 <td><?= htmlspecialchars($animal['ANIMALTYPE']); ?></td>
+
+                                                <!-- Birthdate -->
                                                 <td><?= htmlspecialchars($animal['BIRTHDATE']); ?></td>
+
+                                                <!-- Gender -->
                                                 <td><?= $animal['GENDER'] == 1 ? 'Male' : 'Female'; ?></td>
+
+                                                <!-- Status -->
                                                 <td>
                                                     <button class="btn btn-sm <?= $animal['STATUS'] == 1 ? 'btn-success' : 'btn-danger'; ?> editStatusBtn"
                                                             data-animal-id="<?= $animal['ANIMAL_ID']; ?>"
@@ -190,30 +209,49 @@ mysqli_close($con);
                                                         <?= $animal['STATUS'] == 1 ? 'Alive' : 'Dead'; ?>
                                                     </button>
                                                 </td>
+
+                                                <!-- Vaccination Status -->
                                                 <td>
-                                                    <button class="btn btn-sm <?= $animal['isVaccinated'] == 0 ? 'btn-warning' : 'btn-primary'; ?> " id="vacc-status"
-                                                            data-animal-ids="<?= $animal['ANIMAL_ID']; ?>"
-                                                           >
+                                                    <button class="btn btn-sm <?= $animal['isVaccinated'] == 0 ? 'btn-warning' : 'btn-primary'; ?>" 
+                                                            id="vacc-status"
+                                                            data-animal-id="<?= $animal['ANIMAL_ID']; ?>">
                                                         <?= $animal['isVaccinated'] == 0 ? 'Not Vaccinated' : 'Vaccinated'; ?>
                                                     </button>
                                                 </td>
+
+                                                <!-- Image -->
                                                 <td>
                                                     <?php if (!empty($animal['IMAGE_PATH'])): ?>
-                                                        <!-- Use relative path to display image -->
-                                                        <img src="includes/<?= htmlspecialchars($animal['IMAGE_PATH']); ?>" alt="Animal Image" class="img-thumbnail" style="width:150px;">
+                                                        <img src="includes/<?= htmlspecialchars($animal['IMAGE_PATH']); ?>" 
+                                                            alt="Animal Image" 
+                                                            class="img-thumbnail" 
+                                                            style="width: 150px;">
                                                     <?php else: ?>
                                                         <span class="text-muted">No image</span>
                                                     <?php endif; ?>
                                                 </td>
+
+                                                <!-- Actions -->
                                                 <td>
-                                                    <button class="btn btn-sm btn-primary fa fa-eye"  data-id=<?=$animal['ANIMAL_ID']; ?> id="view-btn">View</button>
-                                                    <button class="btn btn-sm btn-success fa fa-plus"  data-current-vaccination-status="<?= $animal['isVaccinated'] == 0 ? 'Not Vaccinated' : 'Vaccinated'; ?>" data-id=<?=$animal['ANIMAL_ID']; ?> id="add-btn"> Add</button>
+                                                    <button class="btn btn-sm btn-primary" 
+                                                            id="view-btn" 
+                                                            data-id="<?= $animal['ANIMAL_ID']; ?>">
+                                                        <i class="fa fa-eye"></i> View
+                                                    </button>
+                                                    <button class="btn btn-sm btn-success" 
+                                                            id="add-btn" 
+                                                            data-current-vaccination-status="<?= $animal['isVaccinated'] == 0 ? 'Not Vaccinated' : 'Vaccinated'; ?>" 
+                                                            data-id="<?= $animal['ANIMAL_ID']; ?>">
+                                                        <i class="fa fa-plus"></i> Add
+                                                    </button>
                                                 </td>
-                                                                                            </tr>
-                                        <?php endforeach; ?>
+                                            </tr>
+                                        <?php $i++; endforeach; ?>
                                     <?php else: ?>
                                         <tr>
-                                            <td colspan="6" class="text-center text-muted">No animal details found for this client.</td>
+                                            <td colspan="7" class="text-center text-muted">
+                                                No animal details found for this client.
+                                            </td>
                                         </tr>
                                     <?php endif; ?>
                                 </tbody>
@@ -265,6 +303,11 @@ mysqli_close($con);
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Handle vaccine button click
+
+    $('#animal-info-table').dataTable({
+
+    });
+
     const editVaccineButtons = document.querySelectorAll('.editVaccineBtn');
     editVaccineButtons.forEach(button => {
         button.addEventListener('click', function() {

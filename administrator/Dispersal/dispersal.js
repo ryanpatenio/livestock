@@ -5,6 +5,11 @@ $(document).ready(function(){
     const updateFirstModal = $('#firstPaymentModal');
     const updateSecondModal = $('#secondPaymentModal');
 
+    $('#clientTBL').dataTable({
+            
+
+    });
+
     $('#existingClient').on('change', function () {
         const selectedValue = $(this).val();
     
@@ -29,6 +34,7 @@ $(document).ready(function(){
         } else {
             $('#clientForm2').slideUp(); // Hide the form
             $('#paidtToDiv2').css('display', 'block');
+            $('#clientForm2 input').prop('required', false); // Remove required attributes
         }
     });
     
@@ -103,37 +109,85 @@ $(document).ready(function(){
         $url = baseUrl + "action=addFirstPayment";
         let formData = new FormData(this);
 
-        $.ajax({
-            url: $url,
-            type: 'POST',
-            data: formData,
-            contentType: false,
-            processData: false,
-            dataType: 'json',
-    
-    
-            success: function(resp) {
-              // res(resp);
-               
-               if(response.code != 0){
-                msg(response.message,'error');
-                return;
-             }
+        swalMessage('custom','Are you sure you want to update this First Payment Dispersal?',function(){
+            $.ajax({
+                url: $url,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+        
+        
+                success: function(response) {
+                // res(resp);
+                
+                if(response.code != 0){
+                    msg(response.message,'error');
+                    return;
+                }
 
-            message(response.message,'success');
-            formModalClose(addModal,$('#firstPaymentForm'));
-             
-                                  
-            },
-            error: function(xhr, status, error) {
-                res(xhr.responseText);
-      
-            }
+                message(response.message,'success');
+                formModalClose(updateFirstModal,$('#firstPaymentForm'));
+                
+                                    
+                },
+                error: function(xhr, status, error) {
+                    res(xhr.responseText);
+        
+                }
+            });
         });
-    
        
       
-    })
+    });
+
+    $('#secondPaymentForm').submit(function(e){
+        e.preventDefault();
+
+        if ($('#existingClient2').val() === 'notexisting' && $('#clientForm2 input:visible[required]').filter(function () {
+            return !this.value;
+        }).length > 0) {
+            alert('Please fill out all required fields!');
+            e.preventDefault();
+        }
+
+        $url = baseUrl + "action=addSecondPayment";
+        let formData = new FormData(this);
+
+        swalMessage('custom','Are you sure you want to update this Second Payment Dispersal?',function(){
+
+            $.ajax({
+                url: $url,
+                type: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                dataType: 'json',
+        
+        
+                success: function(response) {
+                res(response);
+                
+                if(response.code != 0){
+                    msg(response.message,'error');
+                    return;
+                }
+
+                message(response.message,'success');
+                formModalClose(updateSecondModalModal,$('#secondPaymentForm'));
+                
+                                    
+                },
+                error: function(xhr, status, error) {
+                    res(xhr.responseText);
+        
+                }
+            });
+
+         });
+
+    });
 
     $(document).on('click','.payment-button-1st',function(e){
         e.preventDefault();

@@ -45,6 +45,24 @@ if (isset($_GET['page'])) {
         default:
             include("administrator/Recording/Recording.php");
             break;
+
+
+            //reports    
+        case "AnimalReports":
+            include("administrator/reports/animals/animalList.php"); // 
+            break;
+        case "ScheduleReports":
+            include("administrator/reports/schedule/scheduleList.php"); // Path 
+            break;
+        case "InventoryReports":
+            include("administrator/reports/inventory/inventoryList.php"); // Path 
+            break;
+        case "DispersalReports":
+            include("administrator/reports/dispersal/dispersalList.php"); // Path 
+            break;
+        case "PaymentReports":
+            include("administrator/reports/payment/paymentList.php"); // Path 
+            break;
     }
 } else {
     header('Location: login/login.php');

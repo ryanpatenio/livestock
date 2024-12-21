@@ -130,38 +130,40 @@ mysqli_close($con);
     <div class="container-fluid">
       <div class="row">
         <!-- Clients List Section -->
-        <div class="col-md-4 mb-4">
+        <div class="col-md-6 mb-4">
           <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white">
-              <h6 class="mb-0"><b>List of Clients</b></h6>
-            </div>
-            <div class="card-body">
-              <table id="clientTBL" class="table table-bordered table-hover">
-                <thead class="thead-dark">
-                  <tr>
-                    <th>Client</th>
-                    <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php foreach ($clients as $client) { ?>
-                    <tr>
-                      <td><?= htmlspecialchars($client['full_name']); ?></td>
-                      <td>
-                        <a href="index.php?page=Dispersal&client_id=<?= $client['CLIENT_ID']; ?>" class="btn btn-info btn-sm elevation-1">
-                          View
-                        </a>
-                      </td>
-                    </tr>
-                  <?php } ?>
-                </tbody>
-              </table>
+              <div class="card-header bg-primary text-white">
+                  <h6 class="mb-0"><b>List of Clients</b></h6>
+              </div>
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table id="clientTBL" class="table table-bordered table-hover">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th>Client</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php foreach ($clients as $client) { ?>
+                        <tr>
+                          <td><?= htmlspecialchars($client['full_name']); ?></td>
+                          <td>
+                            <a href="index.php?page=Dispersal&client_id=<?= $client['CLIENT_ID']; ?>" class="btn btn-info btn-sm elevation-1">
+                              View
+                            </a>
+                          </td>
+                        </tr>
+                      <?php } ?>
+                    </tbody>
+                  </table>
+              </div>
             </div>
           </div>
         </div>
 
         <!-- Dispersal Details Section -->
-        <div class="col-md-8 mb-4">
+        <div class="col-md-6 mb-4">
           <div class="card shadow-lg border-0">
             <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
             <h6 class="mb-0">

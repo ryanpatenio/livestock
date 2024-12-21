@@ -33,10 +33,12 @@
                         <label for="parentId">Parent ID (Animal of CLIENTS (Female) )</label>
                         <select name="ANIMAL_ID" id="animal_parent" class="form-control" required>
                           <option value="">Select...</option>
-                        <?php
-                        foreach ($animals as $animal) { ?>
-                            <option data-animal-type=<?=$animal['ANIMALTYPE']; ?> value="<?=$animal['ANIMAL_ID'] ?>"> <?=$animal['ANIMALTYPE']." | ".$animal['ANIMAL_SEX'] ?></option>
-                        <?php }
+                          
+                          <?php foreach ($animals ?? [] as $animal) { ?>
+                            <option data-animal-type="<?=$animal['ANIMALTYPE']; ?>" value="<?=$animal['ANIMAL_ID'] ?>">
+                                <?=$animal['ANIMALTYPE']." | ".$animal['ANIMAL_SEX'] ?>
+                            </option>
+                         <?php } ?>
                   
                   ?>
                 </select>

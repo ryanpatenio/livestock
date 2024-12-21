@@ -1,8 +1,3 @@
-<?php
-
-
-?>
-
 
 <!-- Modal -->
 <div class="modal fade" id="Add_dispersalModal" tabindex="-1" role="dialog" aria-labelledby="Add_dispersalModalLabel" aria-hidden="true">

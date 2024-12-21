@@ -30,7 +30,7 @@
 <!-- CropperJS -->s
 <script src="plugins/cropper/cropper.min.js"></script>
 
-<script src="vendor/datatables/simple-datatable.js"></script>
+<script src="vendor/datatables/simple-datatables.js"></script>
 
 <!-- USING CDN ###############################################################################-->
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.2/jquery.min.js"></script>
@@ -62,8 +62,8 @@
 }
 ?>
 <!-- Personal JavaScript -->
-<script src="js/myFunctions.js"></script>
+<!-- <script src="js/myFunctions.js"></script>
 <script src="js/myScript.js"></script>
-<script src="js/table.js"></script>
+<script src="js/table.js"></script> -->
 </body>
 </html>

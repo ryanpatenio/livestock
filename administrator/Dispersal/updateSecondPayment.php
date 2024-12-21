@@ -11,6 +11,7 @@
         <form action="" id="secondPaymentForm" method="post" enctype="multipart/form-data">
           <div class="modal-body">
             <input type="hidden" name="dispersal_id2" id="dispersalId2">
+            <input type="hidden" name="client_id2" value="<?=$client_id; ?>">
             
             <div class="form-group">
               <label for="paymentStatus">Select Payment Status</label>
@@ -26,16 +27,18 @@
                 <div class="row">
                     <div class="col">
                         <label for="orPaymentNo">OR Payment No</label>
-                        <input type="text" class="form-control" id="orPaymentNo" name="or_payment_no" required>
+                        <input type="text" class="form-control" id="" name="or" required>
                     </div>
                     <div class="col">
-                        <label for="parentId">Parent ID (Animal of CLIENTS (Female) )</label>
+                        <label for="">Parent ID (Animal of CLIENTS (Female) )</label>
                         <select name="ANIMAL_ID" id="animal_parent2" class="form-control" required>
                           <option value="">Select....</option>
-                        <?php
-                        foreach ($animals as $animal) { ?>
-                            <option data-animal-type=<?=$animal['ANIMALTYPE']; ?> value="<?=$animal['ANIMAL_ID'] ?>"> <?=$animal['ANIMALTYPE']." | ".$animal['ANIMAL_SEX'] ?></option>
-                        <?php }
+
+                          <?php foreach ($animals ?? [] as $animal) { ?>
+                            <option data-animal-type="<?=$animal['ANIMALTYPE']; ?>" value="<?=$animal['ANIMAL_ID'] ?>">
+                                <?=$animal['ANIMALTYPE']." | ".$animal['ANIMAL_SEX'] ?>
+                            </option>
+                         <?php } ?>
                   
                   ?>
                 </select>
@@ -49,12 +52,12 @@
               <div class="form-group">
                <div class="row">
                     <div class="col">
-                        <label for="parentId">Second Payment</label>
-                        <input type="number" class="form-control" id="first" name="parent_id" required>
+                        <label for="">Second Payment</label>
+                        <input type="number" class="form-control" id="second" name="parent_id" value="1" readonly required>
                     </div>
                     <div class="col">
-                        <label for="paymentDate">Date</label>
-                        <input type="date" class="form-control" id="paymentDate" name="date" required>
+                        <label for="">Date</label>
+                        <input type="date" class="form-control" id="paymentDate" name="paymentDate" required>
                     </div>
                </div>
               </div>
@@ -86,7 +89,7 @@
                    
                     <div class="col">
                      <label for="">Image</label>
-                        <input type="file" class="form-control" accept="image" name="animal_img" required>
+                        <input type="file" class="form-control" accept="image" name="animal_img2" required>
                   </div>                    
                 </div>
               
@@ -123,7 +126,7 @@
 
                     <div class="form-group" id="paidtToDiv2">
                         <label for="paid_to">Give To: (Client)</label>
-                        <select name="give_to" id="give_to" required>
+                        <select name="give_to2" id="give_to2" required>
                         <?php foreach ($clients as $client) { ?>
                             <option value="<?= $client['CLIENT_ID']; ?>"><?= htmlspecialchars($client['full_name']); ?></option>
                         <?php } ?>
@@ -136,34 +139,34 @@
                         <div class="row">
                             <div class="col">
                                 <label>First Name:</label>
-                                <input type="text" name="firstName" class="form-control" placeholder="Enter First Name" required>
+                                <input type="text" name="FNAME" class="form-control" placeholder="Enter First Name" required>
                         
                             </div>
                             <div class="col">
                                 <label>Last Name:</label>
-                                <input type="text" name="lastName" class="form-control" placeholder="Enter Last Name" required>
+                                <input type="text" name="LNAME" class="form-control" placeholder="Enter Last Name" required>
                             </div>
                         </div>
                        
                         <div class="row">
                             <div class="col">
                                 <label>Middle Initial:</label>
-                                <input type="text" name="middleInitial" class="form-control" placeholder="Enter Middle Initial" required>
+                                <input type="text" name="MI" class="form-control" placeholder="Enter Middle Initial" required>
                             </div>
                             <div class="col">
                                 <label>Association:</label>
-                                <input type="text" name="association" class="form-control" placeholder="Enter Association" required>
+                                <input type="text" name="ASSOC" class="form-control" placeholder="Enter Association" required>
                             </div>
                         </div>
                         
                         <div class="row">
                             <div class="col">
                                 <label>Contact:</label>
-                                <input type="text" name="contact" class="form-control" placeholder="Enter Contact" required>
+                                <input type="text" name="CONTACT" class="form-control" placeholder="Enter Contact" required>
                             </div>
                             <div class="col">
                                 <label>Address:</label>
-                                <input type="text" name="address" class="form-control" placeholder="Enter Address"required>
+                                <input type="text" name="ADDRESS" class="form-control" placeholder="Enter Address"required>
                             </div>
                         </div>         
                         

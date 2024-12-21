@@ -74,13 +74,15 @@ mysqli_close($con);
         <div class="container-fluid p-3">
             <div class="row">
                 <!-- Vaccine Type List -->
-                <div class="col-md-4">
+
+                <div class="col-md-4 mb-4">
                     <div class="card shadow-sm">
                         <div class="card-header bg-primary text-white">
-                            <h6><b>Vaccine Types</b></h6>
+                            <h6 class="mb-0"><b>List of Vaccine Types</b></h6>
                         </div>
                         <div class="card-body">
-                            <table id="vaccineTypeTBL" class="table table-striped table-hover">
+                            <div class="table-responsive">
+                            <table id="vaccineTypeTBL" class="table table-bordered table-hover">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th>No.</th>
@@ -88,27 +90,28 @@ mysqli_close($con);
                                     </tr>
                                 </thead>
                                 <tbody>
-
                                 <?php
-                                  $i = 1;
-                                foreach ($vaccineTypes as $type) {
-                                  
-                                    ?>
-                                        <tr>
-                                            <td><?=$i; ?></td>
-                                            <td><?= htmlspecialchars($type['VACCINE_NAME']); ?></td>
-                                            <!-- <td><a href="index.php?page=inventory&vaccine_type_id=<?= $type['VACCINE_TYPE_ID']; ?>" class="btn btn-sm btn-outline-info">View</a></td> -->
-                                        </tr>
+                                    $i = 1;
+                                    foreach ($vaccineTypes as $type) {
+                                        
+                                        ?>
+                                            <tr>
+                                                <td><?=$i; ?></td>
+                                                <td><?= htmlspecialchars($type['VACCINE_NAME']); ?></td>
+                                                <!-- <td><a href="index.php?page=inventory&vaccine_type_id=<?= $type['VACCINE_TYPE_ID']; ?>" class="btn btn-sm btn-outline-info">View</a></td> -->
+                                            </tr>
 
-                              <?php $i++;  } ?>
-                                
-                                
-                                    
+                                    <?php $i++;  } ?>
                                 </tbody>
                             </table>
                         </div>
+                        </div>
                     </div>
-                </div>
+             </div>
+
+            
+
+
 
                 <!-- Vaccine Inventory List -->
                 <div class="col-md-8">
@@ -127,7 +130,7 @@ mysqli_close($con);
                         </div>
                         <div class="card-body">
                             <div id="table-responsive">
-                                <table class="table datatable table-light" id="dataTable" width="100%" cellspacing="0">
+                                <table class="table datatable table-light inventoryTable" id="dataTable" width="100%" cellspacing="0">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>No.</th>
@@ -149,7 +152,7 @@ mysqli_close($con);
                                                     <td><?=$data['available_quantity'] ?></td>
                                                     
                                                     <td>
-                                                        <a href="index.php?page=viewInventory&vaccID=<?=$data['VACCINE_TYPE_ID'] ?>" class="btn btn-sm btn-primary fa fa-eye">View</a>
+                                                        <a href="index.php?page=viewInventory&vaccID=<?=$data['VACCINE_TYPE_ID'] ?>" class="btn btn-sm btn-info fa fa-search">View</a>
                                                        
                                                        
                                                     </td>

@@ -60,7 +60,7 @@ $vaccineData = mysqli_fetch_all($result, MYSQLI_ASSOC);
                 <h6 class="mb-0">Clients</h6>
               </div>
               <div class="card-body">
-                <table class="table table-striped table-hover">
+                <table class="table table-striped table-hover" id="client-table">
                   <thead>
                     <tr><th>Client</th><th>Action</th></tr>
                   </thead>
@@ -69,7 +69,7 @@ $vaccineData = mysqli_fetch_all($result, MYSQLI_ASSOC);
                       <tr>
                         <td><?= htmlspecialchars($client['full_name']); ?></td>
                         <td>
-                          <a href="index2.php?page=Schedule&client_id=<?= $client['CLIENT_ID']; ?>" class="btn btn-sm btn-outline-primary">View</a>
+                          <a href="index2.php?page=Schedule&client_id=<?= $client['CLIENT_ID']; ?>" class="btn btn-sm btn-info">View</a>
                         </td>
                       </tr>
                     <?php } ?>
@@ -82,15 +82,15 @@ $vaccineData = mysqli_fetch_all($result, MYSQLI_ASSOC);
     <!-- Schedule Information -->
           <div class="col-md-8">
             <div class="card">
-              <div class="card-header">
-                <div class="d-flex">
+              <div class="card-header bg-primary text-white d-flex align-items-center">
+               
                   <h6>Scheduling Information</h6>
-                  <a href="#" class="btn btn-primary ml-auto" data-toggle="modal" data-target="#Add_scheduleModal">New Request</a>
-                </div>
+                  <a href="#" class="btn btn-dark ml-auto" data-toggle="modal" data-target="#Add_scheduleModal">New Request</a>
+              
               </div>
               <div class="card-body">
                 <h6>Client: <span><?= htmlspecialchars($selectedClientName); ?></span></h6>
-                <table class="table table-bordered">
+                <table class="table table-bordered" id="sched-info-table">
                   <thead>
                     <tr>
                       <th>Vaccine Name</th>
@@ -206,6 +206,17 @@ include('addSched.php');
 </script>
 
   <script>
+
+    $(document).ready(function(){
+      $('#sched-info-table').dataTable({
+
+
+      });
+      $('#client-table').dataTable({
+
+      });
+
+    });
     $(document).on('click','.approve-btn',function(e){
       e.preventDefault();
 
@@ -218,7 +229,7 @@ include('addSched.php');
         const scheduleId = $(this).attr('data-id');
         const firstRequirement = $(this).attr('data-1st');
         const secondRequirement = $(this).attr('data-2nd');
-
+        
         // Check if both requirements are submitted
         if (firstRequirement === '0' || secondRequirement === '0') {
           alert('Both the 1st and 2nd Requirements must be submitted before approval.');
