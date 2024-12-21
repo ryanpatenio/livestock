@@ -55,7 +55,7 @@ class dispersalController {
 
     public function firstPayment(){
         extract($_POST);
-
+        
         //payment STATUS
         $paymentStatus = "First Payment";
 
@@ -68,6 +68,7 @@ class dispersalController {
         if($dispersal_id1 == "" || $dispersal_id1 == null){
             return $this->helper->message('error! missing some parameters..',200,1);
         }
+
 
          // Validate if the file is present
          if (!isset($_FILES['animal_img']) || $_FILES['animal_img']['error'] !== UPLOAD_ERR_OK) {
@@ -254,8 +255,8 @@ class dispersalController {
         }
     
         // Insert the animal record into the database
-        $insertQuery = "INSERT INTO animal (CLIENT_ID, BIRTHDATE, ANIMALTYPE, ANIMAL_SEX, STATUS, IMAGE_PATH,isPayment,fromClient) 
-                        VALUES (?, ?, ?, ?, ?, ?,'1',?)";
+        $insertQuery = "INSERT INTO animal (CLIENT_ID, BIRTHDATE, ANIMALTYPE, ANIMAL_SEX, STATUS, IMAGE_PATH,isPayment,fromClient, date_created) 
+                        VALUES (?, ?, ?, ?, ?, ?,'1',?, now())";
         $STATUS = "1"; // Default status @it means animal is alive
         $param = [$CLIENT_ID, $BIRTHDATE, $ANIMALTYPE, $ANIMAL_SEX, $STATUS, $imagePath,$fromClientID];
         $insert = $this->helper->regularQuery($insertQuery, $param);
@@ -319,8 +320,8 @@ class dispersalController {
         }
     
         // Insert the animal record into the database
-        $insertQuery = "INSERT INTO animal (CLIENT_ID, BIRTHDATE, ANIMALTYPE, ANIMAL_SEX, STATUS, IMAGE_PATH,isPayment,fromClient) 
-                        VALUES (?, ?, ?, ?, ?, ?,'1',?)";
+        $insertQuery = "INSERT INTO animal (CLIENT_ID, BIRTHDATE, ANIMALTYPE, ANIMAL_SEX, STATUS, IMAGE_PATH,isPayment,fromClient, date_created) 
+                        VALUES (?, ?, ?, ?, ?, ?,'1',?, now())";
         $STATUS = "1"; // Default status @it means animal is alive
         $param = [$CLIENT_ID, $BIRTHDATE, $ANIMALTYPE, $ANIMAL_SEX, $STATUS, $imagePath,$fromClientID];
         $insert = $this->helper->regularQuery($insertQuery, $param);

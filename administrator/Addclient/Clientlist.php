@@ -37,7 +37,8 @@
                 <table id="pendingTBL" class="table table-striped table-hover table-bordered">
                   <thead class="thead-dark">
                     <tr>
-                      <th hidden>CLIENT_ID</th>
+                      <th>#</th>
+                      <!-- <th hidden>CLIENT_ID</th> -->
                       <th>First Name</th>
                       <th>Last Name</th>
                       <th>Middle Initial</th>
@@ -54,10 +55,13 @@
                       $query = "SELECT * FROM client"; 
                       $result = mysqli_query($con, $query);
                       $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+
+                      $i = 1;
                       foreach ($rows as $row) { 
                     ?>
                     <tr>
-                      <td hidden><?php echo $row['CLIENT_ID']; ?></td>
+                      <td><?=$i; ?></td>
+                      <!-- <td hidden><?php echo $row['CLIENT_ID']; ?></td> -->
                       <td><?php echo htmlspecialchars($row['FNAME']); ?></td>
                       <td><?php echo htmlspecialchars($row['LNAME']); ?></td>
                       <td><?php echo htmlspecialchars($row['MIDINITIAL']); ?></td>
@@ -66,7 +70,7 @@
                       <td><?php echo htmlspecialchars($row['CONTACT_NO']); ?></td>
                       <td><?php echo htmlspecialchars($row['DATE_REGISTERED']); ?></td>
                       <td>
-                        <a href="index.php?page=Stb_Profile&client_id=<?= $row['CLIENT_ID']; ?>" class="btn btn-sm btn-info" title="View">
+                        <a href="index.php?page=Stb_Profile&client_id=<?= $row['CLIENT_ID']; ?>" class="btn btn-sm btn-info">
                           <i class="fas fa-eye"></i> View
                         </a>
                         <button class="btn btn-sm btn-warning ml-2 fa fa-edit" id="edit-btn-client" data-id="<?= $row['CLIENT_ID']; ?>"> Edit</button>
@@ -75,7 +79,7 @@
                         </a> -->
                       </td>
                     </tr>
-                    <?php } ?>
+                    <?php $i++; } ?>
                   </tbody>
                 </table>
               </div>

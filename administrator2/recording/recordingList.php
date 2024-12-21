@@ -10,7 +10,7 @@ mysqli_free_result($clientResult);
 // Fetch animals for selected client if client_id is set
 $animals = [];
 $selectedClient = '';
-$client_id = $_GET['client_id'];
+$client_id = isset($_GET['client_id']) ? $_GET['client_id'] : '';
 if (isset($_GET['client_id'])) {
     
     $animalQuery = "SELECT 
@@ -125,13 +125,15 @@ mysqli_close($con);
                                 <table id="clientTBL" class="table table-bordered table-hover">
                                     <thead class="thead-dark">
                                     <tr>
+                                        <th>#</th>
                                         <th>Client</th>
                                         <th>Action</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($clients as $client): ?>
+                                        <?php $i =1 ; foreach ($clients as $client): ?>
                                             <tr>
+                                                <td><?=$i; ?></td>
                                                 <td><?= htmlspecialchars($client['full_name']); ?></td>
                                                 <td>
                                                     <a href="index2.php?page=Recording&client_id=<?= $client['CLIENT_ID']; ?>" 
@@ -141,7 +143,7 @@ mysqli_close($con);
                                                     </a>
                                                 </td>
                                             </tr>
-                                        <?php endforeach; ?>
+                                        <?php $i++; endforeach; ?>
                                         </tbody>
                                 </table>
                             </div>

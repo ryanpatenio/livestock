@@ -44,7 +44,7 @@ $clients = mysqli_fetch_all($clientResult, MYSQLI_ASSOC);
 
 
 // Fetch all animals by clients
-$client_id = $_GET['client_id'];
+$client_id = isset($_GET['client_id']) ? $_GET['client_id'] : '';
 $Query2 = "SELECT ANIMAL_ID, ANIMALTYPE, ANIMAL_SEX FROM animal WHERE CLIENT_ID = ? AND ANIMAL_SEX = 'Female'";
 $stmt2 = mysqli_prepare($con, $Query2);
 
@@ -110,15 +110,16 @@ mysqli_close($con);
 
 <div class="content-wrapper">
   <!-- Page Header -->
-  <div class="content-header">
+  <div class="content-header" style="margin-top: -20px;">
     <div class="container-fluid">
-      <div class="row mb-2">
+      <div class="row mb-1 align-items-center">
         <div class="col-sm-6">
-          <h1 class="m-0 text-dark">Dispersal Record</h1>
+          <h1 class="m-0 text-primary"><i class="fas fa-users"></i> Dispersal Records</h1>
         </div>
         <div class="col-sm-6">
-          <ol class="breadcrumb float-sm-right">
-            <li class="breadcrumb-item active">Staff</li>
+          <ol class="breadcrumb float-sm-right bg-light p-2 rounded">
+            <li class="breadcrumb-item text-dark"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active">Admin</li>
           </ol>
         </div>
       </div>
@@ -140,13 +141,15 @@ mysqli_close($con);
                   <table id="clientTBL" class="table table-bordered table-hover">
                     <thead class="thead-dark">
                       <tr>
+                        <th>#</th>
                         <th>Client</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <?php foreach ($clients as $client) { ?>
+                      <?php $i=1; foreach ($clients as $client) { ?>
                         <tr>
+                          <td><?=$i; ?></td>
                           <td><?= htmlspecialchars($client['full_name']); ?></td>
                           <td>
                             <a href="index2.php?page=Dispersal&client_id=<?= $client['CLIENT_ID']; ?>" class="btn btn-info btn-sm elevation-1">
@@ -154,7 +157,7 @@ mysqli_close($con);
                             </a>
                           </td>
                         </tr>
-                      <?php } ?>
+                      <?php $i++; } ?>
                     </tbody>
                   </table>
               </div>

@@ -57,13 +57,22 @@
         <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
           <div class="small-box bg-primary elevation-4">
             <div class="inner">
-              <h3>0</h3>
+            <?php
+               require 'connection/connection.php';
+              $query = "select count(*) as sched from schedule ";
+              $result = mysqli_query($con, $query);
+              $sched_count = ($row = mysqli_fetch_assoc($result)) ? $row['sched'] : 0;
+              mysqli_close($con);
+            
+            ?>
+            
+              <h3><?=$sched_count; ?></h3>
               <p>Schedules</p>
             </div>
             <div class="icon">
               <i class="fas fa-calendar-alt"></i>
             </div>
-            <a href="index2.php?page=schedules" class="small-box-footer">
+            <a href="index2.php?page=Schedule" class="small-box-footer">
               More info <i class="fas fa-arrow-circle-right"></i>
             </a>
           </div>
@@ -78,15 +87,13 @@
                   require("connection/connection.php");
 
                   // Query to count the number of rows where no payments have been made (1ST_PAYMENT_ID and 2ND_PAYMENT_ID = 0)
-                  $query = "SELECT COUNT(*) as unpaid_count 
-                            FROM dispersal 
-                            WHERE 1ST_PAYMENT_ID = 0 AND 2ND_PAYMENT_ID = 0";
+                  $query = "select count(*) as unpaid from dispersal where 1ST_PAYMENT_ID = 0 and 2ND_PAYMENT_ID = 0";
                   $result = mysqli_query($con, $query);
 
                   // Check if query execution was successful
                   if ($result) {
                     $row = mysqli_fetch_assoc($result);
-                    $unpaid_count = $row['unpaid_count'];
+                    $unpaid_count = $row['unpaid'];
                   } else {
                     $unpaid_count = 0; // Default to 0 if the query fails
                   }
@@ -100,7 +107,7 @@
               <div class="icon">
                 <i class="fas fa-times-circle"></i>
               </div>
-              <a href="index2.php?page=Unpaid" class="small-box-footer">
+              <a href="index2.php?page=unpaid" class="small-box-footer">
                 More info <i class="fas fa-arrow-circle-right"></i>
               </a>
             </div>
@@ -114,7 +121,7 @@
                     require("connection/connection.php");
 
                     // Query to count the number of rows where STATUS is 'Partially Paid'
-                    $query = "SELECT COUNT(*) as partial_count FROM dispersal WHERE STATUS = 'Partially Paid'";
+                    $query = "SELECT COUNT(*) as partial_count FROM dispersal WHERE 1ST_PAYMENT_ID = 1 and 2ND_PAYMENT_ID = 0 and STATUS = 'PENDING';";
                     $result = mysqli_query($con, $query);
 
                     // Check if query execution was successful
@@ -190,7 +197,7 @@
             <div class="icon">
               <i class="fas fa-users"></i>
             </div>
-            <a href="index2.php?page=Clientlist" class="small-box-footer">
+            <a href="index2.php?page=clientList2" class="small-box-footer">
               More info <i class="fas fa-arrow-circle-right"></i>
             </a>
           </div>
@@ -203,7 +210,7 @@
 
 <script>
   $(document).ready(function(){
-
+ 
     $('#main').css('filter', 'none');
     $('#loader').hide();
 });

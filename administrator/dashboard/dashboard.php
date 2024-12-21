@@ -43,7 +43,7 @@
               <i class="fas fa-users"></i>
             </div>
             <a href="index.php?page=Dispersal" class="small-box-footer">
-              More info <i class="fas fa-arrow-circle-right"></i>
+              More info <i class="fas fa-arrow-cirscle-right"></i>
             </a>
           </div>
         </div>
@@ -100,7 +100,7 @@
             <div class="inner text-center">
               <?php 
                 require("connection/connection.php");
-                $query = "SELECT COUNT(*) as unpaid_count FROM dispersal WHERE STATUS = 'PENDING';";
+                $query = "select count(*) as unpaid_count from dispersal where 1ST_PAYMENT_ID = 0 and 2ND_PAYMENT_ID = 0";
                 $result = mysqli_query($con, $query);
                 $unpaid_count = ($row = mysqli_fetch_assoc($result)) ? $row['unpaid_count'] : 0;
                 mysqli_close($con);
@@ -126,7 +126,7 @@
             <div class="inner text-center">
               <?php 
                 require("connection/connection.php");
-                $query = "SELECT COUNT(*) as partial_count FROM dispersal WHERE STATUS = 'Partially Paid'";
+                $query = "SELECT COUNT(*) as partial_count FROM dispersal WHERE 1ST_PAYMENT_ID = 1 and 2ND_PAYMENT_ID = 0 and STATUS = 'PENDING';";
                 $result = mysqli_query($con, $query);
                 $partial_count = ($row = mysqli_fetch_assoc($result)) ? $row['partial_count'] : 0;
                 mysqli_close($con);

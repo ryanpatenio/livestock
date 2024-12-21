@@ -39,6 +39,17 @@ if (isset($_GET['page'])) {
             include("administrator2/Schedule/AddSchedule.php"); // Path to AddSchedule page
             break;
 
+            //dashboard Breadcrumbs
+        case "unpaid":
+            include("administrator2/dashboard/unpaid/unpaidList.php"); // Path to AddSchedule page
+            break;
+        case "PartialPayments":
+            include("administrator2/dashboard/partial/partial.php"); // Path to AddSchedule page
+            break;
+        case "FullyPaid":
+            include("administrator2/dashboard/fullypaid/fully.php"); // Path to AddSchedule page
+            break;
+            
             //reports
            
         case "AnimalReports":

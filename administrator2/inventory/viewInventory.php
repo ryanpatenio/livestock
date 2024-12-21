@@ -229,6 +229,14 @@ if ($stmt5) {
 ?>
 
 
+<style>
+  @media print {
+    #print-btn {
+      display: none;
+    }
+  }
+</style>
+
 <div class="content-wrapper">
     <div class="content-header">
         <h1 class="m-0">Vaccine Details</h1>
@@ -245,7 +253,7 @@ if ($stmt5) {
                             <h4><strong style="color:rgb(2, 247, 55);"><?= $vaccineName ? $vaccineName : ''  ?></strong> Stocks on hand <strong style="color:rgb(2, 247, 55);">(<?php echo $stocksCount ? $stocksCount : '' ?>)</strong></h4>
                             </div> 
                             <div class="col-6">
-                                    <button class="btn btn-primary float-right" data-toggle="modal" data-target="">Print</button> 
+                                    <button class="btn btn-primary float-right" onclick="printReport()" id="print-btn"><i class="fas fa-print"></i>Print</button> 
                             </div>                     
                         </div>
                             
@@ -489,4 +497,8 @@ if ($stmt5) {
 
 
 </script>
-
+<script>
+  function printReport() {
+    window.print();
+  }
+</script>

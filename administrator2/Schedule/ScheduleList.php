@@ -62,17 +62,18 @@ $vaccineData = mysqli_fetch_all($result, MYSQLI_ASSOC);
               <div class="card-body">
                 <table class="table table-striped table-hover" id="client-table">
                   <thead>
-                    <tr><th>Client</th><th>Action</th></tr>
+                    <tr> <th>#</th><th>Client</th><th>Action</th></tr>
                   </thead>
                   <tbody>
-                    <?php foreach ($clients as $client) { ?>
+                    <?php $i = 1; foreach ($clients as $client) { ?>
                       <tr>
+                        <td><?=$i; ?></td>
                         <td><?= htmlspecialchars($client['full_name']); ?></td>
                         <td>
                           <a href="index2.php?page=Schedule&client_id=<?= $client['CLIENT_ID']; ?>" class="btn btn-sm btn-info">View</a>
                         </td>
                       </tr>
-                    <?php } ?>
+                    <?php $i++; } ?>
                   </tbody>
                 </table>
               </div>

@@ -101,18 +101,41 @@ $(document).ready(function(){
     $('#firstPaymentForm').submit(function(e) {
         e.preventDefault(); // Prevent default form submission
     
-        // Check if 'notexisting' is selected and visible required fields are empty
-        if ($('#existingClient').val() === 'notexisting') {
-            const missingFields = $('#clientForm input:visible[required]').filter(function () {
-                return !this.value.trim(); // Check for empty values
+        // Check if 'notexisting' or 'existing' is selected
+        const clientType = $('#existingClient').val();
+
+        if (clientType === 'notexisting') {
+            // Find missing required visible input fields in #clientForm
+            const missingFields = $('#clientForm input:visible[required], #clientForm select:visible[required]').filter(function () {
+                return !$(this).val().trim(); // Check for empty values
             });
-    
+
             if (missingFields.length > 0) {
-                missingFields.first().focus(); // Focus on the first missing field
+                // Focus the first missing field
+                missingFields.first().focus();
+
+                // Show an alert
                 alert('Please fill out all required fields!');
-                return; // Exit early
+                return false; // Stop form submission
             }
         }
+
+        if (clientType === 'existing') {
+            // Find missing required visible input fields in #paymentDetails1
+            const missingFields1 = $('#paymentDetails1 input:visible[required], #paymentDetails1 select:visible[required]').filter(function () {
+                return !$(this).val().trim(); // Check for empty values
+            });
+
+            if (missingFields1.length > 0) {
+                // Focus the first missing field
+                missingFields1.first().focus();
+
+                // Show an alert
+                alert('Please fill out all required fields!');
+                return false; // Stop form submission
+            }
+        }
+
     
         const $url = baseUrl + "action=addFirstPayment";
         const formData = new FormData(this);
@@ -148,18 +171,42 @@ $(document).ready(function(){
 
     $('#secondPaymentForm').submit(function(e){
         e.preventDefault();
-        // Check if 'notexisting' is selected and visible required fields are empty
-        if ($('#existingClient2').val() === 'notexisting') {
-            const missingFields = $('#clientForm2 input:visible[required]').filter(function () {
-                return !this.value.trim(); // Check for empty values
-            });
 
-            if (missingFields.length > 0) {
-                missingFields.first().focus(); // Focus on the first missing field
-                alert('Please fill out all required fields!');
-                return; // Exit early
-            }
-        }
+         // Check if 'notexisting' or 'existing' is selected
+         const clientType = $('#existingClient2').val();
+
+         if (clientType === 'notexisting') {
+             // Find missing required visible input fields in #clientForm
+             const missingFields = $('#clientForm2 input:visible[required], #clientForm2 select:visible[required]').filter(function () {
+                 return !$(this).val().trim(); // Check for empty values
+             });
+ 
+             if (missingFields.length > 0) {
+                 // Focus the first missing field
+                 missingFields.first().focus();
+ 
+                 // Show an alert
+                 alert('Please fill out all required fields!');
+                 return false; // Stop form submission
+             }
+         }
+ 
+         if (clientType === 'existing') {
+             // Find missing required visible input fields in #paymentDetails1
+             const missingFields1 = $('#paymentDetails2 input:visible[required], #paymentDetails2 select:visible[required]').filter(function () {
+                 return !$(this).val().trim(); // Check for empty values
+             });
+ 
+             if (missingFields1.length > 0) {
+                 // Focus the first missing field
+                 missingFields1.first().focus();
+ 
+                 // Show an alert
+                 alert('Please fill out all required fields!');
+                 return false; // Stop form submission
+             }
+         }
+
 
         $url = baseUrl + "action=addSecondPayment";
         let formData = new FormData(this);

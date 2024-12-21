@@ -44,7 +44,7 @@ $clients = mysqli_fetch_all($clientResult, MYSQLI_ASSOC);
 
 
 // Fetch all animals by clients
-$client_id = $_GET['client_id'];
+$client_id = isset($_GET['client_id']) ? $_GET['client_id'] : '';
 $Query2 = "SELECT ANIMAL_ID, ANIMALTYPE, ANIMAL_SEX FROM animal WHERE CLIENT_ID = ? AND ANIMAL_SEX = 'Female'";
 $stmt2 = mysqli_prepare($con, $Query2);
 
@@ -110,7 +110,7 @@ mysqli_close($con);
 
 <div class="content-wrapper">
   <!-- Page Header -->
-  <div class="content-header">
+  <div class="content-header" style="margin-top: -20px;">
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
@@ -140,13 +140,15 @@ mysqli_close($con);
                   <table id="clientTBL" class="table table-bordered table-hover">
                     <thead class="thead-dark">
                       <tr>
+                        <th>#</th>
                         <th>Client</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <?php foreach ($clients as $client) { ?>
+                      <?php $i = 1; foreach ($clients as $client) { ?>
                         <tr>
+                          <td><?=$i; ?></td>
                           <td><?= htmlspecialchars($client['full_name']); ?></td>
                           <td>
                             <a href="index.php?page=Dispersal&client_id=<?= $client['CLIENT_ID']; ?>" class="btn btn-info btn-sm elevation-1">
@@ -154,7 +156,7 @@ mysqli_close($con);
                             </a>
                           </td>
                         </tr>
-                      <?php } ?>
+                      <?php $i++; } ?>
                     </tbody>
                   </table>
               </div>
@@ -188,6 +190,7 @@ mysqli_close($con);
                 <table class="table table-hover table-bordered">
                   <thead class="thead-dark">
                     <tr>
+                      <th>#</th>
                       <th>Dispersal ID</th>
                       <th>1st Payment</th>
                       <th>2nd Payment</th>
@@ -196,12 +199,13 @@ mysqli_close($con);
                   </thead>
                   <tbody>
                     <?php if (!empty($dispersals)) { ?>
-                      <?php foreach ($dispersals as $dispersal) {
+                      <?php $i = 1; foreach ($dispersals as $dispersal) {
                         $isFirstPaymentPaid = !empty($dispersal['1ST_PAYMENT_ID']);
                         $isSecondPaymentPaid = !empty($dispersal['2ND_PAYMENT_ID']);
                         $status = $isFirstPaymentPaid && $isSecondPaymentPaid ? "Completed" : ($isFirstPaymentPaid ? "Partially Paid" : "Unpaid");
                       ?>
                         <tr>
+                          <td><?=$i; ?></td>
                           <td><?= htmlspecialchars($dispersal['DISPERSAL_ID']); ?></td>
                           <td>
                             <?php if (!$isFirstPaymentPaid) { ?>
@@ -235,7 +239,7 @@ mysqli_close($con);
                             </span>
                           </td>
                         </tr>
-                      <?php } ?>
+                      <?php $i++; } ?>
                     <?php } else { ?>
                       <tr>
                         <td colspan="4" class="text-center text-muted">

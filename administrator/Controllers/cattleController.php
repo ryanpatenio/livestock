@@ -36,8 +36,8 @@ class cattleController {
            return $this->helper->message("error while uploading...",200,1);
         }
 
-        $insertQuery = "INSERT INTO animal (CLIENT_ID, BIRTHDATE, ANIMALTYPE, ANIMAL_SEX, STATUS, IMAGE_PATH) 
-        VALUES (?, ?, ?, ?, ?, ?)";
+        $insertQuery = "INSERT INTO animal (CLIENT_ID, BIRTHDATE, ANIMALTYPE, ANIMAL_SEX, STATUS, IMAGE_PATH, date_created) 
+        VALUES (?, ?, ?, ?, ?, ?, now())";
         $param = [$CLIENT_ID, $BIRTHDATE, $ANIMALTYPE, $ANIMAL_SEX, $STATUS, $imagePath];
 
         $insert = $this->helper->regularQuery($insertQuery,$param);
@@ -89,8 +89,8 @@ class cattleController {
            return $this->helper->message("error while uploading...",200,1);
         }
 
-        $insertQuery = "INSERT INTO animal (CLIENT_ID, BIRTHDATE, ANIMALTYPE, ANIMAL_SEX, STATUS, IMAGE_PATH) 
-        VALUES (?, ?, ?, ?, ?, ?)";
+        $insertQuery = "INSERT INTO animal (CLIENT_ID, BIRTHDATE, ANIMALTYPE, ANIMAL_SEX, STATUS, IMAGE_PATH,date_created) 
+        VALUES (?, ?, ?, ?, ?, ?,now())";
         $param = [$CLIENT_ID, $BIRTHDATE, $ANIMALTYPE, $ANIMAL_SEX, $STATUS, $imagePath];
 
         $insert = $this->helper->regularQuery($insertQuery,$param);

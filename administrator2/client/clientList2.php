@@ -10,7 +10,7 @@
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right bg-light p-2 rounded">
             <li class="breadcrumb-item text-dark"><a href="#">Home</a></li>
-            <li class="breadcrumb-item active">Staff</li>
+            <li class="breadcrumb-item active">Admin</li>
           </ol>
         </div>
       </div>
@@ -37,7 +37,8 @@
                 <table id="pendingTBL" class="table table-striped table-hover table-bordered">
                   <thead class="thead-dark">
                     <tr>
-                      <th hidden>CLIENT_ID</th>
+                      <!-- <th hidden>CLIENT_ID</th> -->
+                      <th>#</th>
                       <th>First Name</th>
                       <th>Last Name</th>
                       <th>Middle Initial</th>
@@ -51,13 +52,16 @@
                   <tbody>
                     <?php 
                       require("connection/connection.php");
-                      $query = "SELECT * FROM client"; 
+                      $query = "SELECT * FROM client ORDER BY FNAME ASC"; 
                       $result = mysqli_query($con, $query);
                       $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
+                      $i = 1;
+
                       foreach ($rows as $row) { 
                     ?>
                     <tr>
-                      <td hidden><?php echo $row['CLIENT_ID']; ?></td>
+                      <!-- <td hidden><?php echo $row['CLIENT_ID']; ?></td> -->
+                      <td><?=$i; ?></td>
                       <td><?php echo htmlspecialchars($row['FNAME']); ?></td>
                       <td><?php echo htmlspecialchars($row['LNAME']); ?></td>
                       <td><?php echo htmlspecialchars($row['MIDINITIAL']); ?></td>
@@ -74,7 +78,7 @@
                         
                       </td>
                     </tr>
-                    <?php } ?>
+                    <?php $i++; } ?>
                   </tbody>
                 </table>
               </div>

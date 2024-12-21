@@ -1,3 +1,11 @@
+<style>
+  @media print {
+    #print-btn {
+      display: none;
+    }
+  }
+</style>
+
 <!-- Content Wrapper -->
 <div class="content-wrapper">
   <!-- Content Header -->
@@ -25,14 +33,16 @@
           <div class="card shadow-lg rounded">
             <!-- Card Header -->
             <div class="card-header d-flex align-items-center bg-primary text-white">
-              <h5 class="mb-0"><i class="fas fa-list"></i> Payment List</h5>
-             
+              <h5 class="mb-0"><i class="fas fa-list"></i> Payment List Reports</h5>
+              <a href="#" class="btn btn-success ml-auto" onclick="printReport()" id="print-btn">
+                <i class="fas fa-print"></i> Print
+              </a>
             </div>
 
             <!-- Card Body -->
             <div class="card-body">
               <div class="table-responsive">
-                <table id="pendingTBL" class="table table-striped table-hover table-bordered">
+                <table id="paymentTBL" class="table table-striped table-hover table-bordered">
                   <thead class="thead-dark">
                     <tr>
                       <th>#</th>
@@ -107,8 +117,19 @@
     </div>
   </section>
 
+<script>
+   $(document).ready(function(){
 
+    $('#main').css('filter', 'none');
+    $('#loader').hide();
+    
+    $('#paymentTBL').dataTable({
 
-<script src="../livestock2/administrator/Addclient/client.js"></script>
+    });
 
+});
+  function printReport() {
+    window.print();
+  }
+</script>
 

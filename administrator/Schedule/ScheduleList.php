@@ -69,6 +69,16 @@ if (isset($_POST['submit_schedule'])) {
   mysqli_close($con);
   ?>
 
+  <style>
+    #schedTable {
+    width: 100%;
+    table-layout: fixed;
+    overflow-x: auto;
+    display: block;
+}
+
+  </style>
+
 <div class="content-wrapper">
   <div class="content-header">
     <h1 class="font-weight-bold text-primary">Schedule Record - STAFF</h1>
@@ -88,19 +98,21 @@ if (isset($_POST['submit_schedule'])) {
                     <table class="table table-striped table-hover" id="clientTbl">
                       <thead class="thead-light">
                         <tr>
+                          <th>#</th>
                           <th>Client</th>
                           <th>Action</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <?php foreach ($clients as $client) { ?>
+                        <?php $i=1; foreach ($clients as $client) { ?>
                           <tr>
+                            <td><?=$i; ?></td>
                             <td><?= htmlspecialchars($client['full_name']); ?></td>
                             <td>
                               <a href="index.php?page=Schedule&client_id=<?= $client['CLIENT_ID']; ?>" class="btn btn-sm btn-info">View</a>
                             </td>
                           </tr>
-                        <?php } ?>
+                        <?php $i++; } ?>
                       </tbody>
                     </table>
                 </div>
@@ -110,63 +122,67 @@ if (isset($_POST['submit_schedule'])) {
 
         <!-- Schedule Information -->
         <div class="col-md-8">
-          <div class="card shadow-sm">
-            <div class="card-header bg-primary text-white d-flex align-items-center">
-              <h6>Scheduling Information</h6>
-              <a href="#" class="btn btn-dark btn-sm ml-auto" data-toggle="modal" data-target="#Add_scheduleModal">
-                <i class="fas fa-plus"></i> New Request
-              </a>
-            </div>
-            <div class="card-body">
-              <h6><strong>Client:</strong> <?= htmlspecialchars($selectedClientName); ?></h6>
-              <table class="table table-bordered" id="schedTable">
-                <thead class="thead-dark">
-                  <tr>
-                  <th>Vaccine Name</th>
-                      <th>QTY Req.</th>
-                      <th>Event Name</th>
-                      <th>Event Date</th>
-                      <th>1st Req.</th>
-                      <th>2nd Req.</th>
-                      <th>Status</th>
-                      <th>Action</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <?php foreach ($schedules as $schedule) { ?>
-                    <tr>
-                      <td><?=$schedule['VACCINE_NAME'] ?></td>
-                      <td><?= $schedule['qty_request'] ?></td>
-                      <td><?= htmlspecialchars($schedule['EVENT_NAME']); ?></td>
-                      <td><?= htmlspecialchars($schedule['EVENT_DATE']); ?></td>
-                      <td><?= $schedule['1ST_REQUIREMENT'] == 0 ? 'Not Submitted' : 'Submitted'; ?></td>
-                      <td><?= $schedule['2ND_REQUIREMENT'] == 0 ? 'Not Submitted' : 'Submitted'; ?></td>
-                      <td>
-                        <?php if ($schedule['STATUS'] == 1) { ?>
-                          <span class="badge badge-success">Confirmed</span>
-                        <?php } elseif ($schedule['STATUS'] == 2) { ?>
-                          <span class="badge badge-danger">Cancelled</span>
-                        <?php } else { ?>
-                          <span class="badge badge-warning">Pending</span>
-                        <?php } ?>
-                      </td>
-                      <td>
-                        <button class="btn btn-sm btn-warning edit-btn" 
-                                data-id="<?= $schedule['SCHEDULE_ID']; ?>" 
-                                data-1st="<?= $schedule['1ST_REQUIREMENT']; ?>" 
-                                data-2nd="<?= $schedule['2ND_REQUIREMENT']; ?>" 
-                                data-toggle="modal" 
-                                data-target="#editRequirementsModal">
-                          Edit
-                        </button>
-                      </td>
-                    </tr>
-                  <?php } ?>
-                </tbody>
-              </table>
+            <div class="card shadow-sm">
+              <div class="card-header bg-primary text-white d-flex align-items-center">
+                <h6>Scheduling Information</h6>
+                <a href="#" class="btn btn-dark btn-sm ml-auto" data-toggle="modal" data-target="#Add_scheduleModal">
+                  <i class="fas fa-plus"></i> New Request
+                </a>
+              </div>
+              <div class="card-body">
+                <h6><strong>Client:</strong> <?= htmlspecialchars($selectedClientName); ?></h6>
+                <!-- Make the table responsive -->
+                <div class="table-responsive">
+                  <table class="table table-bordered" id="schedTable">
+                    <thead class="thead-dark">
+                      <tr>
+                        <th>Vaccine Name</th>
+                        <th>QTY Req.</th>
+                        <th>Event Name</th>
+                        <th>Event Date</th>
+                        <th>1st Req.</th>
+                        <th>2nd Req.</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <?php foreach ($schedules as $schedule) { ?>
+                        <tr>
+                          <td><?= $schedule['VACCINE_NAME'] ?></td>
+                          <td><?= $schedule['qty_request'] ?></td>
+                          <td><?= htmlspecialchars($schedule['EVENT_NAME']); ?></td>
+                          <td><?= htmlspecialchars($schedule['EVENT_DATE']); ?></td>
+                          <td><?= $schedule['1ST_REQUIREMENT'] == 0 ? 'Not Submitted' : 'Submitted'; ?></td>
+                          <td><?= $schedule['2ND_REQUIREMENT'] == 0 ? 'Not Submitted' : 'Submitted'; ?></td>
+                          <td>
+                            <?php if ($schedule['STATUS'] == 1) { ?>
+                              <span class="badge badge-success">Confirmed</span>
+                            <?php } elseif ($schedule['STATUS'] == 2) { ?>
+                              <span class="badge badge-danger">Cancelled</span>
+                            <?php } else { ?>
+                              <span class="badge badge-warning">Pending</span>
+                            <?php } ?>
+                          </td>
+                          <td>
+                            <button class="btn btn-sm btn-warning edit-btn" 
+                                    data-id="<?= $schedule['SCHEDULE_ID']; ?>" 
+                                    data-1st="<?= $schedule['1ST_REQUIREMENT']; ?>" 
+                                    data-2nd="<?= $schedule['2ND_REQUIREMENT']; ?>" 
+                                    data-toggle="modal" 
+                                    data-target="#editRequirementsModal">
+                              Edit
+                            </button>
+                          </td>
+                        </tr>
+                      <?php } ?>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
+
       </div>
     </div>
   </section>
