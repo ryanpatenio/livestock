@@ -100,7 +100,7 @@
             <div class="inner text-center">
               <?php 
                 require("connection/connection.php");
-                $query = "SELECT COUNT(*) as unpaid_count FROM dispersal WHERE 1ST_PAYMENT_ID = 0 AND 2ND_PAYMENT_ID = 0";
+                $query = "SELECT COUNT(*) as unpaid_count FROM dispersal WHERE STATUS = 'PENDING';";
                 $result = mysqli_query($con, $query);
                 $unpaid_count = ($row = mysqli_fetch_assoc($result)) ? $row['unpaid_count'] : 0;
                 mysqli_close($con);
