@@ -54,7 +54,7 @@
         </div>
 
         <!-- Schedules Count -->
-        <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+        <!-- <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
           <div class="small-box bg-primary elevation-4">
             <div class="inner">
             <?php
@@ -76,10 +76,58 @@
               More info <i class="fas fa-arrow-circle-right"></i>
             </a>
           </div>
+        </div> -->
+
+         <!-- Confirmed Schedules Count -->
+         <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+          <div class="small-box bg-primary elevation-4">
+            <div class="inner text-center">
+              <?php 
+                require("connection/connection.php");
+                $query = "SELECT COUNT(*) as confirmed_count FROM schedule WHERE STATUS = 1";
+                $result = mysqli_query($con, $query);
+                $confirmed_count = ($row = mysqli_fetch_assoc($result)) ? $row['confirmed_count'] : 0;
+                mysqli_close($con);
+              ?>
+              <h3><?= $confirmed_count ?></h3>
+              <p>Confirmed Schedule Requests</p>
+            </div>
+            <div class="icon">
+              <i class="fas fa-calendar-check"></i>
+            </div>
+            <a href="index2.php?page=confirmSchedules" class="small-box-footer">
+              More info <i class="fas fa-arrow-circle-right"></i>
+            </a>
+          </div>
         </div>
 
+        <!-- Pending Schedules Count -->
+        <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+          <div class="small-box bg-warning elevation-4">
+            <div class="inner text-center">
+              <?php 
+                require("connection/connection.php");
+                $query = "SELECT COUNT(*) as pending_count FROM schedule WHERE STATUS = 0";
+                $result = mysqli_query($con, $query);
+                $pending_count = ($row = mysqli_fetch_assoc($result)) ? $row['pending_count'] : 0;
+                mysqli_close($con);
+              ?>
+              <h3><?= $pending_count ?></h3>
+              <p>Pending Schedule Requests</p>
+            </div>
+            <div class="icon">
+              <i class="fas fa-clock"></i>
+            </div>
+            <a href="index2.php?page=pendingSchedules" class="small-box-footer">
+              More info <i class="fas fa-arrow-circle-right"></i>
+            </a>
+          </div>
+        </div>
 
-                      <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
+  
+
+
+          <div class="col-lg-3 col-md-6 col-sm-12 mb-4">
             <div class="small-box bg-danger elevation-4">
               <div class="inner">
                 <?php

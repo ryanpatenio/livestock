@@ -153,5 +153,24 @@ class cattleController {
 
     }
 
+    public function getFemaleAnimalsByClient(){
+        extract($_POST);
+
+        if($client_id == "" || $client_id == null){
+            return $this->helper->message('error! missing some parameters!',200,1);
+        }
+
+        $query = "SELECT ANIMAL_ID, ANIMALTYPE, ANIMAL_SEX FROM animal WHERE CLIENT_ID = ? AND ANIMAL_SEX = 'Female'";
+        $param = [$client_id];
+
+        $result = $this->helper->regularQuery($query,$param);
+
+        if(empty($result)){
+             $data = [];//empty array
+             return $this->helper->message('success-empty',200,0,$data);
+        }
+        return $this->helper->message('success',200,0,$result);
+    }
+
 
 }

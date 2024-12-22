@@ -21,7 +21,7 @@ class dispersalController {
         }
         $FIRST_PAYMENT_ID = ""; $SECOND_PAYMENT_ID = "";
 
-        $query = "INSERT INTO `dispersal` (`CLIENT_ID`, `1ST_PAYMENT_ID`, `2ND_PAYMENT_ID`, `STATUS`) VALUES (?,?,?,?)";
+        $query = "INSERT INTO `dispersal` (`CLIENT_ID`, `1ST_PAYMENT_ID`, `2ND_PAYMENT_ID`, `STATUS`,`date_created`) VALUES (?,?,?,?,now())";
         $param = [$CLIENT_ID, $FIRST_PAYMENT_ID , $SECOND_PAYMENT_ID , $STATUS];
 
         $result = $this->helper->regularQuery($query,$param);

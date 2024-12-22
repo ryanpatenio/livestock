@@ -49,6 +49,12 @@ if (isset($_GET['page'])) {
         case "FullyPaid":
             include("administrator2/dashboard/fullypaid/fully.php"); // Path to AddSchedule page
             break;
+        case "confirmSchedules":
+            include("administrator2/dashboard/schedules/confirm.php"); // Path to AddSchedule page
+            break;
+        case "pendingSchedules":
+            include("administrator2/dashboard/schedules/pending.php"); // Path to AddSchedule page
+            break;
             
             //reports
            

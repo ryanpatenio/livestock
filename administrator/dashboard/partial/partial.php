@@ -154,7 +154,7 @@ mysqli_close($con);
                         <tr>
                           <td><?= htmlspecialchars($client['full_name']); ?></td>
                           <td>
-                            <a href="index2.php?page=PartialPayments&client_id=<?= $client['CLIENT_ID']; ?>" class="btn btn-info btn-sm elevation-1">
+                            <a href="index.php?page=PartialPayments&client_id=<?= $client['CLIENT_ID']; ?>" class="btn btn-info btn-sm elevation-1">
                               View
                             </a>
                           </td>

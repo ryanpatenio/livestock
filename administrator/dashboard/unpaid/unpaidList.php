@@ -145,21 +145,23 @@ mysqli_close($con);
                   <table id="clientTBL" class="table table-bordered table-hover">
                     <thead class="thead-dark">
                       <tr>
+                        <th>#</th>
                         <th>Client</th>
                         <th>Action</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <?php foreach ($clientsUnpaid as $client) { ?>
+                      <?php  $i = 1; foreach ($clientsUnpaid as $client) { ?>
                         <tr>
+                          <td><?=$i; ?></td>
                           <td><?= htmlspecialchars($client['full_name']); ?></td>
                           <td>
-                            <a href="index2.php?page=unpaid&client_id=<?= $client['CLIENT_ID']; ?>" class="btn btn-info btn-sm elevation-1">
+                            <a href="index.php?page=unpaid&client_id=<?= $client['CLIENT_ID']; ?>" class="btn btn-info btn-sm elevation-1">
                               View
                             </a>
                           </td>
                         </tr>
-                      <?php } ?>
+                      <?php $i++; } ?>
                     </tbody>
                   </table>
               </div>
@@ -180,17 +182,19 @@ mysqli_close($con);
           </div>
             <div class="card-body">
               <!-- Client Information -->
-              <div class="mb-4">
-                <h6 class="font-weight-bold text-muted">Client:</h6>
-                <p id="clientNameDisplay" class="text-dark">
-                  <?= $selectedClientName ? htmlspecialchars($selectedClientName) : "Select a client to view dispersal details"; ?>
-                </p>
+              <div class="mb-4" >
+                <h6 class="font-weight-bold text-muted">Client: 
+                  
+                     <?= $selectedClientName ? htmlspecialchars($selectedClientName) : "Select a client to view dispersal details"; ?>
+                 
+              </h6>
+                
               </div>
 
               <!-- Dispersal Table -->
-              <h5 class="text-primary font-weight-bold">Dispersal Details</h5>
+              
               <div class="table-responsive">
-                <table class="table table-hover table-bordered">
+                <table class="table table-hover table-bordered" id="unpaid-tbl">
                   <thead class="thead-dark">
                     <tr>
                       <th>Dispersal ID</th>
@@ -268,6 +272,9 @@ document.addEventListener('DOMContentLoaded', function() {
     $('#main').css('filter', 'none');
     $('#loader').hide();
 
+    $('#unpaid-tbl').dataTable({
+
+    });
 
   // Toggle payment details based on status selection
   document.getElementById('paymentStatus1').addEventListener('change', function() {

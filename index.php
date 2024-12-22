@@ -42,8 +42,28 @@ if (isset($_GET['page'])) {
         case "Schedulelist":
             include("administrator/Schedule/update_schedule.php");
             break;
-        default:
-            include("administrator/Recording/Recording.php");
+        // default:
+        //     include("administrator/Recording/Recording.php");
+        //     break;
+
+        //dashboard breadcrumbs
+        case "dispersalDashboard":
+            include("administrator/dashboard/dispersal/dispersalList.php"); // 
+            break;
+        case "confirmSchedules":
+            include("administrator/dashboard/schedules/confirm.php"); // 
+            break;
+        case "pendingSchedules":
+            include("administrator/dashboard/schedules/pending.php"); // 
+            break;
+        case "unpaid":
+            include("administrator/dashboard/unpaid/unpaidList.php"); // 
+            break;
+        case "PartialPayments":
+            include("administrator/dashboard/partial/partial.php"); // 
+            break;
+        case "FullyPaid":
+            include("administrator/dashboard/fullypaid/fully.php"); // 
             break;
 
 

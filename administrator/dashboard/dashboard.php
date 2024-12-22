@@ -42,7 +42,7 @@
             <div class="icon">
               <i class="fas fa-users"></i>
             </div>
-            <a href="index.php?page=Dispersal" class="small-box-footer">
+            <a href="index.php?page=dispersalDashboard" class="small-box-footer">
               More info <i class="fas fa-arrow-cirscle-right"></i>
             </a>
           </div>
@@ -65,7 +65,7 @@
             <div class="icon">
               <i class="fas fa-calendar-check"></i>
             </div>
-            <a href="index.php?page=Schedules" class="small-box-footer">
+            <a href="index.php?page=confirmSchedules" class="small-box-footer">
               More info <i class="fas fa-arrow-circle-right"></i>
             </a>
           </div>
@@ -88,7 +88,7 @@
             <div class="icon">
               <i class="fas fa-clock"></i>
             </div>
-            <a href="index.php?page=Schedules" class="small-box-footer">
+            <a href="index.php?page=pendingSchedules" class="small-box-footer">
               More info <i class="fas fa-arrow-circle-right"></i>
             </a>
           </div>
@@ -111,7 +111,7 @@
             <div class="icon">
               <i class="fas fa-times-circle"></i>
             </div>
-            <a href="index.php?page=Unpaid" class="small-box-footer">
+            <a href="index.php?page=unpaid" class="small-box-footer">
               More info <i class="fas fa-arrow-circle-right"></i>
             </a>
           </div>

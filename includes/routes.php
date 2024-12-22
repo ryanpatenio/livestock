@@ -116,3 +116,7 @@ if($action == "addSecondPayment"){
 	$secondPayment = $dispersalController->secondPayment();
 	return $secondPayment;
 }
+if($action == 'getAnimalsByClientFemale'){
+	$femaleAnimal = $cattleController->getFemaleAnimalsByClient();
+	return $femaleAnimal;
+}

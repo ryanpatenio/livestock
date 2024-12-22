@@ -61,8 +61,8 @@
                                 s.EVENT_NAME,
                                 s.EVENT_DATE,
                                 CASE 
-                                    WHEN s.isCompleted = '1' THEN 'Not Completed'
-                                    ELSE 'Completed'
+                                    WHEN s.isCompleted = '1' THEN 'Completed'
+                                    ELSE 'Not Completed'
                                 END AS `sched_status`
                             FROM schedule s
                             JOIN client c ON s.CLIENT_ID = c.CLIENT_ID ORDER BY s.EVENT_DATE
