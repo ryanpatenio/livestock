@@ -13,7 +13,7 @@
     <div class="container-fluid">
       <div class="row mb-1 align-items-center">
         <div class="col-sm-6">
-          <h1 class="m-0 text-primary"><i class="fas fa-users"></i> Payment Reports</h1>
+          <h1 class="m-0 text-primary"><i class="fas fa-users"></i> Payments List</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right bg-light p-2 rounded">
@@ -33,7 +33,7 @@
           <div class="card shadow-lg rounded">
             <!-- Card Header -->
             <div class="card-header d-flex align-items-center bg-primary text-white">
-              <h5 class="mb-0"><i class="fas fa-list"></i> List of Fulyy Paid Clients</h5>
+              <h5 class="mb-0"><i class="fas fa-list"></i> List of Fully Paid Clients</h5>
               <a href="#" class="btn btn-success ml-auto" onclick="printReport()" id="print-btn">
                 <i class="fas fa-print"></i> Print
               </a>
@@ -84,7 +84,12 @@
                     //         GROUP BY 
                     //         d.DISPERSAL_ID, c.FNAME, c.LNAME, d.1ST_PAYMENT_ID, d.DATE_FIRST_PAYMENT, d.2ND_PAYMENT_ID, d.DATE_SECOND_PAYMENT, d.`STATUS`;
                     //         "; 
-                      $query = "SELECT d.DISPERSAL_ID, CONCAT(c.FNAME, ' ',c.LNAME) AS 'name',a.ANIMALTYPE,case when d.1ST_PAYMENT_ID = '1' then d.DATE_FIRST_PAYMENT ELSE '' end AS 'first_payment' , case when d.2ND_PAYMENT_ID = '1' then d.DATE_SECOND_PAYMENT ELSE '' END AS 'second_payment', case when d.STATUS = 'PENDING' then 'Partial' ELSE 'Completed' END AS 'status' FROM dispersal d,client c,animal a WHERE d.CLIENT_ID = c.CLIENT_ID AND d.PARENT_ANIMAL_ID = a.ANIMAL_ID";
+                      $query = "
+                      SELECT d.DISPERSAL_ID, CONCAT(c.FNAME, ' ',c.LNAME) AS 'name',a.ANIMALTYPE,case when d.1ST_PAYMENT_ID = '1' then d.DATE_FIRST_PAYMENT ELSE '' end AS 'first_payment' , case when d.2ND_PAYMENT_ID = '1' then d.DATE_SECOND_PAYMENT ELSE '' END AS 'second_payment', case when d.STATUS = 'PENDING' then 'Partial' ELSE 'Completed' END AS 'status' FROM dispersal d,client c,animal a 
+                      WHERE
+                      d.CLIENT_ID = c.CLIENT_ID AND d.PARENT_ANIMAL_ID = a.ANIMAL_ID 
+                      and d.1ST_PAYMENT_ID != '0' and d.2ND_PAYMENT_ID != '0'
+                      ";
                       $result = mysqli_query($con, $query);
                       $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
                      // foreach ($rows as $row) { 

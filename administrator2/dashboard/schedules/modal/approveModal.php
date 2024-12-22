@@ -10,7 +10,7 @@
       </div>
       <form id="approveScheduleForm" method="post" action="">
         <div class="modal-body">
-          <input type="text" name="schedule_id" id="approveScheduleId">
+          <input type="hidden" name="schedule_id" id="approveScheduleId">
           <div class="form-group">
             <label for="approveEventDateLabel">Event Date</label>
             <input type="date" name="event_date" id="approveEventDate" class="form-control" required>

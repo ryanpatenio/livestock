@@ -61,7 +61,7 @@
                         s.EVENT_NAME,
                         s.EVENT_DATE,
                         CASE 
-                            WHEN s.isCompleted = '1' THEN 'Approved Schedule'
+                            WHEN s.STATUS = '1' THEN 'Approved Schedule'
                             ELSE 'Pending'
                         END AS `sched_status`
                     FROM schedule s

@@ -69,8 +69,8 @@
             <label for="status">Status:</label>
             <select name="status" id="status" class="form-control" required>
               <option value="0">Pending</option>
-              <option value="1">Confirmed</option>
-              <option value="2">Cancelled</option>
+              <!-- <option value="1">Confirmed</option>
+              <option value="2">Cancelled</option> -->
             </select>
           </div>
           
