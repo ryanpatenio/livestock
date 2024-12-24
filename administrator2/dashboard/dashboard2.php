@@ -47,7 +47,7 @@
             <div class="icon">
               <i class="fas fa-users"></i>
             </div>
-            <a href="index2.php?page=Dispersal" class="small-box-footer">
+            <a href="index2.php?page=dashboardDispersal" class="small-box-footer">
               More info <i class="fas fa-arrow-circle-right"></i>
             </a>
           </div>

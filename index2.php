@@ -55,6 +55,9 @@ if (isset($_GET['page'])) {
         case "pendingSchedules":
             include("administrator2/dashboard/schedules/pending.php"); // Path to AddSchedule page
             break;
+        case "dashboardDispersal":
+            include("administrator2/dashboard/dispersal/dispersalList.php"); // Path to AddSchedule page
+            break;
             
             //reports
            
@@ -73,6 +76,18 @@ if (isset($_GET['page'])) {
         case "PaymentReports":
             include("administrator2/reports/payment/paymentList.php"); // Path 
             break;
+
+        //Users
+        case "Users":
+            include("administrator2/users/userList.php"); // Path 
+            break;
+
+        //my Account
+        case "MyAccount":
+            include("administrator2/myaccount/user_account.php"); // Path 
+            break;
+
+
     }
 } else {
     header('Location: login/login.php');

@@ -35,6 +35,9 @@
                 else if ($_GET['page'] == "DispersalReports") { $dispersal = "bg-primary text-bold elevation-2"; }
                 else if ($_GET['page'] == "PaymentReports") { $payment = "bg-primary text-bold elevation-2"; }
                 else if ($_GET['page'] == "AnimalReports") { $animal = "bg-primary text-bold elevation-2"; }
+
+                else if ($_GET['page'] == "Users") { $Users = "bg-primary text-bold elevation-2"; }
+                else if ($_GET['page'] == "MyAccount") { $myAccount = "bg-primary text-bold elevation-2"; }
             } else { $dashboard = "bg-primary text-bold elevation-2"; }
         ?>
 
@@ -78,6 +81,12 @@
                         <p>Inventory</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="index2.php?page=Users" class="nav-link <?= $Users ?>">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>Users</p>
+                    </a>
+                </li>
                 <!-- Dropdown Menu for Recording -->
                 <li class="nav-item dropdown">
                     <a href="#" class="nav-link dropdown-toggle <?= $reports ?>" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -92,6 +101,14 @@
                         <a href="index2.php?page=PaymentReports" class="dropdown-item  mt-2>">Payments </a>
                        
                     </div>
+                </li>
+
+                <!---MY PERSONAL ACCOUNT--->
+                <li class="nav-item">
+                    <a href="index2.php?page=MyAccount" class="nav-link <?= $myAccount ?>">
+                        <i class="nav-icon fas fa-user"></i>
+                        <p>My Account</p>
+                    </a>
                 </li>
             </ul>
         </nav>

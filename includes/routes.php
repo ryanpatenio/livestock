@@ -14,6 +14,8 @@ $cattleController = new cattleController($helper);
 $vaccineController = new vaccineController($helper);
 $dispersalController = new dispersalController($helper);
 
+$userController = new userController($helper);
+
 if($action == 'addClient'){
 
     $addC = $clientController->store();
@@ -119,4 +121,19 @@ if($action == "addSecondPayment"){
 if($action == 'getAnimalsByClientFemale'){
 	$femaleAnimal = $cattleController->getFemaleAnimalsByClient();
 	return $femaleAnimal;
+}
+
+if($action == "addUser"){
+	$newUser = $userController->store();
+	return $newUser;
+}
+
+if($action == "getUser"){
+	$userData = $userController->getUser();
+	return $userData;
+}
+
+if($action == "updateUser"){
+	$update = $userController->update();
+	return $update;
 }

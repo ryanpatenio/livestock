@@ -10,3 +10,4 @@ require_once(ROOT_PATH . '/administrator/Controllers/scheduleController.php');
 require_once(ROOT_PATH . '/administrator/Controllers/cattleController.php');
 require_once(ROOT_PATH . '/administrator/Controllers/vaccineController.php');
 require_once(ROOT_PATH . '/administrator/Controllers/dispersalController.php');
+require_once(ROOT_PATH . '/administrator/Controllers/userController.php');
