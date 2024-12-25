@@ -102,6 +102,8 @@
   include('modal/addModal.php');
   include('modal/editModal.php');
   ?>
+
+
 <script src="../livestock2/administrator2/users/user.js"></script>
 <script>
    $(document).ready(function(){

@@ -1,6 +1,7 @@
 <?php
 session_start();
-if (!isset($_SESSION['ACCOUNT_TYPE_ID']) || $_SESSION['ACCOUNT_TYPE_ID'] != 1) {
+//@note 2 = STAFF 1 = ADMIN
+if (!isset($_SESSION['account_type']) || $_SESSION['account_type'] != 2) {
     header('Location: login/login.php');
     exit();
 }
@@ -82,6 +83,11 @@ if (isset($_GET['page'])) {
             break;
         case "PaymentReports":
             include("administrator/reports/payment/paymentList.php"); // Path 
+            break;
+
+        //my Account
+        case "MyAccount":
+            include("administrator/myaccount/myaccount.php"); // Path 
             break;
     }
 } else {

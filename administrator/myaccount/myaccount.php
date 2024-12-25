@@ -99,7 +99,7 @@
 
   include('modal/editModal.php');
   ?>
- 
+  <!-- <script src="../livestock2/plugins/jquery/jquery.min.js"></script> -->
 <script src="../livestock2/administrator2/myaccount/myaccount.js"></script>
 
 <script>

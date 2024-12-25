@@ -1,6 +1,8 @@
 <?php
    session_start();
-   if (!isset($_SESSION['ACCOUNT_TYPE_ID']) || $_SESSION['ACCOUNT_TYPE_ID'] != 2) {
+
+   //@note 1 = ADMIN 2 = STAFF
+   if (!isset($_SESSION['account_type']) || $_SESSION['account_type'] != 1) {
       header('Location: login/login.php');
    }  
    ?>

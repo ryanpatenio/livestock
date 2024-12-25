@@ -15,6 +15,7 @@ $vaccineController = new vaccineController($helper);
 $dispersalController = new dispersalController($helper);
 
 $userController = new userController($helper);
+$authController = new authController($helper);
 
 if($action == 'addClient'){
 
@@ -136,4 +137,16 @@ if($action == "getUser"){
 if($action == "updateUser"){
 	$update = $userController->update();
 	return $update;
+}
+
+//login
+if($action == "login"){
+	$res = $authController->authenticate();
+	return $res;
+}
+
+//updating account
+if($action == "updateMyAccount"){
+	$isUpdated = $userController->updateMyAccount();
+	return $isUpdated;
 }

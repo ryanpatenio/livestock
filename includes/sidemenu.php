@@ -47,6 +47,9 @@
             $reports = "bg-primary text-bold elevation-2";
           }
 
+          //my Account
+          else if ($_GET['page'] == "MyAccount") { $myAccount = "bg-primary text-bold elevation-2"; }
+
         }else{
            $dashboard = "bg-primary text-bold elevation-2";
         }
@@ -122,6 +125,14 @@
                        
                     </div>
                 </li>
+
+              <!---MY PERSONAL ACCOUNT--->
+              <li class="nav-item">
+                  <a href="index.php?page=MyAccount" class="nav-link <?= $myAccount ?>">
+                      <i class="nav-icon fas fa-user"></i>
+                      <p>My Account</p>
+                  </a>
+              </li>
 
         </ul>
       </nav>
