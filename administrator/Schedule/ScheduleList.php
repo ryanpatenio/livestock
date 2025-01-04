@@ -310,6 +310,7 @@ if (isset($_POST['submit_schedule'])) {
       </div>
     </div>
   </div>
+  <!-- <script src="../livestock2/plugins/jquery/jquery.min.js"></script> -->
   <script src="../livestock2/administrator/Schedule/sched.js"></script>
   <script>
   document.addEventListener('DOMContentLoaded', function () {

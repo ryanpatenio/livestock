@@ -140,6 +140,10 @@ $('#clientTBL').dataTable({
     $(document).on('click','#view-btn',function(e){
         e.preventDefault();
 
+        resetForm($('#viewForm'));
+        $('#vaccine-id').text("");
+        $('#animal-type').text("");
+
         const tableBody = $('#tbl-data tbody');
         tableBody.empty();
 
@@ -155,7 +159,7 @@ $('#clientTBL').dataTable({
             },
     
             function(response){
-              // res(response);
+               res(response);
 
                   if(response.code != 0){
                     msg(response.message,'error');

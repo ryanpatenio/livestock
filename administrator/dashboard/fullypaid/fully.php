@@ -85,9 +85,14 @@
                     //         d.DISPERSAL_ID, c.FNAME, c.LNAME, d.1ST_PAYMENT_ID, d.DATE_FIRST_PAYMENT, d.2ND_PAYMENT_ID, d.DATE_SECOND_PAYMENT, d.`STATUS`;
                     //         "; 
                       $query = "
-                        SELECT d.DISPERSAL_ID, CONCAT(c.FNAME, ' ',c.LNAME) AS 'name',a.ANIMALTYPE,case when d.1ST_PAYMENT_ID = '1' then d.DATE_FIRST_PAYMENT ELSE '' end AS 'first_payment' , case when d.2ND_PAYMENT_ID = '1' then d.DATE_SECOND_PAYMENT ELSE '' END AS 'second_payment', case when d.STATUS = 'PENDING' then 'Partial' ELSE 'Completed' END AS 'status' FROM dispersal d,client c,animal a 
+                        SELECT d.DISPERSAL_ID, CONCAT(c.FNAME, ' ',c.LNAME) AS 'name',cat.category_name as ANIMALTYPE,
+                        case when d.1ST_PAYMENT_ID = '1' then d.DATE_FIRST_PAYMENT ELSE '' end AS 'first_payment' ,
+                         case when d.2ND_PAYMENT_ID = '1' then d.DATE_SECOND_PAYMENT ELSE '' END AS 'second_payment',
+                          case when d.STATUS = 'PENDING' then 'Partial' ELSE 'Completed' END AS 'status' 
+                          FROM dispersal d,client c,animal a ,category cat
                         WHERE
                         d.CLIENT_ID = c.CLIENT_ID AND d.PARENT_ANIMAL_ID = a.ANIMAL_ID 
+                        AND a.category_id = cat.category_id
                         and d.1ST_PAYMENT_ID != '0' and d.2ND_PAYMENT_ID != '0'
                       ";
                       $result = mysqli_query($con, $query);

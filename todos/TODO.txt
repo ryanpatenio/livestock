@@ -9,7 +9,7 @@
 FIX THE REPORT ADMIN SIDE
 
 
-1. Inventory Print --on Going
+1. Inventory Print --DONE
 
 Dashboard ADMIN DISPERSAL LIST
-STAFF ALL DASHBOARD
+STAFF ALL DASHBOARD --DONE

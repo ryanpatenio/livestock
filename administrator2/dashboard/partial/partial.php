@@ -49,7 +49,7 @@ $clients = mysqli_fetch_all($clientResult, MYSQLI_ASSOC);
 
 // Fetch all animals by clients
 $client_id = isset($_GET['client_id']) ? $_GET['client_id'] : '';
-$Query2 = "SELECT ANIMAL_ID, ANIMALTYPE, ANIMAL_SEX FROM animal WHERE CLIENT_ID = ? AND ANIMAL_SEX = 'Female'";
+$Query2 = "SELECT a.ANIMAL_ID,c.category_id, c.category_name as ANIMALTYPE, a.ANIMAL_SEX FROM animal a,category c WHERE a.category_id = c.category_id AND a.CLIENT_ID = ? AND a.ANIMAL_SEX = 'Female'";
 $stmt2 = mysqli_prepare($con, $Query2);
 
 // Check if statement preparation was successful
@@ -260,7 +260,7 @@ mysqli_close($con);
 
   <?php include('modal/updateFirstPayment.php'); ?>
   <?php include('modal/updateSecondPayment.php'); ?>
-
+  <!-- <script src="../livestock2/plugins/jquery/jquery.min.js"></script> -->
 <script src="../livestock2/administrator2/dashboard/partial/partial.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {

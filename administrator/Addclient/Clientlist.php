@@ -70,7 +70,7 @@
                       <td><?php echo htmlspecialchars($row['CONTACT_NO']); ?></td>
                       <td><?php echo htmlspecialchars($row['DATE_REGISTERED']); ?></td>
                       <td>
-                        <a href="index.php?page=Stb_Profile&client_id=<?= $row['CLIENT_ID']; ?>" class="btn btn-sm btn-info">
+                        <a href="index.php?page=Recording&client_id=<?= $row['CLIENT_ID']; ?>" class="btn btn-sm btn-info">
                           <i class="fas fa-eye"></i> View
                         </a>
                         <button class="btn btn-sm btn-warning ml-2 fa fa-edit" id="edit-btn-client" data-id="<?= $row['CLIENT_ID']; ?>"> Edit</button>
@@ -140,10 +140,10 @@
     </div>
   </div>
 </div>
-                      <!--EDIT MODAL--->
-                      <?php include('editModal.php'); ?>
+          <!--EDIT MODAL--->
+          <?php include('editModal.php'); ?>
 
-
+ <!-- <script src="../livestock2/plugins/jquery/jquery.min.js"></script> -->
 <script src="../livestock2/administrator/Addclient/client.js"></script>
 <script>
 $(document).ready(function() {

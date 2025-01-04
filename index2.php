@@ -34,6 +34,10 @@ if (isset($_GET['page'])) {
         case "viewInventory":
             include("administrator2/inventory/viewInventory.php");
             break;
+            //Category
+        case "category":
+            include("administrator2/category/categoryList.php");
+            break;    
         case "Schedule":
             include("administrator2/Schedule/Schedulelist.php");
             break;

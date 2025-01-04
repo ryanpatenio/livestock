@@ -255,7 +255,7 @@ class dispersalController {
         }
     
         // Insert the animal record into the database
-        $insertQuery = "INSERT INTO animal (CLIENT_ID, BIRTHDATE, ANIMALTYPE, ANIMAL_SEX, STATUS, IMAGE_PATH,isPayment,fromClient, date_created) 
+        $insertQuery = "INSERT INTO animal (CLIENT_ID, BIRTHDATE, category_id, ANIMAL_SEX, STATUS, IMAGE_PATH,isPayment,fromClient, date_created) 
                         VALUES (?, ?, ?, ?, ?, ?,'1',?, now())";
         $STATUS = "1"; // Default status @it means animal is alive
         $param = [$CLIENT_ID, $BIRTHDATE, $ANIMALTYPE, $ANIMAL_SEX, $STATUS, $imagePath,$fromClientID];
@@ -320,7 +320,7 @@ class dispersalController {
         }
     
         // Insert the animal record into the database
-        $insertQuery = "INSERT INTO animal (CLIENT_ID, BIRTHDATE, ANIMALTYPE, ANIMAL_SEX, STATUS, IMAGE_PATH,isPayment,fromClient, date_created) 
+        $insertQuery = "INSERT INTO animal (CLIENT_ID, BIRTHDATE, category_id, ANIMAL_SEX, STATUS, IMAGE_PATH,isPayment,fromClient, date_created) 
                         VALUES (?, ?, ?, ?, ?, ?,'1',?, now())";
         $STATUS = "1"; // Default status @it means animal is alive
         $param = [$CLIENT_ID, $BIRTHDATE, $ANIMALTYPE, $ANIMAL_SEX, $STATUS, $imagePath,$fromClientID];

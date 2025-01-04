@@ -139,6 +139,10 @@ $(document).ready(function(){
     
         $(document).on('click','#view-btn',function(e){
             e.preventDefault();
+
+            $('#vaccine-id').text("");
+            $('#animal-type').text("");
+
     
             const tableBody = $('#tbl-data tbody');
             tableBody.empty();

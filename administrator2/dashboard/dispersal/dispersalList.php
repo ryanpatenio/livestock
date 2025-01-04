@@ -76,7 +76,7 @@ $clients = mysqli_fetch_all($clientResult, MYSQLI_ASSOC);
                      require("connection/connection.php");
                       $query = "SELECT d.DISPERSAL_ID,c.CLIENT_ID,
                             CONCAT(c.FNAME, ' ', c.LNAME) AS name,
-                            a.ANIMALTYPE AS animal_parent,
+                            cat.category_name AS animal_parent,
                             d.1ST_PAYMENT_ID,
                             d.2ND_PAYMENT_ID,
                             d.`STATUS`,
@@ -87,6 +87,8 @@ $clients = mysqli_fetch_all($clientResult, MYSQLI_ASSOC);
                             client c ON d.CLIENT_ID = c.CLIENT_ID
                         LEFT JOIN 
                             animal a ON d.PARENT_ANIMAL_ID = a.ANIMAL_ID
+                        LEFT JOIN
+                            category cat ON a.category_id = cat.category_id
                         ORDER BY d.date_created DESC
                         "; 
                       $result = mysqli_query($con, $query);
@@ -97,7 +99,13 @@ $clients = mysqli_fetch_all($clientResult, MYSQLI_ASSOC);
                         <?php
                         $i = 1;
 
-                        foreach ($rows as $dis) { ?>
+                        foreach ($rows as $dis) { 
+                          $isFirstPaymentPaid = !empty($dis['1ST_PAYMENT_ID']);
+                          $isSecondPaymentPaid = !empty($dis['2ND_PAYMENT_ID']);
+                          $status = $isFirstPaymentPaid && $isSecondPaymentPaid ? "Completed" : ($isFirstPaymentPaid ? "Partially Paid" : "Unpaid");
+                          
+                          
+                          ?>
                           <tr>
                             <td><?=$i; ?></td>
                             <td><?=$dis['name'] ?></td>
@@ -131,7 +139,9 @@ $clients = mysqli_fetch_all($clientResult, MYSQLI_ASSOC);
                                ?>
                             </td>
                             <td><?=$dis['date_created'] ?></td>
-                            <td><?=$dis['STATUS']; ?></td>
+                            <td
+                            class="<?= $status === 'Completed' ? 'text-success font-weight-bold' : ($status === 'Partially Paid' ? 'text-warning font-weight-bold' : 'text-danger font-weight-bold'); ?>"
+                            ><?=$status; ?></td>
                         </tr>
                       <?php $i++;  }
                         
@@ -153,6 +163,7 @@ $clients = mysqli_fetch_all($clientResult, MYSQLI_ASSOC);
 include('modal/updateFirstPayment.php');
 include('modal/updateSecondPayment.php');
   ?>
+   <script src="../livestock2/plugins/jquery/jquery.min.js"></script>
 <script src="../livestock2/administrator2/dashboard/dispersal/dispersal.js"></script>
 <script>
 $(document).ready(function(){

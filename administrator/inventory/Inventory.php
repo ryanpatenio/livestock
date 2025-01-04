@@ -210,9 +210,13 @@ mysqli_close($con);
         </div>
     </div>
 </div>
+
+<!-- <script src="../livestock2/plugins/jquery/jquery.min.js"></script> -->
 <script src="../livestock2/administrator/inventory/inventory.js"></script>
 <!-- JavaScript for handling AJAX-based modal interactions -->
 <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
+
+
 <script>
     $(document).on('click', '.editVaccineBtn', function() {
         const vaccineId = $(this).data('id');

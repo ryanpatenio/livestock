@@ -56,7 +56,7 @@
                   <tbody>
                     <?php 
                      require("connection/connection.php");
-                      $query = "SELECT CONCAT(c.FNAME, ' ', c.LNAME) AS 'name',a.ANIMALTYPE,a.ANIMAL_SEX,a.date_created FROM client c, animal a WHERE c.CLIENT_ID = a.CLIENT_ID ORDER BY c.FNAME ASC"; 
+                      $query = "SELECT CONCAT(c.FNAME, ' ', c.LNAME) AS 'name',cat.category_name as ANIMALTYPE,a.ANIMAL_SEX,a.date_created FROM client c, animal a,category cat WHERE c.CLIENT_ID = a.CLIENT_ID AND a.category_id = cat.category_id ORDER BY c.FNAME ASC"; 
                       $result = mysqli_query($con, $query);
                       $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
                      

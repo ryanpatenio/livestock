@@ -13,6 +13,7 @@ $scheduleController = new scheduleController($helper);
 $cattleController = new cattleController($helper);
 $vaccineController = new vaccineController($helper);
 $dispersalController = new dispersalController($helper);
+$categoryController = new categoryController($helper);
 
 $userController = new userController($helper);
 $authController = new authController($helper);
@@ -149,4 +150,22 @@ if($action == "login"){
 if($action == "updateMyAccount"){
 	$isUpdated = $userController->updateMyAccount();
 	return $isUpdated;
+}
+
+//add category
+if($action == 'addCategory'){
+	$add = $categoryController->store();
+	return $add;
+}
+
+//get category
+if($action == 'getCategory'){
+	$category = $categoryController->get();
+	return $category; 
+}
+
+//update category
+if($action == 'updateCategory'){
+	$update = $categoryController->update();
+	return $update;
 }

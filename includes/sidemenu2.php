@@ -29,6 +29,7 @@
                 else if ($_GET['page'] == "addCattle") { $Cattlelist = "bg-primary text-bold elevation-2"; }
                 else if ($_GET['page'] == "Schedule") { $Schedulelist = "bg-primary text-bold elevation-2"; }
                 else if ($_GET['page'] == "reports") { $reports = "bg-primary text-bold elevation-2"; }
+                else if ($_GET['page'] == "category") { $category = "bg-primary text-bold elevation-2"; }
 
                 else if ($_GET['page'] == "ScheduleReports") { $sched = "bg-primary text-bold elevation-2"; }
                 else if ($_GET['page'] == "InventoryReports") { $inven = "bg-primary text-bold elevation-2"; }
@@ -79,6 +80,12 @@
                     <a href="index2.php?page=inventory" class="nav-link <?= $inventory ?>">
                         <i class="nav-icon fas fa-file"></i>
                         <p>Inventory</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="index2.php?page=category" class="nav-link <?= $category ?>">
+                        <i class="nav-icon fas fa-file"></i>
+                        <p>Category</p>
                     </a>
                 </li>
                 <li class="nav-item">

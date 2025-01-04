@@ -8,7 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="" method="POST" id="">
+            <form action="" method="POST" id="viewForm">
                 <div class="modal-body">
 
                 <div class="row">

@@ -1,3 +1,14 @@
+<?php
+require("connection/connection.php");
+
+// Fetch all category
+$query = "SELECT * FROM category";
+$executeQ = mysqli_query($con, $query);
+$res = mysqli_fetch_all($executeQ, MYSQLI_ASSOC);
+
+
+?>
+
 <!-- Add Cattle Modal -->
 <div class="modal fade" id="AddCattleModal" tabindex="-1" aria-labelledby="AddCattleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -27,8 +38,19 @@
 
             <!-- Animal Type Input -->
             <div class="col-md-6 mb-3">
+            <select name="ANIMALTYPE" id="" class="form-control">
+              <?php
+              foreach ($res as $cat) { ?>
+                <option value="<?=$cat['category_id'] ?>">
+                  <?= $cat['category_name'] ?>
+                </option>
+             <?php }
+              ?>
+              
+            </select>
+<!-- 
               <label for="InputANIMALTYPE">Animal Type</label>
-              <input type="text" name="ANIMALTYPE" class="form-control" id="InputANIMALTYPE" required>
+              <input type="text" name="ANIMALTYPE" class="form-control" id="InputANIMALTYPE" required> -->
             </div>
 
             <!-- Gender Select -->

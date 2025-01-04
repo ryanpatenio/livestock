@@ -36,7 +36,7 @@ class cattleController {
            return $this->helper->message("error while uploading...",200,1);
         }
 
-        $insertQuery = "INSERT INTO animal (CLIENT_ID, BIRTHDATE, ANIMALTYPE, ANIMAL_SEX, STATUS, IMAGE_PATH, date_created) 
+        $insertQuery = "INSERT INTO animal (CLIENT_ID, BIRTHDATE, category_id, ANIMAL_SEX, STATUS, IMAGE_PATH, date_created) 
         VALUES (?, ?, ?, ?, ?, ?, now())";
         $param = [$CLIENT_ID, $BIRTHDATE, $ANIMALTYPE, $ANIMAL_SEX, $STATUS, $imagePath];
 
@@ -89,7 +89,7 @@ class cattleController {
            return $this->helper->message("error while uploading...",200,1);
         }
 
-        $insertQuery = "INSERT INTO animal (CLIENT_ID, BIRTHDATE, ANIMALTYPE, ANIMAL_SEX, STATUS, IMAGE_PATH,date_created) 
+        $insertQuery = "INSERT INTO animal (CLIENT_ID, BIRTHDATE, category_id, ANIMAL_SEX, STATUS, IMAGE_PATH,date_created) 
         VALUES (?, ?, ?, ?, ?, ?,now())";
         $param = [$CLIENT_ID, $BIRTHDATE, $ANIMALTYPE, $ANIMAL_SEX, $STATUS, $imagePath];
 
@@ -135,7 +135,7 @@ class cattleController {
         }
        
 
-        $query2 = "SELECT ANIMAL_ID,ANIMALTYPE,VACCINE_CARD_ID FROM animal WHERE ANIMAL_ID = ?";
+        $query2 = "SELECT a.ANIMAL_ID,c.category_name as ANIMALTYPE,a.VACCINE_CARD_ID FROM animal a, category c WHERE a.category_id = c.category_id and ANIMAL_ID = ?";
         $param2 = [$animal_id];
         $result2 = $this->helper->regularQuery($query2,$param2);
 
@@ -160,7 +160,7 @@ class cattleController {
             return $this->helper->message('error! missing some parameters!',200,1);
         }
 
-        $query = "SELECT ANIMAL_ID, ANIMALTYPE, ANIMAL_SEX FROM animal WHERE CLIENT_ID = ? AND ANIMAL_SEX = 'Female'";
+        $query = "SELECT a.ANIMAL_ID, c.category_id,c.category_name as ANIMALTYPE, a.ANIMAL_SEX FROM animal a,category c WHERE a.category_id = c.category_id AND a.CLIENT_ID = ? AND a.ANIMAL_SEX = 'Female'";
         $param = [$client_id];
 
         $result = $this->helper->regularQuery($query,$param);

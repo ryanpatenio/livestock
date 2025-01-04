@@ -14,15 +14,15 @@ $client_id = isset($_GET['client_id']) ? $_GET['client_id'] : '';
 if (isset($_GET['client_id'])) {
     
     $animalQuery = "SELECT 
-                        ANIMAL_ID, 
+                        a.ANIMAL_ID, c.category_name as  
                         ANIMALTYPE, 
-                        BIRTHDATE, 
-                        ANIMAL_SEX AS GENDER, 
-                        STATUS, 
-                        VACCINE_CARD_ID, isVaccinated,
-                        IMAGE_PATH
-                    FROM animal 
-                    WHERE CLIENT_ID = ?";
+                        a.BIRTHDATE, 
+                        a.ANIMAL_SEX AS GENDER, 
+                        a.STATUS, 
+                        a.VACCINE_CARD_ID, a.isVaccinated,
+                        a.IMAGE_PATH
+                    FROM animal a,category c
+                    WHERE a.category_id = c.category_id AND a.CLIENT_ID = ?";
                     
     if ($stmt = mysqli_prepare($con, $animalQuery)) {
         mysqli_stmt_bind_param($stmt, 'i', $client_id);
@@ -300,6 +300,7 @@ mysqli_close($con);
 
 
 
+<!-- <script src="../livestock2/plugins/jquery/jquery.min.js"></script> -->
 <script src="../livestock2/administrator/Recording/recording.js"></script>
 <!-- Scripts to handle modals and updates -->
 <script>

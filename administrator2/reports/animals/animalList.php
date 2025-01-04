@@ -57,7 +57,7 @@
                   <tbody>
                     <?php 
                      require("connection/connection.php");
-                      $query = "SELECT *  FROM animal ORDER BY ANIMALTYPE AND ANIMAL_SEX ASC"; 
+                      $query = "SELECT c.category_name as ANIMALTYPE, a.ANIMAL_SEX,a.BIRTHDATE  FROM animal a, category c WHERE a.category_id = c.category_id ORDER BY c.category_name AND a.ANIMAL_SEX ASC"; 
                       $result = mysqli_query($con, $query);
                       $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
                       

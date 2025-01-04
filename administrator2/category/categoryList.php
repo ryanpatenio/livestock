@@ -1,6 +1,6 @@
 <style>
   @media print {
-    #print-btn {
+    #print-btn,#add-btn {
       display: none;
     }
   }
@@ -13,7 +13,7 @@
     <div class="container-fluid">
       <div class="row mb-1 align-items-center">
         <div class="col-sm-6">
-          <h1 class="m-0 text-primary"><i class="fas fa-users"></i> Dispersal Reports</h1>
+          <h1 class="m-0 text-primary"><i class="fas fa-users"></i> Category List</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right bg-light p-2 rounded">
@@ -33,50 +33,58 @@
           <div class="card shadow-lg rounded">
             <!-- Card Header -->
             <div class="card-header d-flex align-items-center bg-primary text-white">
-              <h5 class="mb-0"><i class="fas fa-list"></i> Dispersal List Reports</h5>
-              <a href="#" class="btn btn-success ml-auto" onclick="printReport()" id="print-btn">
+            <h5 class="mb-0 mr-auto">
+                <i class="fas fa-list"></i> Category List
+            </h5>
+            <div class="d-flex justify-content-end">
+                <a href="#" class="btn btn-dark btn-sm mr-2" id="add-btn" data-toggle="modal" data-target="#addModal">
+                <i class="fas fa-plus"></i> Add New
+                </a>
+                <a href="#" class="btn btn-success btn-sm" onclick="printReport()" id="print-btn">
                 <i class="fas fa-print"></i> Print
-              </a>
+                </a>
+            </div>
             </div>
 
             <!-- Card Body -->
             <div class="card-body">
               <div class="table-responsive">
-                <table id="dispersalTBL" class="table table-striped table-hover table-bordered">
+                <table id="categoryTBL" class="table table-striped table-hover table-bordered">
                   <thead class="thead-dark">
                     <tr>
                       <th>#</th>
-                      <th>Client Name</th>
-                      <th>Animal Type (Received)</th>
-                      <th>Animal sex</th>
-                      <th>Date Received</th>
+                      <th>Category Name</th>
+                                     
+                      <th>Action</th>
                   
                     </tr>
                   </thead>
                   <tbody>
                     <?php 
                      require("connection/connection.php");
-                      $query = "SELECT CONCAT(c.FNAME, ' ', c.LNAME) AS 'name',cat.category_name as ANIMALTYPE,a.ANIMAL_SEX,a.date_created FROM client c, animal a, category cat WHERE c.CLIENT_ID = a.CLIENT_ID AND a.category_id = cat.category_id ORDER BY c.FNAME ASC"; 
+                      $query = "SELECT * FROM category;
+                      ";
                       $result = mysqli_query($con, $query);
                       $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
-                     
+                     // foreach ($rows as $row) { 
+                    ?>
+
+                    <?php
+                    $i = 1;
+                    foreach ($rows as $cat) { ?>
+                     <tr>
+                        <td><?=$i; ?></td>
+                        <td><?=$cat['category_name'] ?></td>
+                      
+                        <td>
+                            <button class="btn btn-sm btn-warning" id="edit-btn" data-id="<?=$cat['category_id'] ?>"><i class=" fa fa-pendcil">Edit</i></button>
+                        </td>
+                       
+                    </tr>                      
+                   <?php $i++; }
+                 
                     ?>
                     
-                        <?php
-                        $i = 1;
-
-                        foreach ($rows as $dis) { ?>
-                          <tr>
-                            <td><?=$i; ?></td>
-                            <td><?=$dis['name'] ?></td>
-                            <td><?=$dis['ANIMALTYPE'] ?></td>
-                            <td><?=$dis['ANIMAL_SEX'] ?></td>
-                            <td><?=$dis['date_created']; ?></td>
-                        </tr>
-                      <?php $i++;  }
-                        
-                        ?>
-                        
                     
                   </tbody>
                 </table>
@@ -88,12 +96,20 @@
     </div>
   </section>
 
+  <?php 
+  include('modal/addModal.php');
+  include('modal/editModal.php');
+  ?>
+
+<script src="../livestock2/plugins/jquery/jquery.min.js"></script>
+<script src="../livestock2/administrator2/category/category.js"></script>
 <script>
    $(document).ready(function(){
+
     $('#main').css('filter', 'none');
     $('#loader').hide();
-
-    $('#dispersalTBL').dataTable({
+    
+    $('#userTBL').dataTable({
 
     });
 

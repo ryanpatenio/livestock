@@ -12,7 +12,7 @@
           <div class="modal-body">
             <input type="hidden" name="dispersal_id2" id="dispersalId2">
             <input type="hidden" name="client_id2" value="<?=$client_id; ?>">
-            
+            <input type="hidden" name="animal_type" id="animal-type-id2">
             <div class="form-group">
               <label for="paymentStatus">Select Payment Status</label>
               <select class="form-control" id="paymentStatus2" name="payment_status2" required>
@@ -35,7 +35,7 @@
                           <option value="">Select....</option>
 
                           <?php foreach ($animals ?? [] as $animal) { ?>
-                            <option data-animal-type="<?=$animal['ANIMALTYPE']; ?>" value="<?=$animal['ANIMAL_ID'] ?>">
+                            <option data-animal-type="<?=$animal['ANIMALTYPE']; ?>" data-animal-type-id = <?=$animal['category_id'] ?> value="<?=$animal['ANIMAL_ID'] ?>">
                                 <?=$animal['ANIMALTYPE']." | ".$animal['ANIMAL_SEX'] ?>
                             </option>
                          <?php } ?>
@@ -66,7 +66,7 @@
                 <div class="row">
                   <div class="col">
                     <label for="">Animal Type</label>
-                    <input class="form-control" id="animal-type-to-give2" name="animal_type" readonly required>
+                    <input class="form-control" id="animal-type-to-give2" readonly required>
                   </div>
                   <div class="col">
                     <label for="">Birth Day</label>

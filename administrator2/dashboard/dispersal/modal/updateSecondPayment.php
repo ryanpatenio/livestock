@@ -12,6 +12,7 @@
           <div class="modal-body">
             <input type="hidden" name="dispersal_id2" id="dispersalId2">
             <input type="hidden" name="client_id2" id="client-id2" value="">
+            <input type="hidden" name="animal_type" id="animal-type-id2">
             
             <div class="form-group">
               <label for="paymentStatus">Select Payment Status</label>
@@ -59,7 +60,7 @@
                 <div class="row">
                   <div class="col">
                     <label for="">Animal Type</label>
-                    <input class="form-control" id="animal-type-to-give2" name="animal_type" readonly required>
+                    <input class="form-control" id="animal-type-to-give2"  readonly required>
                   </div>
                   <div class="col">
                     <label for="">Birth Day</label>

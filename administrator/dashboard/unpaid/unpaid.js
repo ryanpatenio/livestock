@@ -47,9 +47,11 @@ $(document).ready(function(){
         
         // Get the data attribute value
         var animalType = selectedOption.data('animal-type');
+        let animalTypeID = selectedOption.data('animal-type-id');
         
         // Set the value in the input field
         $('#animal-type-to-give').val(animalType);
+        $('#animal-type-id').val(animalTypeID);
     });
 
     $('#animal_parent2').on('change', function () {
@@ -58,9 +60,11 @@ $(document).ready(function(){
         
         // Get the data attribute value
         var animalType = selectedOption.data('animal-type');
+        let animalTypeID = selectedOption.data('animal-type-id');
         
         // Set the value in the input field
         $('#animal-type-to-give2').val(animalType);
+        $('#animal-type-id2').val(animalTypeID);
     });
 
     
@@ -152,13 +156,13 @@ $(document).ready(function(){
                     processData: false,
                     dataType: 'json',
                     success: function(response) {
-                        res(response)
+                       // res(response)
                         if (response.code !== 0) {
                             msg(response.message, 'error'); // Show error message
                             return;
                         }
     
-                        msgThenRedirect(response.message, 'success',"livestock2/"+"../index2.php?page=unpaid"); // Show success message
+                        msgThenRedirect(response.message, 'success',"livestock2/"+"../index.php?page=unpaid"); // Show success message
                         formModalClose(updateFirstModal, $('#firstPaymentForm')); // Close the modal and reset the form
                     },
                     error: function(xhr) {
@@ -228,7 +232,7 @@ $(document).ready(function(){
                         msg(response.message,'error');
                         return;
                     }
-                    msgThenRedirect(response.message, 'success',"livestock2/"+"../index2.php?page=unpaid"); // Show success message
+                    msgThenRedirect(response.message, 'success',"livestock2/"+"../index.php?page=unpaid"); // Show success message
                     formModalClose(updateSecondModalModal,$('#secondPaymentForm'));
  
                                     

@@ -18,8 +18,10 @@ class authController {
         if(empty($username) || empty($password)){
             return $this->helper->message('error! missing some parameters!',200,1);
         }
-        $query = "SELECT ID as user_id,FULL_NAME as name,USERNAME as username,PASSWORD as password, case when ACCOUNT_TYPE_ID = 1 THEN 'admin'
-                WHEN ACCOUNT_TYPE_ID = 2 THEN 'staff' WHEN ACCOUNT_TYPE_ID = 3 THEN 'super_admin' END as account_type, ACCOUNT_TYPE_ID
+        $query = "SELECT ID as user_id,FULL_NAME as name,USERNAME as username,PASSWORD as password,
+                case when ACCOUNT_TYPE_ID = 1 THEN 'admin'
+                WHEN ACCOUNT_TYPE_ID = 2 THEN 'staff' WHEN ACCOUNT_TYPE_ID = 3 THEN 'super_admin' 
+                END as account_type, ACCOUNT_TYPE_ID
                 FROM user where USERNAME = ? LIMIT 1";
         $param = [$username];
 
@@ -42,7 +44,7 @@ class authController {
         $_SESSION['name'] = $user_data['name'];
         $_SESSION['account_type'] = $user_data['ACCOUNT_TYPE_ID'];
 
-        //@note 1 = ADMIN 2 = STAFF 3= SUPER_ADMIN
+        //@note 1 = ADMIN ,2 = STAFF, 3= SUPER_ADMIN
         $location = "";
         if($user_data['ACCOUNT_TYPE_ID'] == 1){
             //admin

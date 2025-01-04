@@ -179,6 +179,7 @@ include('addSched.php');
     </div>
   </div>
 </div>
+
 <script>
 
 
@@ -318,7 +319,7 @@ include('addSched.php');
       </div>
     </div>
   </div>
-
+  
   <script src="../livestock2/administrator2/Schedule/sched.js"></script>
   <script>
 
@@ -379,8 +380,8 @@ $(document).on('click','.edit-btn',function(e){
       }
   });
 
-  ini_set('display_errors', 1);
-error_reporting(E_ALL);
+ // ini_set('display_errors', 1);
+//error_reporting(E_ALL);
   </script>
 
   <style>

@@ -21,7 +21,7 @@ class inventoryController {
                           DATE_CREATED
                     FROM VACCINE
                     WHERE DATE_EXPIRED > now()
-                    GROUP BY VACCINE_NA ME, VACCINE_TYPE, DATE_CREATED
+                    GROUP BY VACCINE_NAME, VACCINE_TYPE, DATE_CREATED
                     ORDER BY DATE_CREATED ASC        
 
         ";

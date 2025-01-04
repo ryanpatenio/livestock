@@ -47,9 +47,11 @@ $(document).ready(function(){
         
         // Get the data attribute value
         var animalType = selectedOption.data('animal-type');
+        let animalTypeID = selectedOption.data('animal-type-id');
         
         // Set the value in the input field
         $('#animal-type-to-give').val(animalType);
+        $('#animal-type-id').val(animalTypeID);
     });
 
     $('#animal_parent2').on('change', function () {
@@ -58,9 +60,11 @@ $(document).ready(function(){
         
         // Get the data attribute value
         var animalType = selectedOption.data('animal-type');
+        let animalTypeID = selectedOption.data('animal-type-id');
         
         // Set the value in the input field
         $('#animal-type-to-give2').val(animalType);
+        $('#animal-type-id2').val(animalTypeID);
     });
 
     

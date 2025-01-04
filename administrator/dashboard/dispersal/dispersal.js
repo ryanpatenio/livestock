@@ -45,11 +45,14 @@ $(document).ready(function(){
         // Get the selected option
         var selectedOption = $(this).find('option:selected');
         
+        
         // Get the data attribute value
         var animalType = selectedOption.data('animal-type');
+        let animalTypeID = selectedOption.data('animal-type-id');
         
         // Set the value in the input field
         $('#animal-type-to-give').val(animalType);
+        $('#animal-type-id').val(animalTypeID);
     });
 
     $('#animal_parent2').on('change', function () {
@@ -60,9 +63,11 @@ $(document).ready(function(){
         
         // Get the data attribute value
         var animalType = selectedOption.data('animal-type');
+        let animalTypeID = selectedOption.data('animal-type-id');
         
         // Set the value in the input field
         $('#animal-type-to-give2').val(animalType);
+        $('#animal-type-id2').val(animalTypeID);
     });
 
     
@@ -275,13 +280,13 @@ $(document).ready(function(){
 
             },
             function(response){
-               // res(response);
+                res(response);
 
                 if (response.data && response.data.length > 0) {
                     // Loop through the data and populate the select tag
                     $.each(response.data, function (index, item) {
                         $('#animal_parent').append(
-                            `<option data-animal-type="${item.ANIMALTYPE}" value="${item.ANIMAL_ID}">
+                            `<option data-animal-type="${item.ANIMALTYPE}" data-animal-type-id="${item.category_id}" value="${item.ANIMAL_ID}">
                                 ${item.ANIMALTYPE} | ${item.ANIMAL_SEX}
                             </option>`
                         );
@@ -324,17 +329,18 @@ $(document).ready(function(){
                 
             },
             function(response){
-               // res(response);
+                res(response);
 
                 if (response.data && response.data.length > 0) {
                     // Loop through the data and populate the select tag
                     $.each(response.data, function (index, item) {
                         $('#animal_parent2').append(
-                            `<option data-animal-type="${item.ANIMALTYPE}" value="${item.ANIMAL_ID}">
+                            `<option data-animal-type="${item.ANIMALTYPE}" data-animal-type-id="${item.category_id}"  value="${item.ANIMAL_ID}">
                                 ${item.ANIMALTYPE} | ${item.ANIMAL_SEX}
                             </option>`
                         );
                     });
+
                 }
                
             },

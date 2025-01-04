@@ -43,9 +43,9 @@ if (isset($_GET['page'])) {
         case "Schedulelist":
             include("administrator/Schedule/update_schedule.php");
             break;
-        // default:
-        //     include("administrator/Recording/Recording.php");
-        //     break;
+        case "Recording" :
+            include("administrator/Recording/Recording.php");
+            break;
 
         //dashboard breadcrumbs
         case "dispersalDashboard":
