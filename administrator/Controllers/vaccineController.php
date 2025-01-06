@@ -56,21 +56,80 @@ class vaccineController {
         return $this->helper->message("Quantity Updated Successfully!",200,0);
     }
 
-//query for displaying the data vaccine received logs
-//     SELECT 
-//     vt.VACCINE_TYPE_ID,
-//     vt.VACCINE_NAME,
-//     vt.DESCRIPTION,
-//     vh.QTY_ADD AS received,
-//     vh.DATE_CREATED AS log_date
-// FROM 
-//     vaccine_type vt
-// JOIN 
-//     vaccine_history vh ON vt.VACCINE_TYPE_ID = vh.VACCINE_TYPE_ID
-// WHERE 
-//     vt.VACCINE_TYPE_ID = 6
-// ORDER BY 
-//     vh.DATE_CREATED ASC;
+    //add vacc type
+   public function addVaccType(){
+        extract($_POST);
 
+        if(empty($vaccine_type_name) || $vaccine_type_name == null){
+            return $this->helper->message('error missing some parameters!',200,1);
+        }
+        if(empty($description) || $description == null){
+            return $this->helper->message('error missing some parameters!',200,1);
+        }
+
+        $query = "INSERT INTO vaccine_type (VACCINE_NAME, DESCRIPTION) VALUES(?,?);";
+        $param = [$vaccine_type_name,$description];
+
+        $result = $this->helper->regularQuery($query,$param);
+
+        if(!$result){
+            //error
+            return $this->helper->message('error while processing your request!',200,1);
+        }
+        //success
+        return $this->helper->message('New Vaccine Type Added Successfulyl!',200,0);
+
+    }
+
+    //get Vacc Type Details
+
+    public function getVaccTypeDetails(){
+        extract($_POST);
+
+        if(empty($id) || $id == null){
+            return $this->helper->message('error missing some parameters!',200,1);
+        }
+
+        $query = "SELECT * FROM vaccine_type WHERE VACCINE_TYPE_ID = ? LIMIT 1";
+        $param = [$id];
+
+        $result = $this->helper->regularQuery($query,$param);
+
+        if(empty($result)){
+            return $this->helper->message('No result(s) found!',200,1);
+        }
+
+        return $this->helper->message('success',200,0,$result);
+    }
+
+    //update vaccine name
+    public function updateVaccType(){
+        extract($_POST);
+
+        if(empty($vaccine_type_id) || $vaccine_type_id == null){
+            return $this->helper->message('error missing some parameters!',200,1);
+        }
+
+        if(empty($vaccine_type_name) || $vaccine_type_name == null){
+            return $this->helper->message('error missing some parameters!',200,1);
+        }
+        if(empty($description) || $description == null){
+            return $this->helper->message('error missing some parameters!',200,1);
+        }
+
+
+        $query = "UPDATE vaccine_type SET VACCINE_NAME = ?, DESCRIPTION = ? WHERE VACCINE_TYPE_ID = ?";
+        $param = [$vaccine_type_name,$description,$vaccine_type_id];
+
+        $update = $this->helper->regularQuery($query,$param);
+
+        if(!$update){
+            //error
+            return $this->helper->message('error while processing your request!',200,1);
+        }
+
+        //success
+        return $this->helper->message('Vaccine Name Updated Successfully!',200,0);
+    }
 
 }

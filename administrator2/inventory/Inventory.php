@@ -78,6 +78,7 @@ mysqli_close($con);
                     <div class="card shadow-sm">
                         <div class="card-header bg-primary text-white">
                             <h6 class="mb-0"><b>List of Vaccine Types</b></h6>
+                            <button class="btn btn-success float-right" data-toggle="modal" data-target="#addVaccTypeModal">+ add</button>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -86,6 +87,7 @@ mysqli_close($con);
                                     <tr>
                                         <th>No.</th>
                                         <th>Vaccine Type</th>
+                                        <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -97,6 +99,9 @@ mysqli_close($con);
                                             <tr>
                                                 <td><?=$i; ?></td>
                                                 <td><?= htmlspecialchars($type['VACCINE_NAME']); ?></td>
+                                                <td>
+                                                    <button class="btn btn-sm btn-warning" id="edit-vacc-type-btn" data-id="<?=$type['VACCINE_TYPE_ID']; ?>"><i class="fa fa-edit">edit</i></button>
+                                                </td>
                                                 <!-- <td><a href="index.php?page=inventory&vaccine_type_id=<?= $type['VACCINE_TYPE_ID']; ?>" class="btn btn-sm btn-outline-info">View</a></td> -->
                                             </tr>
 
@@ -147,7 +152,7 @@ mysqli_close($con);
                                                     <td><?=$data['available_quantity'] ?></td>
                                                    
                                                     <td>
-                                                        <a href="index2.php?page=viewInventory&vaccID=<?=$data['VACCINE_TYPE_ID'] ?>" class="btn btn-sm btn-primary fa fa-eye">View</a>
+                                                        <a href="index2.php?page=viewInventory&vaccID=<?=$data['VACCINE_TYPE_ID'] ?>" class="btn btn-sm btn-primary "><i class="fa fa-eye"> view</i></a>
                                                        
                                                     
                                                     </td>
@@ -205,7 +210,14 @@ mysqli_close($con);
         </div>
     </div>
 </div>
+<?php 
+include('modal/addVaccyTypeModal.php');
+include('modal/editVaccTypeModal.php');
+
+?>
+
 <script src="../livestock2/administrator2/inventory/inventory.js"></script>
+<script src="../livestock2/administrator2/inventory/vaccine.js"></script>
 <!-- JavaScript for handling AJAX-based modal interactions -->
 <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
 <script>

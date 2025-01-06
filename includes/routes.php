@@ -169,3 +169,21 @@ if($action == 'updateCategory'){
 	$update = $categoryController->update();
 	return $update;
 }
+
+//add new Vaccine Type
+if($action == "addVaccType"){
+	$addVaccType = $vaccineController->addVaccType();
+	return $addVaccType;
+}
+
+//get vacc type details
+if($action == "getVaccTypeDetails"){
+	$getVaccType = $vaccineController->getVaccTypeDetails();
+	return $getVaccType;
+}
+
+//update vaccine type name
+if($action == "updateVaccTypeName"){
+	$updateVaccTypeName = $vaccineController->updateVaccType();
+	return $updateVaccTypeName;
+}
