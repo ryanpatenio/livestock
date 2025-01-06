@@ -203,7 +203,7 @@ mysqli_close($con);
                                                     <td><?= htmlspecialchars($animal['BIRTHDATE']); ?></td>
 
                                                     <!-- Gender -->
-                                                    <td><?= $animal['GENDER'] == 1 ? 'Male' : 'Female'; ?></td>
+                                                    <td><?= $animal['GENDER'] ?></td>
 
                                                     <!-- Status -->
                                                     <td>
