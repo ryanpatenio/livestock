@@ -49,30 +49,34 @@
           <div class="form-group">
             <label for="status">Vaccine:</label>
             <select name="vaccine_TYPE_ID" id="vacc" class="form-control" required>
-              <?php
-              
-              foreach ($vaccineData as $vacc) { ?>
-                <option value="<?=$vacc['VACCINE_TYPE_ID'] ?>"><?=  $vacc['VACCINE_NAME'].' | '.$vacc['DESCRIPTION'] ?></option>
 
-            <?php  }
-              
-              ?>
+            <?php foreach ($vaccineData as $vacc) { ?>
+                  <option 
+                      value="<?= $vacc['VACCINE_TYPE_ID'] ?>" 
+                      <?= $vacc['QUANTITY_DISPLAY'] == 0 ? 'style="color: red;"' : '' ?>>
+                      <?= $vacc['VACCINE_NAME'] . ' | ' . $vacc['DESCRIPTION'] . ' | Remaining Quantity (' . $vacc['QUANTITY_DISPLAY'] . ')' ?>
+                  </option>
+               <?php } ?>
               
             </select>
           </div>
           <div class="form-group">
-            <label for="status">Qty</label>
-            <input type="number" class="form-control" name="qty" required>
+            <div class="row">
+              <div class="col">
+                <label for="status">Qty</label>
+                <input type="number" class="form-control" name="qty" required>
+              </div>
+              <div class="col">
+                  <label for="status">Status:</label>
+                  <select name="status" id="status" class="form-control" required>
+                    <option value="0">Pending</option>
+                    <!-- <option value="1">Confirmed</option>
+                    <option value="2">Cancelled</option> -->
+                  </select>
+              </div>
+            </div>            
           </div>
-          <!-- Status -->
-          <div class="form-group">
-            <label for="status">Status:</label>
-            <select name="status" id="status" class="form-control" required>
-              <option value="0">Pending</option>
-              <!-- <option value="1">Confirmed</option>
-              <option value="2">Cancelled</option> -->
-            </select>
-          </div>
+         
           
         </div>
         <div class="modal-footer">

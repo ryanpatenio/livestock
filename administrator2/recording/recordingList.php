@@ -249,7 +249,7 @@ mysqli_close($con);
                                                         <button class="btn btn-sm btn-success" 
                                                                 id="add-btn" 
                                                                 data-current-vaccination-status="<?= $animal['isVaccinated'] == 0 ? 'Not Vaccinated' : 'Vaccinated'; ?> " 
-                                                                data-id="<?= $animal['ANIMAL_ID']; ?>" <?= $animalStatus; ?>
+                                                                data-id="<?= $animal['ANIMAL_ID']; ?>" <?= $animalStatus; ?>>
                                                             <i class="fa fa-plus"></i> Add
                                                         </button>
                                                     </td>

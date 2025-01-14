@@ -9,7 +9,22 @@ $clientQuery = "SELECT CLIENT_ID, CONCAT(FNAME, ' ', LNAME) AS full_name FROM cl
 $clientResult = mysqli_query($con, $clientQuery);
 $clients = mysqli_fetch_all($clientResult, MYSQLI_ASSOC);
 
-$query = "select * from vaccine_type";
+$query = "SELECT 
+    vt.VACCINE_TYPE_ID,
+    vt.VACCINE_NAME,
+    vt.DESCRIPTION,
+    v.QUANTITY,
+    CASE 
+        WHEN v.QUANTITY IS NULL THEN 0
+        ELSE v.QUANTITY
+    END AS QUANTITY_DISPLAY
+FROM 
+    vaccine_type vt
+LEFT JOIN 
+    vaccine v 
+ON 
+    vt.VACCINE_TYPE_ID = v.VACCINE_TYPE_ID;
+    ";
 $result = mysqli_query($con, $query);
 $vaccineData = mysqli_fetch_all($result, MYSQLI_ASSOC);
 

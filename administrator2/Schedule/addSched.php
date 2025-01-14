@@ -60,20 +60,24 @@
               
             </select>
           </div>
-          <div class="form-group">
-            <label for="status">Qty</label>
-            <input type="number" class="form-control" name="qty" required>
-          </div>
-          <!-- Status -->
-          <div class="form-group">
-            <label for="status">Status:</label>
-            <select name="status" id="status" class="form-control" required>
-              <option value="0">Pending</option>
-              <!-- <option value="1">Confirmed</option>
-              <option value="2">Cancelled</option> -->
-            </select>
-          </div>
           
+          <div class="form-group">
+            <div class="row">
+              <div class="col">
+                <label for="status">Qty</label>
+                <input type="number" class="form-control" name="qty" required>
+              </div>
+              <div class="col">
+                <label for="status">Status:</label>
+                  <select name="status" id="status" class="form-control" required>
+                    <option value="0">Pending</option>
+                    <!-- <option value="1">Confirmed</option>
+                    <option value="2">Cancelled</option> -->
+                  </select>
+              </div>
+            </div>           
+          </div>
+         
         </div>
         <div class="modal-footer">
           <button type="submit" name="" class="btn btn-primary">Submit Schedule</button>
