@@ -15,7 +15,7 @@ $res = mysqli_fetch_all($executeQ, MYSQLI_ASSOC);
     <div class="modal-content">
       <div class="modal-header bg-primary text-white">
         <h5 class="modal-title" id="AddCattleModalLabel">Add New Animal</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button type="button" class="btn-close" data-dismiss="modal" aria-label="Close"></button>
       </div>
       <form action="" method="POST" id="addCattleForm" enctype="multipart/form-data">
         <div class="modal-body">
@@ -38,6 +38,7 @@ $res = mysqli_fetch_all($executeQ, MYSQLI_ASSOC);
 
             <!-- Animal Type Input -->
             <div class="col-md-6 mb-3">
+            <label for="">Animal Type</label>
             <select name="ANIMALTYPE" id="" class="form-control">
               <?php
               foreach ($res as $cat) { ?>
