@@ -242,10 +242,14 @@ mysqli_close($con);
                                                                 data-id="<?= $animal['ANIMAL_ID']; ?>">
                                                             <i class="fa fa-eye"></i> View
                                                         </button>
+                                                        <?php
+                                                         $animalStatus = '';
+                                                         $animal['STATUS'] == 1 ? $animalStatus='enabled' : $animalStatus='disabled'; 
+                                                         ?>
                                                         <button class="btn btn-sm btn-success" 
                                                                 id="add-btn" 
-                                                                data-current-vaccination-status="<?= $animal['isVaccinated'] == 0 ? 'Not Vaccinated' : 'Vaccinated'; ?>" 
-                                                                data-id="<?= $animal['ANIMAL_ID']; ?>">
+                                                                data-current-vaccination-status="<?= $animal['isVaccinated'] == 0 ? 'Not Vaccinated' : 'Vaccinated'; ?> " 
+                                                                data-id="<?= $animal['ANIMAL_ID']; ?>" <?= $animalStatus; ?>>
                                                             <i class="fa fa-plus"></i> Add
                                                         </button>
                                                     </td>

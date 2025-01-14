@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 04, 2025 at 05:45 AM
+-- Generation Time: Jan 14, 2025 at 05:18 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -67,9 +67,14 @@ CREATE TABLE `animal` (
 --
 
 INSERT INTO `animal` (`ANIMAL_ID`, `CLIENT_ID`, `BIRTHDATE`, `IMAGE_PATH`, `category_id`, `ANIMAL_SEX`, `isVaccinated`, `STATUS`, `VACCINE_CARD_ID`, `isPayment`, `fromClient`, `date_created`) VALUES
-(185, 62, '2024-09-12', 'path_to_images/6778b295bbf84_goat.jpg', 2, 'Female', '1', '1', 88, 0, 0, '2025-01-04'),
-(186, 62, '2025-01-10', 'path_to_images/6778b33b4e72b_goat.jpg', 2, 'Female', '0', '1', 89, 0, 0, '2025-01-04'),
-(187, 63, '2024-10-10', 'path_to_images/6778b3c1b7051_goat.jpg', 2, 'Male', '0', '1', 90, 1, 62, '2025-01-04');
+(185, 62, '2024-09-12', 'path_to_images/6778b295bbf84_goat.jpg', 2, 'Female', '1', '0', 88, 0, 0, '2025-01-04'),
+(186, 62, '2025-01-10', 'path_to_images/6778b33b4e72b_goat.jpg', 2, 'Female', '1', '1', 89, 0, 0, '2025-01-04'),
+(187, 63, '2024-10-10', 'path_to_images/6778b3c1b7051_goat.jpg', 2, 'Male', '0', '1', 90, 1, 62, '2025-01-04'),
+(188, 63, '2024-11-06', 'path_to_images/677b50b3d9cfc_cattle1.jpg', 1, 'Female', '0', '1', 91, 0, 0, '2025-01-06'),
+(189, 64, '2024-10-01', 'path_to_images/677b512de88f0_goat.jpg', 2, 'Male', '1', '1', 92, 1, 62, '2025-01-06'),
+(190, 64, '2024-09-10', 'path_to_images/677b5f8189711_goat.jpg', 2, 'Female', '0', '1', 93, 0, 0, '2025-01-06'),
+(191, 65, '2024-09-10', 'path_to_images/677b6243ec67d_goat.jpg', 2, 'Male', '0', '1', 94, 1, 64, '2025-01-06'),
+(192, 66, '2024-10-08', 'path_to_images/677b6298e0b43_goat.jpg', 2, 'Female', '0', '1', 95, 1, 64, '2025-01-06');
 
 -- --------------------------------------------------------
 
@@ -114,7 +119,10 @@ CREATE TABLE `client` (
 
 INSERT INTO `client` (`CLIENT_ID`, `FNAME`, `LNAME`, `MIDINITIAL`, `ASSOCIATION`, `CONTACT_NO`, `ADDRESS`, `DATE_REGISTERED`) VALUES
 (62, 'Mark', 'Heaven', 'A', 'Farmer Assoc', '09499498583', 'Brgy Camindajao', '2025-01-04'),
-(63, 'Henry', 'Saber', 'S', 'Farmer Assoc', '09484883847', 'Brgy Bugagaw', '2025-01-04');
+(63, 'Henry', 'Saber', 'S', 'Farmer Assoc', '09484883847', 'Brgy Bugagaw', '2025-01-04'),
+(64, 'John', 'Doe', 'A', 'Farmer Assoc', '09583884838', 'Brgy 2 kidapawan', '2025-01-06'),
+(65, 'Lester', 'Damon', 'A', 'Farmer Assoc', '09484883844', 'Libunan st. Antipolo', '2025-01-06'),
+(66, 'Jam', 'Magno', 'J', 'Farmer Assoc', '049958388445', 'Brgy Libunan Karakar Cebu', '2025-01-06');
 
 -- --------------------------------------------------------
 
@@ -139,7 +147,8 @@ CREATE TABLE `dispersal` (
 --
 
 INSERT INTO `dispersal` (`DISPERSAL_ID`, `CLIENT_ID`, `1ST_PAYMENT_ID`, `DATE_FIRST_PAYMENT`, `2ND_PAYMENT_ID`, `DATE_SECOND_PAYMENT`, `PARENT_ANIMAL_ID`, `STATUS`, `date_created`) VALUES
-(70, 62, 1, '2025-01-04', 0, NULL, 185, 'PENDING', '2025-01-04');
+(70, 62, 1, '2025-01-04', 1, '2025-01-06', 185, 'COMPLETED', '2025-01-04'),
+(71, 64, 1, '2025-01-06', 1, '2025-01-06', 190, 'COMPLETED', '2025-01-06');
 
 -- --------------------------------------------------------
 
@@ -706,7 +715,18 @@ INSERT INTO `parent` (`PARENT_ID`, `CLIENT_ID`, `ANIMAL_ID`) VALUES
 (1041, 62, 185),
 (1042, 62, 185),
 (1043, 62, 185),
-(1044, 62, 185);
+(1044, 62, 185),
+(1045, 64, 189),
+(1046, 64, 189),
+(1047, 64, 189),
+(1048, 64, 189),
+(1049, 64, 189),
+(1050, 63, 187),
+(1051, 64, 189),
+(1052, 64, 189),
+(1053, 64, 189),
+(1054, 64, 189),
+(1055, 64, 189);
 
 -- --------------------------------------------------------
 
@@ -729,7 +749,10 @@ CREATE TABLE `payment` (
 --
 
 INSERT INTO `payment` (`PAYMENT_ID`, `DISPERSAL_ID`, `OR_PAYMENT_NO`, `DATE`, `PAID_BY`, `GIVE_TO`, `PAYMENT_STATUS`) VALUES
-(85, 70, 'SOO03048884', '2025-01-04', 62, 63, 'First Payment');
+(85, 70, 'SOO03048884', '2025-01-04', 62, 63, 'First Payment'),
+(86, 70, 'SO0049549', '2025-01-06', 62, 64, 'Second Payment'),
+(87, 71, 'SOO004959', '2025-01-06', 64, 65, 'First Payment'),
+(88, 71, 'SOORII040599', '2025-01-06', 64, 66, 'Second Payment');
 
 -- --------------------------------------------------------
 
@@ -756,7 +779,11 @@ CREATE TABLE `schedule` (
 --
 
 INSERT INTO `schedule` (`SCHEDULE_ID`, `VACCINE_TYPE_ID`, `QTY_USED`, `EVENT_NAME`, `EVENT_DATE`, `CLIENT_ID`, `1ST_REQUIREMENT`, `2ND_REQUIREMENT`, `STATUS`, `isCompleted`, `CREATED_AT`) VALUES
-(79, 4, '1', 'Vaccination', '2025-01-05', 62, '1', '1', '1', '1', '2025-01-04 04:01:48');
+(79, 4, '1', 'Vaccination', '2025-01-05', 62, '1', '1', '1', '1', '2025-01-04 04:01:48'),
+(80, 1, '1', 'DEWORMING', '2025-01-07', 64, '1', '1', '1', '0', '2025-01-06 04:40:26'),
+(81, 1, '1', 'DEWORMING', '2025-01-08', 64, '1', '1', '1', '1', '2025-01-06 04:43:04'),
+(82, 4, '0', 'DEWORMING', '2025-01-16', 62, '1', '1', '1', '1', '2025-01-14 15:39:35'),
+(83, 2, '10', 'DEWORMING 2', '2025-01-17', 62, '1', '1', '0', '0', '2025-01-14 14:52:59');
 
 -- --------------------------------------------------------
 
@@ -778,8 +805,8 @@ CREATE TABLE `user` (
 --
 
 INSERT INTO `user` (`ID`, `FULL_NAME`, `USERNAME`, `PASSWORD`, `ACCOUNT_TYPE_ID`, `status`) VALUES
-(4, 'RMAS', 'Staff', 'Staff', 2, 0),
-(5, 'HER', 'Admin', 'Admin', 1, 0),
+(4, 'RMAS', 'Staff', '$2y$10$CCj3uG70CNerokGFPWyoFuuuogzaN2G6SvNVJnB9yoFSD0FHPh/Ne', 2, 0),
+(5, 'HER', 'Admin', '$2y$10$F2LwqUUPOfvVXazPEqDSIuCdypyqRDkqlTcaGKHsJyLVctmIFZHrW', 1, 0),
 (6, 'Ryan Wong', 'ryanwong', '$2y$10$HmEtuUy3SJXnRyGqtBDlSOyXOV5j2mvLKMhljImiIzsR4TqiDNRBK', 1, 0),
 (7, 'update 2', 'user1', '$2y$10$x/RQ/97DUwxnQrJXQTu5je98RQWJjLDGLRNoMCdIDU5aYwyINNb9i', 2, 0),
 (8, 'kongwe', 'ryanwong1', '$2y$10$MD6e0sxFdTgO5l06.V.nLe65MyFGpZ6a1f8NEo/Sh9tLJXh8HllC2', 2, 0);
@@ -803,9 +830,9 @@ CREATE TABLE `vaccine` (
 --
 
 INSERT INTO `vaccine` (`VACCINE_ID`, `VACCINE_TYPE_ID`, `QUANTITY`, `EXPIRY_DATE`, `DATE_CREATED`) VALUES
-(48, 4, 98, '2026-10-06', '2025-01-04'),
+(48, 4, 88, '2026-10-06', '2025-01-04'),
 (49, 5, 99, '2026-04-01', '2025-01-04'),
-(50, 1, 100, '2026-02-04', '2025-01-04');
+(50, 1, 99, '2026-02-04', '2025-01-04');
 
 -- --------------------------------------------------------
 
@@ -826,7 +853,12 @@ CREATE TABLE `vaccine_card` (
 INSERT INTO `vaccine_card` (`VACCINE_CARD_ID`, `ANIMAL_ID`, `DATE_CREATED`) VALUES
 (88, 185, '2025-01-04'),
 (89, 186, '2025-01-04'),
-(90, 187, '2025-01-04');
+(90, 187, '2025-01-04'),
+(91, 188, '2025-01-06'),
+(92, 189, '2025-01-06'),
+(93, 190, '2025-01-06'),
+(94, 191, '2025-01-06'),
+(95, 192, '2025-01-06');
 
 -- --------------------------------------------------------
 
@@ -838,6 +870,8 @@ CREATE TABLE `vaccine_details` (
   `VACCINE_DETAILS_ID` int(11) NOT NULL,
   `VACCINE_CARD_ID` int(11) NOT NULL,
   `SCHEDULE_ID` int(11) NOT NULL,
+  `DATE_INJECTED` date DEFAULT NULL,
+  `QTY_USED` varchar(50) DEFAULT NULL,
   `STATUS` varchar(50) NOT NULL DEFAULT ''
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -845,8 +879,11 @@ CREATE TABLE `vaccine_details` (
 -- Dumping data for table `vaccine_details`
 --
 
-INSERT INTO `vaccine_details` (`VACCINE_DETAILS_ID`, `VACCINE_CARD_ID`, `SCHEDULE_ID`, `STATUS`) VALUES
-(16, 88, 79, '1');
+INSERT INTO `vaccine_details` (`VACCINE_DETAILS_ID`, `VACCINE_CARD_ID`, `SCHEDULE_ID`, `DATE_INJECTED`, `QTY_USED`, `STATUS`) VALUES
+(16, 88, 79, NULL, NULL, '1'),
+(17, 92, 81, NULL, NULL, '1'),
+(20, 89, 82, '2025-01-15', '3.5', '1'),
+(22, 89, 82, '2025-01-14', '6.5', '1');
 
 -- --------------------------------------------------------
 
@@ -893,7 +930,9 @@ INSERT INTO `vaccine_type` (`VACCINE_TYPE_ID`, `VACCINE_NAME`, `DESCRIPTION`) VA
 (3, 'MedYUmayu', 'Medicine For Nothing'),
 (4, 'hemosep', 'Maryusip'),
 (5, 'VACCi', 'Vaccine for Deworming'),
-(6, 'COVID-19 Vaccine', 'Effective against COVID-19');
+(6, 'COVID-19 Vaccine', 'Effective against COVID-19'),
+(7, 'updated Name', 'DEscription Updated'),
+(8, 'sample2 updated', 'lorem\r\n               ');
 
 -- --------------------------------------------------------
 
@@ -914,7 +953,9 @@ CREATE TABLE `vaccine_usage` (
 --
 
 INSERT INTO `vaccine_usage` (`usage_id`, `VACCINE_ID`, `VACCINE_TYPE_ID`, `use_quantity`, `date_used`) VALUES
-(30, 48, 4, 1, '2025-01-04');
+(30, 48, 4, 1, '2025-01-04'),
+(31, 50, 1, 1, '2025-01-06'),
+(32, 48, 4, 10, '2025-01-14');
 
 --
 -- Indexes for dumped tables
@@ -1031,7 +1072,7 @@ ALTER TABLE `account_type`
 -- AUTO_INCREMENT for table `animal`
 --
 ALTER TABLE `animal`
-  MODIFY `ANIMAL_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=188;
+  MODIFY `ANIMAL_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=193;
 
 --
 -- AUTO_INCREMENT for table `category`
@@ -1043,31 +1084,31 @@ ALTER TABLE `category`
 -- AUTO_INCREMENT for table `client`
 --
 ALTER TABLE `client`
-  MODIFY `CLIENT_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
+  MODIFY `CLIENT_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT for table `dispersal`
 --
 ALTER TABLE `dispersal`
-  MODIFY `DISPERSAL_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `DISPERSAL_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
 
 --
 -- AUTO_INCREMENT for table `parent`
 --
 ALTER TABLE `parent`
-  MODIFY `PARENT_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1045;
+  MODIFY `PARENT_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=1056;
 
 --
 -- AUTO_INCREMENT for table `payment`
 --
 ALTER TABLE `payment`
-  MODIFY `PAYMENT_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+  MODIFY `PAYMENT_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
 
 --
 -- AUTO_INCREMENT for table `schedule`
 --
 ALTER TABLE `schedule`
-  MODIFY `SCHEDULE_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=80;
+  MODIFY `SCHEDULE_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- AUTO_INCREMENT for table `user`
@@ -1085,13 +1126,13 @@ ALTER TABLE `vaccine`
 -- AUTO_INCREMENT for table `vaccine_card`
 --
 ALTER TABLE `vaccine_card`
-  MODIFY `VACCINE_CARD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+  MODIFY `VACCINE_CARD_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 
 --
 -- AUTO_INCREMENT for table `vaccine_details`
 --
 ALTER TABLE `vaccine_details`
-  MODIFY `VACCINE_DETAILS_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `VACCINE_DETAILS_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `vaccine_history`
@@ -1103,13 +1144,13 @@ ALTER TABLE `vaccine_history`
 -- AUTO_INCREMENT for table `vaccine_type`
 --
 ALTER TABLE `vaccine_type`
-  MODIFY `VACCINE_TYPE_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `VACCINE_TYPE_ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT for table `vaccine_usage`
 --
 ALTER TABLE `vaccine_usage`
-  MODIFY `usage_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `usage_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

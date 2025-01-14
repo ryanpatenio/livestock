@@ -56,12 +56,12 @@ class scheduleController {
         //check the extracted DATA
         if($schedule_id == "" || $schedule_id == null || $event_date == "" || $event_date == null){
             //return error
-            $this->helper->message("error while getting the DATA.. SCE",200,1);
+            $this->helper->message("error while getting the DATA.. ",200,1);
             return;
         }
 
         //get the Client Contact Number Event Date and Event Name
-        $query = " SELECT client.CONTACT_NO, schedule.EVENT_NAME, schedule.EVENT_DATE 
+        $query = "  SELECT schedule.SCHEDULE_ID,schedule.QTY_USED,schedule.VACCINE_TYPE_ID,client.CONTACT_NO, schedule.EVENT_NAME, schedule.EVENT_DATE 
             FROM schedule 
             JOIN client ON schedule.CLIENT_ID = client.CLIENT_ID 
             WHERE schedule.SCHEDULE_ID = ?";
@@ -105,7 +105,25 @@ class scheduleController {
             $response = $api->sendSmsMessage($request);    
             //update event if success
 
-                
+            /**
+             * @get the Schedule Request Quantity
+             * @then check if the inventory vaccine quantity is not less than to the request quantity
+             */
+            $qty_need_to_deduct = $result[0]['QTY_USED'];
+            $vaccine_type_id = $result[0]['VACCINE_TYPE_ID'];
+
+            $checkStock = $this->checkStock($vaccine_type_id,$qty_need_to_deduct);
+            if( ! $checkStock){
+                //not enough stock
+                return $this->helper->message("Not enough stock available for this Vaccine", 200, 1);
+            }
+            
+            //this method will deduct the vaccine inventory
+            $deduct =  $this->deductVaccine($vaccine_type_id,$qty_need_to_deduct);
+            if(! $deduct){
+                return $this->helper->message('Error: while deducting your request!',200,1);
+            }
+            //set status = 1 approved
             $updateQuery = "UPDATE schedule SET STATUS = 1 WHERE SCHEDULE_ID = ?";
             $params = [$schedule_id];
             $results = $this->helper->regularQuery($updateQuery,$params);
@@ -120,6 +138,7 @@ class scheduleController {
                
                 return $this->helper->message("Schedule approved but failed to send SMS",200,0,$response);
             }
+
         } catch (Exception $e) {
             $err = [
                 'err_msg' =>  $this->helper->message("success",200,1,$e->$e->getMessage()),
@@ -166,7 +185,13 @@ class scheduleController {
             return $this->helper->message("Error some parameters missing...",200,1);
         }
 
-        $query = "SELECT * FROM schedule WHERE SCHEDULE_ID = ?";
+        $query = "  SELECT schedule.SCHEDULE_ID,vaccine_type.VACCINE_NAME,CONCAT(c.FNAME,' ',c.LNAME) AS client_name,schedule.QTY_USED,schedule.VACCINE_TYPE_ID,client.CONTACT_NO, schedule.EVENT_NAME, schedule.EVENT_DATE 
+            FROM schedule 
+            JOIN client ON schedule.CLIENT_ID = client.CLIENT_ID
+			
+				JOIN vaccine_type ON schedule.VACCINE_TYPE_ID = vaccine_type.VACCINE_TYPE_ID 
+				JOIN client c ON schedule.CLIENT_ID = c.CLIENT_ID
+            WHERE schedule.SCHEDULE_ID = ?";
         $param = [$schedule_id];
 
         $result = $this->helper->regularQuery($query,$param);
@@ -175,8 +200,15 @@ class scheduleController {
             //return error
             return $this->helper->message("Error while processing your request...",200,1);
         }
+        $data = [
+            'EVENT_DATE' => $result[0]['EVENT_DATE'],
+            'VACCINE_NAME' => $result[0]['VACCINE_NAME'],
+            'QUANTITY_REQUEST' => $result[0]['QTY_USED'],
+            'EVENT_NAME'    => $result[0]['EVENT_NAME'],
+            'CLIENT_NAME'  => $result[0]['client_name']
+        ];
 
-         return $this->helper->message("success",200,0,$result[0]['EVENT_DATE']);
+         return $this->helper->message("success",200,0,$data);
     }
 
     function getRequestQty($schedule_id){
@@ -199,13 +231,14 @@ class scheduleController {
     function deductVaccine($vaccine_type_id, $usedQty) {
         $remainingQty = $usedQty;
 
-        // Check total available stock before proceeding
+           //Check total available stock before proceeding
             $query_check = "SELECT SUM(QUANTITY) AS total_stock FROM vaccine WHERE VACCINE_TYPE_ID = ? AND EXPIRY_DATE > NOW() AND QUANTITY > 0";
             $param_check = [$vaccine_type_id];
             $result_check = $this->helper->regularQuery($query_check, $param_check);
 
             if ($result_check[0]['total_stock'] < $usedQty) {
-                return $this->helper->message("Not enough stock available", 200, 1);
+                //return $this->helper->message("Not enough stock available", 200, 1);
+                return false;
             }
 
     
@@ -218,7 +251,8 @@ class scheduleController {
     
             if (!$result) {
                 // No available stock found
-                return $this->helper->message("Not enough stock available", 200, 1);
+                //return $this->helper->message("Not enough stock available", 200, 1);
+                return false;
             }
     
             // Get the quantity to deduct from this stock
@@ -233,7 +267,8 @@ class scheduleController {
     
             if (!$result2) {
                 // Error in updating the stock
-                return $this->helper->message("Error updating stock", 200, 1);
+                //return $this->helper->message("Error updating stock", 200, 1);
+                return false;
             }
     
            // Log the usage in the vaccine_usage table
@@ -243,14 +278,16 @@ class scheduleController {
 
             if (!$result3) {
                 // Error in logging the usage
-                return $this->helper->message("Error logging usage", 200, 1);
+                //return $this->helper->message("Error logging usage", 200, 1);
+                return false;
             }
     
         }
     
         // After the loop, check if remaining quantity is 0 (success) or partially deducted
         if ($remainingQty == 0) {
-            return $this->helper->message("Schedule approved and SMS sent successfully",200,0);
+            //return $this->helper->message("Schedule approved and SMS sent successfully",200,0);
+            return true;
         } 
 
     }
@@ -293,63 +330,197 @@ class scheduleController {
     }
 
     public function vaccinateAnimal(){
+        // Extract data from the POST request
         extract($_POST);
+
+        // Validate required fields
+        if (empty($schedule_id) || empty($deduct_amount) || empty($animal_id) || empty($vaccine_card_id) || empty($date_injected)) {
+            return $this->helper->message('Error: Missing required parameters!', 200, 1);
+        }
+
+        // Fetch current schedule quantity
+        $data = $this->getRequestQty($schedule_id);
+        if ($data === 0) {
+            return $this->helper->message('Error: Invalid schedule ID or no quantity found.', 200, 1);
+        }
+
+        $current_quantity = $data['qty'];
+
+        // Validate deduction amount
+        if ($deduct_amount > $current_quantity) {
+            return $this->helper->message('Error: Cannot deduct more than the available quantity.', 200, 1);
+        }
+
+        // Calculate new quantity and update schedule
+        $new_quantity = $current_quantity - $deduct_amount;
+        $updateQtyQuery = "UPDATE schedule SET QTY_USED = ? WHERE SCHEDULE_ID = ?";
+        $updateQtyParams = [$new_quantity, $schedule_id];
+
+        if (! $this->helper->regularQuery($updateQtyQuery, $updateQtyParams)) {
+            return $this->helper->message('Error: Failed to update schedule quantity.', 200, 1);
+        }
+
+        // Check if quantity is zero or less and mark schedule as completed
+        if ($new_quantity <= 0) {
+            $markCompletedQuery = "UPDATE schedule SET isCompleted = 1 WHERE SCHEDULE_ID = ?";
+            $markCompletedParams = [$schedule_id];
+
+            if (! $this->helper->regularQuery($markCompletedQuery, $markCompletedParams)) {
+                return $this->helper->message('Error: Failed to mark schedule as completed.', 200, 1);
+            }
+        }
+
+        // Mark the animal as vaccinated
+        $updateAnimalQuery = "UPDATE animal SET isVaccinated = 1 WHERE ANIMAL_ID = ?";
+        $updateAnimalParams = [$animal_id];
+
+        if (! $this->helper->regularQuery($updateAnimalQuery, $updateAnimalParams)) {
+            return $this->helper->message('Error: Failed to update animal vaccination status.', 200, 1);
+        }
+
+        // Insert vaccination details
+        $insertVaccinationQuery = "INSERT INTO vaccine_details (VACCINE_CARD_ID, SCHEDULE_ID, DATE_INJECTED, QTY_USED, STATUS) VALUES (?, ?, ?, ?, '1')";
+        $insertVaccinationParams = [$vaccine_card_id, $schedule_id, $date_injected, $deduct_amount];
+
+        if (! $this->helper->regularQuery($insertVaccinationQuery, $insertVaccinationParams)) {
+            return $this->helper->message('Error: Failed to insert vaccination details.', 200, 1);
+        }
+
+    // Success message
+    return $this->helper->message('Vaccination recorded successfully!', 200, 0);
+}
+
+
+    // public function vaccinateAnimal(){
+    //     /***
+    //      * @need from FORM $schedule ID 
+    //      * @deduct quantity
+    //      *  deduct the original quantity request to the input quantity to use @interactions schedule table and vaccine_details
+    //      */
+    //     extract($_POST);
+
+
+    //     //$schedule id
+    //     if(empty($schedule_id)){
+    //         return $this->helper->message('Error:: Missing some parameters!',200,1);
+    //     }
+               
+    //      //get schedule request quantity
+    //     $data = $this->getRequestQty($schedule_id);
+    //     if ($data === 0) {
+    //         // Return error if no data is found
+    //         return $this->helper->message("Error: Qty.", 200, 1);
+    //     }
+
+    //     $current_quantity = $data['qty'];
+    //     if($deduct_amount > $current_quantity){
+    //         //
+    //         return $this->helper->message('Cannot deduct more than the available quantity',200,1);
+    //     }
+
+    //     //update the schedule quantity
+    //     $new_quantity = $current_quantity - $deduct_amount;
+    //     $queryQty = "UPDATE schedule SET QTY_USED = ? WHERE SCHEDULE_ID = ?";
+    //     $paramQty = [$new_quantity,$schedule_id];
+    //     $execute = $this->helper->regularQuery($queryQty,$paramQty);
+
+    //     if( ! $execute){
+    //         return $this->helper->message('error while processing your request!',200,1); 
+    //     }
+
+    //      //update animal isVAccinated column set to 1 mean true
+    //      $query = "UPDATE animal SET isVaccinated = 1 WHERE ANIMAL_ID = ?";
+    //      $param = [$animal_id];
+    //      $result = $this->helper->regularQuery($query,$param);
+
+    //      if( ! $result){
+    //         return $this->helper->message('error while processing your request!',200,1);
+    //     }
+        
+    //      //insert new records in vaccine_details or vaccination_details for the record of animals vaccination
+    //      $query2 = "INSERT INTO vaccine_details (VACCINE_CARD_ID, SCHEDULE_ID,DATE_INJECTED,QTY_USED,STATUS) VALUES(?, ?, ?, ?, '1')";
+    //      $param2 = [$vaccine_card_id, $schedule_id,$date_injected,$deduct_amount];
+    //      $insert = $this->helper->regularQuery($query2,$param2);
+
+    //      if( ! $insert){
+    //          return $this->helper->message('error while processing your request!',200,1);
+    //      }
+
+    //     return $this->helper->message('Added Vaccination Successfully!',200,0);
+    // }
+
+    // public function vaccinateAnimal2(){
+    //     extract($_POST);
 
 
       
-        $data = $this->getRequestQty($schedule_id);
-        if ($data === 0) {
-            // Return error if no data is found
-            return $this->helper->message("Error: Qty.", 200, 1);
-        }
+    //     $data = $this->getRequestQty($schedule_id);
+    //     if ($data === 0) {
+    //         // Return error if no data is found
+    //         return $this->helper->message("Error: Qty.", 200, 1);
+    //     }
 
         
-         //get DATA
-         $qty = $data['qty'];
-         $vaccine_type_id = $data['vaccine_type_id'];
+    //      //get DATA
+    //      $qty = $data['qty'];
+    //      $vaccine_type_id = $data['vaccine_type_id'];
 
-        //  $dd = [
-        //     'qt'=> $qty,
-        //     'vc' => $vaccine_type_id
-        //  ];
+    //     //  $dd = [
+    //     //     'qt'=> $qty,
+    //     //     'vc' => $vaccine_type_id
+    //     //  ];
 
 
 
-        //update animal isVAccinated column set to 1 mean true
-        $query = "UPDATE animal SET isVaccinated = 1 WHERE ANIMAL_ID = ?";
-        $param = [$animal_id];
-        $result = $this->helper->regularQuery($query,$param);
+    //     //update animal isVAccinated column set to 1 mean true
+    //     $query = "UPDATE animal SET isVaccinated = 1 WHERE ANIMAL_ID = ?";
+    //     $param = [$animal_id];
+    //     $result = $this->helper->regularQuery($query,$param);
 
-        if(!$result){
-            return $this->helper->message('error while processing your request!',200,1);
-        }  
+    //     if(!$result){
+    //         return $this->helper->message('error while processing your request!',200,1);
+    //     }  
 
-        //insert into vaccine details
-        $query2 = "INSERT INTO vaccine_details (VACCINE_CARD_ID, SCHEDULE_ID,STATUS) VALUES(?, ?, '1')";
-        $param2 = [$vaccine_card_id, $schedule_id];
-        $insert = $this->helper->regularQuery($query2,$param2);
+    //     //insert into vaccine details
+    //     $query2 = "INSERT INTO vaccine_details (VACCINE_CARD_ID, SCHEDULE_ID,STATUS) VALUES(?, ?, '1')";
+    //     $param2 = [$vaccine_card_id, $schedule_id];
+    //     $insert = $this->helper->regularQuery($query2,$param2);
 
        
 
-        if(!$insert){
-            return $this->helper->message('error while processing your request!',200,1);
-        }
+    //     if(!$insert){
+    //         return $this->helper->message('error while processing your request!',200,1);
+    //     }
 
-         //update selected schedule
-         $query3 = "UPDATE schedule SET isCompleted = '1' WHERE SCHEDULE_ID = ?";
-         $param3 = [$schedule_id];
-         $updated = $this->helper->regularQuery($query3,$param3);
+    //      //update selected schedule
+    //      $query3 = "UPDATE schedule SET isCompleted = '1' WHERE SCHEDULE_ID = ?";
+    //      $param3 = [$schedule_id];
+    //      $updated = $this->helper->regularQuery($query3,$param3);
 
-         if(!$updated){
-            return $this->helper->message('error while processing your request!',200,1);
-         }
+    //      if(!$updated){
+    //         return $this->helper->message('error while processing your request!',200,1);
+    //      }
 
           
-         $deduct =  $this->deductVaccine($vaccine_type_id,$qty);
-        // deduct the stocks
+    //      $deduct =  $this->deductVaccine($vaccine_type_id,$qty);
+    //     // deduct the stocks
   
-         return $deduct;
+    //      return $deduct;
+
+    // }
+    
+    //boolean returns false if not enough stocks
+    private function checkStock($vaccine_type_id,$usedQty){
+        //Check total available stock before proceeding
+        $query_check = "SELECT SUM(QUANTITY) AS total_stock FROM vaccine WHERE VACCINE_TYPE_ID = ? AND EXPIRY_DATE > NOW() AND QUANTITY > 0";
+        $param_check = [$vaccine_type_id];
+        $result_check = $this->helper->regularQuery($query_check, $param_check);
+
+        if ($result_check[0]['total_stock'] < $usedQty) {
+            //return $this->helper->message("Not enough stock available", 200, 1);
+            return false;
+        }
+        return true;
 
     }
-    
 }

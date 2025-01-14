@@ -186,6 +186,7 @@ include('modal/approveModal.php');
 
       $('#approveEventDate').val("");
 
+      resetForm($('#approveScheduleForm'));
 
         const scheduleId = $(this).attr('data-id');
         const firstRequirement = $(this).attr('data-1st');
@@ -209,13 +210,17 @@ include('modal/approveModal.php');
             },
     
             function(response){
-               
-
+            //  res(response)
                 if(response.code != 0){
                     msg(response.message,'error');
                     return;
                 }
-                $('#approveEventDate').val(response.data);
+                $('#client-name').val(response.data.CLIENT_NAME);
+                $('#event-name').val(response.data.EVENT_NAME);
+                $('#vaccine-name').val(response.data.VACCINE_NAME);
+                $('#approveEventDate').val(response.data.EVENT_DATE);
+                $('#req-qty').val(response.data.QUANTITY_REQUEST);
+                $('#approveEventDate').val(response.data.EVENT_DATE);
 
                 $('#approveScheduleModal').modal('show');
 

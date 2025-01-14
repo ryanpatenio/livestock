@@ -49,33 +49,34 @@ $(document).ready(function(){
         let Data = $(this).serialize();
         $url = baseUrl + "action=approveSchedule";
 
-        AjaxPost(
-            $url,
-            'POST',
-            Data,
-            function(){
-                logs(true);
-                loader(true);
-            },
-    
-            function(response){
-                res(response);
-
-                if(response.code != 0){
-                    msg(response.message,'error');
-                    return;
-                }
-
-                message(response.message,'success');
-                formModalClose(addModal,$('#approveScheduleForm'));
-            },
-    
-            function(){
-                logs(false);
-                loader(false);
-            }
-        );
+        swalMessage('custom','Are you sure you want to Approve this Schedule?',function(){
+            AjaxPost(
+                $url,
+                'POST',
+                Data,
+                function(){
+                    logs(true);
+                    loader(true);
+                },
         
+                function(response){
+                    res(response);
+
+                    if(response.code != 0){
+                        msg(response.message,'error');
+                        return;
+                    }
+
+                    message(response.message,'success');
+                    formModalClose(addModal,$('#approveScheduleForm'));
+                },
+        
+                function(){
+                    logs(false);
+                    loader(false);
+                }
+            );
+        });
        
 
     });

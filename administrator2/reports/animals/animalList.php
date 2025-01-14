@@ -51,13 +51,21 @@
                       <th>Animal Type</th>
                       <th>Sex</th>
                       <th>Birth Day</th>
+                      <th>Status</th>
                       
                     </tr>
                   </thead>
                   <tbody>
                     <?php 
                      require("connection/connection.php");
-                      $query = "SELECT c.category_name as ANIMALTYPE, a.ANIMAL_SEX,a.BIRTHDATE  FROM animal a, category c WHERE a.category_id = c.category_id ORDER BY c.category_name AND a.ANIMAL_SEX ASC"; 
+                      $query = "SELECT c.category_name as ANIMALTYPE, a.ANIMAL_SEX,a.BIRTHDATE, 
+
+                      case
+	                          when a.`STATUS` = 1 then 'Alive' ELSE 'Dead' END AS animal_status 
+                      FROM animal a, category c 
+                      WHERE a.category_id = c.category_id 
+                            ORDER BY c.category_name AND a.ANIMAL_SEX ASC"; 
+
                       $result = mysqli_query($con, $query);
                       $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
                       
@@ -72,6 +80,9 @@
                       <td><?=$animal['ANIMALTYPE'] ?></td>
                       <td><?=$animal['ANIMAL_SEX'] ?></td>
                       <td><?=$animal['BIRTHDATE'] ?></td>
+                      <td style="<?= $animal['animal_status'] == 'Dead' ? 'color: red;' : 'color:green;'; ?>">
+                          <?= $animal['animal_status']; ?>
+                      </td>
        
                     </tr>
 

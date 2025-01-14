@@ -58,11 +58,10 @@ $(document).ready(function(){
     
         $(document).on('change','#select-schedule',function(e){
             e.preventDefault();
-    
-           
-    
+
             let schedule_ID = $(this).val();
             let animal_id = $('#vaccineAnimalIdInput').val();
+
             $url = baseUrl + "action=getScheduleData";
     
             res(animal_id)
@@ -77,7 +76,7 @@ $(document).ready(function(){
                 },
         
                 function(response){
-                    res(response);
+                   // res(response);
      
                     if(response.code != 0){
                         msg(response.message,'error');
@@ -87,8 +86,8 @@ $(document).ready(function(){
                     $('#vaccine-name').val(response.data.vaccine_name);
                     $("#vaccine-description").val(response.data.description);
                     $('#vaccine-card-id').val(response.data.vaccine_card_id);
-                    $('#vaccine-qty-request').val(response.data.req_qty);
-                    $('#DATE').val(response.data.event_date);
+                    $('#remaining-vaccine-qty').val(response.data.req_qty);
+                  //  $('#DATE').val(response.data.event_date);
         
                 },
         
@@ -124,7 +123,7 @@ $(document).ready(function(){
                             return;
                         }
             
-                        message('Animal Vaccination Added Successfully!','success');
+                        message(response.message,'success');
                         formModalClose(addModal,$('#editAnimalVaccineForm'));
                     },
             

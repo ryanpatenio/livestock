@@ -10,7 +10,23 @@
   $clients = mysqli_fetch_all($clientResult, MYSQLI_ASSOC);
 
   //get all vaccine Dat
-$query = "select * from vaccine_type";
+$query = "SELECT 
+    vt.VACCINE_TYPE_ID,
+    vt.VACCINE_NAME,
+    vt.DESCRIPTION,
+    v.QUANTITY,
+    CASE 
+        WHEN v.QUANTITY IS NULL THEN 0
+        ELSE v.QUANTITY
+    END AS QUANTITY_DISPLAY
+FROM 
+    vaccine_type vt
+LEFT JOIN 
+    vaccine v 
+ON 
+    vt.VACCINE_TYPE_ID = v.VACCINE_TYPE_ID;
+
+";
 $result = mysqli_query($con, $query);
 $vaccineData = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
@@ -123,7 +139,7 @@ $vaccineData = mysqli_fetch_all($result, MYSQLI_ASSOC);
                                   >Edit</button>
 
 
-                          <form action="includes/action.php" method="POST" class="d-inline">
+                          <form action="" method="POST" class="d-inline">
                             <input type="hidden" name="schedule_id" value="<?= $schedule['SCHEDULE_ID']; ?>">
                             <button 
                             type="button" 
@@ -167,7 +183,27 @@ include('addSched.php');
         <div class="modal-body">
           <input type="hidden" name="schedule_id" id="approveScheduleId">
           <div class="form-group">
-            <label for="approveEventDateLabel">Event Date</label>
+            <label for="approveEventDateLabel">Client Name</label>
+            <input type="text" name="client_name" id="client-name" class="form-control" readonly>
+          </div>
+          <div class="form-group">
+            <label for="">Event Name</label>
+            <input type="text" name="event_name" id="event-name" class="form-control" readonly>
+          </div>
+          <div class="form-group">
+              <div class="row">
+                <div class="col">
+                  <label for="">Vaccine Name</label>
+                  <input type="text" name="vaccine_name" id="vaccine-name" class="form-control" readonly>
+                </div>
+                <div class="col">
+                <label for="">Request Quantity</label>
+                <input type="text" name="req_qty" id="req-qty" class="form-control" readonly>
+                </div>
+              </div>
+          </div>
+          <div class="form-group">
+            <label for="">Event Date</label>
             <input type="date" name="event_date" id="approveEventDate" class="form-control" required>
           </div>
         </div>
@@ -226,7 +262,8 @@ include('addSched.php');
       $('#approveScheduleId').val(ID);
 
       $('#approveEventDate').val("");
-
+  
+      resetForm($('#approveScheduleForm'));
 
         const scheduleId = $(this).attr('data-id');
         const firstRequirement = $(this).attr('data-1st');
@@ -237,7 +274,7 @@ include('addSched.php');
           alert('Both the 1st and 2nd Requirements must be submitted before approval.');
           return;
         }
-
+      
         
       $url = baseUrl + "action=getSchedDate";
 
@@ -250,13 +287,16 @@ include('addSched.php');
             },
     
             function(response){
-               
-
+              res(response);
                 if(response.code != 0){
                     msg(response.message,'error');
                     return;
                 }
-                $('#approveEventDate').val(response.data);
+                $('#client-name').val(response.data.CLIENT_NAME);
+                $('#event-name').val(response.data.EVENT_NAME);
+                $('#vaccine-name').val(response.data.VACCINE_NAME);
+                $('#approveEventDate').val(response.data.EVENT_DATE);
+                $('#req-qty').val(response.data.QUANTITY_REQUEST);
 
                 $('#approveScheduleModal').modal('show');
 

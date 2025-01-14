@@ -12,7 +12,27 @@
         <div class="modal-body">
           <input type="hidden" name="schedule_id" id="approveScheduleId">
           <div class="form-group">
-            <label for="approveEventDateLabel">Event Date</label>
+            <label for="approveEventDateLabel">Client Name</label>
+            <input type="text" name="client_name" id="client-name" class="form-control" readonly>
+          </div>
+          <div class="form-group">
+            <label for="">Event Name</label>
+            <input type="text" name="event_name" id="event-name" class="form-control" readonly>
+          </div>
+          <div class="form-group">
+              <div class="row">
+                <div class="col">
+                  <label for="">Vaccine Name</label>
+                  <input type="text" name="vaccine_name" id="vaccine-name" class="form-control" readonly>
+                </div>
+                <div class="col">
+                <label for="">Request Quantity</label>
+                <input type="text" name="req_qty" id="req-qty" class="form-control" readonly>
+                </div>
+              </div>
+          </div>
+          <div class="form-group">
+            <label for="">Event Date</label>
             <input type="date" name="event_date" id="approveEventDate" class="form-control" required>
           </div>
         </div>
