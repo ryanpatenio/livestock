@@ -148,9 +148,6 @@ class scheduleController {
             return $err;
         }
         
-     //   return $this->helper->message("success",200,0,$result[0]['CONTACT_NO']);
-
-
     }
 
     public function updatRequirements(){

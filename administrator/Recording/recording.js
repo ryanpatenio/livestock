@@ -65,8 +65,6 @@ $('#clientTBL').dataTable({
         let animal_id = $('#vaccineAnimalIdInput').val();
         $url = baseUrl + "action=getScheduleData";
 
-        res(animal_id)
-
         AjaxPost(
             $url,
             'POST',
@@ -87,8 +85,8 @@ $('#clientTBL').dataTable({
                 $('#vaccine-name').val(response.data.vaccine_name);
                 $("#vaccine-description").val(response.data.description);
                 $('#vaccine-card-id').val(response.data.vaccine_card_id);
-                $('#vaccine-qty-request').val(response.data.req_qty);
-                $('#DATE').val(response.data.event_date);
+                $('#remaining-vaccine-qty').val(response.data.req_qty);
+                //$('#DATE').val(response.data.event_date);
     
             },
     
@@ -124,7 +122,7 @@ $('#clientTBL').dataTable({
                         return;
                     }
         
-                    message('Animal Vaccination Added Successfully!','success');
+                    message(response.message,'success');
                     formModalClose(addModal,$('#editAnimalVaccineForm'));
                 },
         

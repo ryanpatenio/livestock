@@ -63,9 +63,7 @@ $(document).ready(function(){
             let animal_id = $('#vaccineAnimalIdInput').val();
 
             $url = baseUrl + "action=getScheduleData";
-    
-            res(animal_id)
-    
+     
             AjaxPost(
                 $url,
                 'POST',
